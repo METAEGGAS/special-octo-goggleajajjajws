@@ -1,0 +1,20 @@
+{
+  "rewrites": [
+    {
+      "source": "/pages/market/index",
+      "destination": "/market.html"
+    },
+    {
+      "source": "/pages/Asset/Index",
+      "destination": "/asset.html"
+    },
+    {
+      "source": "/h5",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/pages/My/Index",
+      "destination": "/my.html"
+    }
+  ]
+}
