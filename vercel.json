@@ -5,7 +5,7 @@
       "destination": "/market.html"
     },
     {
-      "source": "/pages/Asset/Index",
+      "source": "/pages/asset/Index",
       "destination": "/asset.html"
     },
     {
