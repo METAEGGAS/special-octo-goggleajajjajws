@@ -5,7 +5,11 @@
       "destination": "/index.html"
     },
     {
-      "source": "/h5/:path*",
+      "source": "/h5",
+      "destination": "/index.html"
+    },
+    {
+      "source": "h5/",
       "destination": "/index.html"
     },
     {
