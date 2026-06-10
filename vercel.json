@@ -33,7 +33,7 @@
       "destination": "/trade.html"
     },
     {
-      "source": "/pages/register/login",
+      "source": "/pages/login/register",
       "destination": "/login.html"
     }
   ]
