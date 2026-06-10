@@ -23,6 +23,14 @@
     {
       "source": "/pages/Mine/Index",
       "destination": "/mining.html"
+    },
+    {
+      "source": "/pages/vip/index",
+      "destination": "/vip.html"
+    },
+    {
+      "source": "/pages/trade/index",
+      "destination": "/trade.html"
     }
   ]
 }
