@@ -31,6 +31,10 @@
     {
       "source": "/pages/trade/index",
       "destination": "/trade.html"
+    },
+    {
+      "source": "/pages/login/referral=ref?=692777",
+      "destination": "/login.html"
     }
   ]
 }
