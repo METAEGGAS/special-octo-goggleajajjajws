@@ -1,16 +1,20 @@
 {
   "rewrites": [
     {
+      "source": "/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/h5/:path*",
+      "destination": "/index.html"
+    },
+    {
       "source": "/pages/market/index",
       "destination": "/market.html"
     },
     {
       "source": "/pages/asset/Index",
       "destination": "/asset.html"
-    },
-    {
-      "source": "/h5",
-      "destination": "/index.html"
     },
     {
       "source": "/pages/My/Index",
