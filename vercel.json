@@ -33,7 +33,7 @@
       "destination": "/trade.html"
     },
     {
-      "source": "/pages/login/referral=ref?=692777",
+      "source": "/pages/register/login",
       "destination": "/login.html"
     }
   ]
