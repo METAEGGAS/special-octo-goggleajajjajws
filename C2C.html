@@ -1,73 +1,32 @@
-<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>تبادل</title><style>
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;height:100%;font-family:Tahoma,Arial,sans-serif}
-body{--bg:#000;--panel:#121212;--panel2:#171717;--txt:#fff;--muted:#6f6f6f;--line:#242424;--gold1:#f2c92c;--gold2:#fff0a0;--gold3:#ffde3e;--gold:#f5cf2e;--rec:url(https://tsdvxl.dunfinz.org/static/my/dark/record.png);background:var(--bg);color:var(--txt)}
-body[data-theme=light]{--bg:#fff;--panel:#f7f7f7;--panel2:#fbfbfb;--txt:#111;--muted:#9b9b9b;--line:#e8e8e8;--gold1:#ffd52f;--gold2:#fff3a9;--gold3:#ffd52f;--gold:#ffd52f;--rec:url(https://tsdvxl.dunfinz.org/static/my/light/record.png)}
-.app{min-height:100%;padding:10px 14px 18px;max-width:420px;margin:auto;position:relative}
-.top{height:44px;position:relative;display:flex;align-items:center;justify-content:space-between}
-.back,.record{width:28px;height:28px;border:0;background:none;padding:0;cursor:pointer}
-.back{color:var(--txt);font-size:28px;line-height:1;transform:scaleX(-1)}
-.record{background:var(--rec) center/24px 24px no-repeat}
-.title{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:20px}
-.sec{margin:16px 4px 10px;font-size:20px}
-.select,.box,.confirm{width:100%}
-.select{height:54px;background:var(--panel);border:1px solid var(--line);border-radius:10px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;color:var(--txt);cursor:pointer}
-.select .r{display:flex;align-items:center;gap:8px}
-.a{width:12px;height:8px;background:url(https://i.ibb.co/Lzv0gB9P/91.png) center/contain no-repeat;display:inline-block}
-.swapWrap{position:relative;margin-top:12px}
-.box{height:126px;background:var(--panel);border:1px solid var(--line);border-radius:14px;position:relative}
-.box+.box{margin-top:48px}
-.l1{position:absolute;left:18px;top:18px;font-size:18px}
-.r1{position:absolute;right:18px;top:18px;font-size:17px}
-.coin{position:absolute;left:18px;bottom:26px;display:flex;align-items:center;gap:6px;font-size:20px}
-.ph{position:absolute;right:18px;top:44px;color:var(--muted);font-size:15px}
-.max{position:absolute;right:18px;bottom:26px;color:var(--gold);font-size:18px}
-.swap{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:74px;height:74px;border:0;background:url(https://tsdvxl.dunfinz.org/static/my/big-change.png) center/contain no-repeat;cursor:pointer;z-index:2}
-.rate{padding:18px 0 12px;text-align:center;color:#d7b46d;font-size:15px}
-.rate b{font-weight:500;direction:ltr;display:inline-block}
-.confirm{height:50px;border-radius:8px;border:1px solid #d8b63b;background:linear-gradient(90deg,var(--gold1),var(--gold2) 50%,var(--gold3));color:#111;font-size:18px;font-weight:700;cursor:pointer}
-.ov{position:fixed;inset:0;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:.22s;z-index:20}
-.ov.show{opacity:1;pointer-events:auto}
-.sheet{position:fixed;left:0;right:0;bottom:-220px;background:var(--panel);border-top:1px solid var(--line);border-radius:22px 22px 0 0;transition:.22s;z-index:21;max-width:420px;margin:auto}
-.sheet.show{bottom:0}
-.sheet .head{height:72px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--line);font-size:20px}
-.sheet .item{height:68px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:18px;cursor:pointer}
-.sheet .item:active,.select:active,.confirm:active,.swap:active{filter:brightness(.97)}
-</style></head><body data-theme="dark"><div class="app">
-  <div class="top"><button class="record" aria-label="سجل"></button><div class="title">تبادل</div><button class="back" aria-label="رجوع">›</button></div>
-  <div class="sec">اختر الحساب</div>
-  <button class="select" id="openSheet"><span class="a"></span><span id="accountText">تمويل الحساب</span></button>
-
-  <div class="swapWrap">
-    <div class="box">
-      <div class="l1">استهلك</div>
-      <div class="r1">متوفر:0</div>
-      <div class="coin">BTC<span class="a"></span></div>
-      <div class="ph">أدخل الكمية القصوى</div>
-      <div class="max">ماكس</div>
-    </div>
-
-    <button class="swap" aria-label="تبديل"></button>
-
-    <div class="box">
-      <div class="l1">احصل على</div>
-      <div class="coin">USDT<span class="a"></span></div>
-    </div>
-  </div>
-
-  <div class="rate"><span>سعر:</span> <b>1:61758.494783</b> <span>USDT</span></div>
-  <button class="confirm">تأكيد</button>
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>تبادل</title><style>*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;height:100%;font-family:Tahoma,Arial,sans-serif;background:#000;color:#fff;overflow:hidden}body{--bg:#000;--p:#121212;--l:#232323;--t:#fff;--m:#747474;--g1:#f3c822;--g2:#fff0a8;--g3:#ffd92f}.pg{position:fixed;inset:0;background:var(--bg)}.app{display:flex;flex-direction:column;height:100%;padding:10px 14px 18px;max-width:430px;margin:auto}.top{height:44px;position:relative;display:flex;align-items:center;justify-content:space-between}.ttl{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:20px}.bk,.rc{width:28px;height:28px;border:0;background:none;padding:0;cursor:pointer}.bk{position:absolute;left:0;top:8px;color:#fff;font-size:28px;line-height:1;transform:scaleX(-1)}.rc{background:url(https://tsdvxl.dunfinz.org/static/my/dark/record.png) center/24px 24px no-repeat}.sec{margin:16px 4px 10px;font-size:20px}.sel,.bx,.ok{width:100%}.sel{height:54px;background:var(--p);border:1px solid var(--l);border-radius:10px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;color:var(--t);cursor:pointer}.ar{width:12px;height:8px;background:url(https://i.ibb.co/Lzv0gB9P/91.png) center/contain no-repeat;display:inline-block}.mid{position:relative;flex:1;display:flex;flex-direction:column}.bx{height:126px;background:var(--p);border:1px solid var(--l);border-radius:14px;position:relative}.sp{flex:1;min-height:90px}.tt1{position:absolute;left:18px;top:18px;font-size:18px}.tt2{position:absolute;right:18px;top:18px;font-size:17px}.coin{position:absolute;left:18px;bottom:26px;display:flex;align-items:center;gap:6px;font-size:20px}.ph{position:absolute;right:18px;top:44px;color:var(--m);font-size:15px}.mx{position:absolute;right:18px;bottom:26px;color:#f2c92c;font-size:18px}.sw{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:74px;height:74px;border:0;background:url(https://tsdvxl.dunfinz.org/static/my/big-change.png) center/contain no-repeat;cursor:pointer;z-index:3}.rate{padding:18px 0 12px;text-align:center;color:#d7b46d;font-size:15px}.rate b{font-weight:500;direction:ltr;display:inline-block}.ok{height:50px;border-radius:8px;border:1px solid #d8b63b;background:linear-gradient(90deg,var(--g1),var(--g2) 50%,var(--g3));color:#111;font-size:18px;font-weight:700;cursor:pointer}.ov{position:fixed;inset:0;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:.2s;z-index:20}.ov.s{opacity:1;pointer-events:auto}.sh{position:fixed;left:0;right:0;bottom:-220px;max-width:430px;margin:auto;background:#121212;border-top:1px solid #232323;border-radius:22px 22px 0 0;transition:.2s;z-index:21}.sh.s{bottom:0}.sh .h{height:72px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid #232323;font-size:20px}.sh .i{height:68px;display:flex;align-items:center;justify-content:center;color:#8c8c8c;font-size:18px;cursor:pointer}.his{display:none}.his.s{display:block}.empty{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px}.empty img{width:92px;height:92px;object-fit:contain}.empty div{color:#9a9a9a;font-size:20px}.sel:active,.ok:active,.sw:active,.rc:active,.bk:active,.sh .i:active{filter:brightness(.97)}</style></head><body>
+<div class="pg main" id="main"><div class="app">
+<div class="top"><button class="rc" id="openHis" aria-label="سجل"></button><div class="ttl">تبادل</div><button class="bk" aria-label="رجوع">›</button></div>
+<div class="sec">اختر الحساب</div>
+<button class="sel" id="openSheet"><span class="ar"></span><span id="acc">تمويل الحساب</span></button>
+<div class="mid">
+<div class="bx">
+<div class="tt1">استهلك</div><div class="tt2">متوفر:0</div>
+<div class="coin"><span id="c1">BTC</span><span class="ar"></span></div>
+<div class="ph">أدخل الكمية القصوى</div><div class="mx">ماكس</div>
 </div>
+<div class="sp"></div>
+<button class="sw" id="swap" aria-label="تبديل"></button>
+<div class="bx">
+<div class="tt1">احصل على</div>
+<div class="coin"><span id="c2">USDT</span><span class="ar"></span></div>
+</div>
+</div>
+<div class="rate"><span>سعر:</span> <b>1:61758.494783</b> <span id="r">USDT</span></div>
+<button class="ok">تأكيد</button>
+</div></div>
+
+<div class="pg his" id="his"><div class="app">
+<div class="top"><div></div><div class="ttl">سجل الصرف</div><button class="bk" id="backHis" aria-label="عودة">›</button></div>
+<div class="empty"><img src="https://tsdvxl.dunfinz.org/static/theme/dark/icon/empty.png" alt=""><div>لا يوجد بيانات متاحة</div></div>
+</div></div>
 
 <div class="ov" id="ov"></div>
-<div class="sheet" id="sheet">
-  <div class="head">تمويل الحساب</div>
-  <div class="item" data-v="حساب تداول">حساب تداول</div>
-</div>
+<div class="sh" id="sh"><div class="h">تمويل الحساب</div><div class="i" data-v="حساب تداول">حساب تداول</div></div>
 
-<script>
-const $=e=>document.querySelector(e),sheet=$("#sheet"),ov=$("#ov"),open=$("#openSheet"),txt=$("#accountText");
-function showSheet(){sheet.classList.add("show");ov.classList.add("show")}
-function hideSheet(){sheet.classList.remove("show");ov.classList.remove("show")}
-open.onclick=showSheet;ov.onclick=hideSheet;
-sheet.querySelector(".item").onclick=e=>{txt.textContent=e.target.dataset.v;hideSheet()};
-</script></body></html>
+<script>let $=e=>document.querySelector(e),sh=$("#sh"),ov=$("#ov"),acc=$("#acc"),c1=$("#c1"),c2=$("#c2"),r=$("#r");function os(){sh.classList.add("s");ov.classList.add("s")}function cs(){sh.classList.remove("s");ov.classList.remove("s")}$("#openSheet").onclick=os;ov.onclick=cs;sh.querySelector(".i").onclick=e=>{acc.textContent=e.target.dataset.v;cs()};$("#swap").onclick=()=>{let a=c1.textContent,b=c2.textContent;c1.textContent=b;c2.textContent=a;r.textContent=c2.textContent};$("#openHis").onclick=()=>{$("#main").style.display="none";$("#his").classList.add("s")};$("#backHis").onclick=()=>{$("#his").classList.remove("s");$("#main").style.display="block"};</script>
+</body></html>
