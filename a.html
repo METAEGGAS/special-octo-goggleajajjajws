@@ -1,0 +1,53 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>نقل</title><style>*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif}html,body{height:100%;overflow:hidden}body{background:#000;color:#fff;direction:rtl;transition:background .3s}body.light{background:#fff;color:#000}.scr{position:fixed;inset:0;display:none;flex-direction:column;background:inherit;z-index:1}.scr.active{display:flex}.hdr{display:flex;align-items:center;justify-content:space-between;padding:18px 16px;position:relative;height:56px;flex-shrink:0}.back{font-size:22px;cursor:pointer;width:30px;color:inherit;background:none;border:none;font-weight:300}.title{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:17px;font-weight:500}.rec-ic{width:24px;height:24px;cursor:pointer;opacity:.9}.body{flex:1;padding:8px 18px;overflow-y:auto}.lbl{font-size:14px;margin:18px 0 10px;color:#ddd}body.light .lbl{color:#333}.fld{background:#141414;border-radius:10px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;font-size:15px;cursor:pointer;border:1px solid #1f1f1f}body.light .fld{background:#f5f5f5;border-color:#e5e5e5}.fld .arr{color:#888;font-size:11px}.amt{position:relative}.amt input{width:100%;background:#141414;border:1px solid #1f1f1f;border-radius:10px;padding:14px 16px;color:inherit;font-size:15px;outline:none;direction:ltr;text-align:left}body.light .amt input{background:#f5f5f5;border-color:#e5e5e5;color:#000}.all{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:#d4a82a;font-size:14px;cursor:pointer}.avail{position:absolute;left:0;top:-26px;font-size:12px;color:#888}body.light .avail{color:#666}.lbl-wrap{position:relative}.btn{margin:auto 18px 30px;background:linear-gradient(180deg,#8a6f1d,#6e5817);color:#000;padding:16px;border-radius:12px;text-align:center;font-size:16px;font-weight:600;cursor:pointer;border:none;opacity:.7}.btn.act{background:#f5d020;opacity:1}.btn .sp{display:inline-block;width:14px;height:14px;border:2px solid #000;border-top-color:transparent;border-radius:50%;animation:sp 1s linear infinite;vertical-align:middle;margin-right:6px}@keyframes sp{to{transform:rotate(360deg)}}.empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:80px}.empty img{width:80px;height:80px;opacity:.5;margin-bottom:14px}.empty p{font-size:13px;color:#777}body.light .empty p{color:#999}.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:10;display:none}.sheet-bg.active{display:block}.sheet{position:fixed;left:0;right:0;bottom:0;background:#1a1a1a;border-radius:14px 14px 0 0;padding:8px 0 20px;z-index:11;transform:translateY(100%);transition:transform .25s ease}body.light .sheet{background:#fff}.sheet.active{transform:translateY(0)}.sheet .opt{padding:18px 24px;text-align:center;font-size:16px;color:#666;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}.sheet .opt.sel{color:#fff;font-weight:600}body.light .sheet .opt.sel{color:#000}.sheet .opt .ci{width:14px;height:14px;background:#f5d020;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);display:none}.sheet .opt.sel .ci{display:inline-block}.theme-tog{position:fixed;top:16px;right:60px;background:#222;color:#fff;border:none;padding:6px 10px;border-radius:6px;font-size:11px;cursor:pointer;z-index:5}body.light .theme-tog{background:#eee;color:#000}</style></head><body>
+<button class="theme-tog" onclick="document.body.classList.toggle('light')">🌓</button>
+
+<div class="scr active" id="s1">
+<div class="hdr"><button class="back" onclick="go('s3')">‹</button><div class="title">نقل</div><img class="rec-ic" id="ri1" src="https://tsdvxl.dunfinz.org/static/my/dark/record.png" onclick="go('s3')" alt=""></div>
+<div class="body">
+<div class="lbl">نقل حساب خارجي</div>
+<div class="fld"><span>حساب تداول</span><span class="arr">▼</span></div>
+<div class="lbl">نقل إلى الحساب</div>
+<div class="fld"><span>تمويل الحساب</span><span class="arr">▼</span></div>
+<div class="lbl-wrap"><div class="lbl">اختر العملة</div><span class="avail">متاح:0</span></div>
+<div class="fld" onclick="openSheet()"><span id="curSel">USDC</span><span class="arr">▼</span></div>
+<div class="lbl">اختر الكمية</div>
+<div class="amt"><input type="text" value="800"><span class="all">الكل</span></div>
+</div>
+<button class="btn"><span class="sp"></span>تأكيد</button>
+</div>
+
+<div class="scr" id="s2">
+<div class="hdr"><button class="back" onclick="go('s1')">‹</button><div class="title">نقل</div><img class="rec-ic" id="ri2" src="https://tsdvxl.dunfinz.org/static/my/dark/record.png" onclick="go('s3')" alt=""></div>
+<div class="body">
+<div class="lbl">نقل حساب خارجي</div>
+<div class="fld"><span>حساب تداول</span><span class="arr">▼</span></div>
+<div class="lbl">نقل إلى الحساب</div>
+<div class="fld"><span>تمويل الحساب</span><span class="arr">▼</span></div>
+<div class="lbl-wrap"><div class="lbl">اختر العملة</div><span class="avail">متاح:0</span></div>
+<div class="fld"><span>USDC</span><span class="arr">▼</span></div>
+<div class="lbl">اختر الكمية</div>
+<div class="amt"><input type="text" value="800"><span class="all">الكل</span></div>
+</div>
+<button class="btn act">تأكيد</button>
+</div>
+
+<div class="scr" id="s3">
+<div class="hdr"><button class="back" onclick="go('s1')">‹</button><div class="title">سجل التحويل</div><div style="width:24px"></div></div>
+<div class="empty"><img id="emp" src="https://tsdvxl.dunfinz.org/static/theme/dark/icon/empty.png" alt=""><p>لا توجد بيانات بعد</p></div>
+</div>
+
+<div class="sheet-bg" id="sbg" onclick="closeSheet()"></div>
+<div class="sheet" id="sh">
+<div class="opt" data-c="USDT"><span class="ci"></span>USDT</div>
+<div class="opt" data-c="BTC"><span class="ci"></span>BTC</div>
+<div class="opt sel" data-c="USDC"><span class="ci"></span>USDC</div>
+</div>
+
+<script>
+function go(id){document.querySelectorAll('.scr').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function openSheet(){document.getElementById('sbg').classList.add('active');document.getElementById('sh').classList.add('active')}
+function closeSheet(){document.getElementById('sbg').classList.remove('active');document.getElementById('sh').classList.remove('active')}
+document.querySelectorAll('.sheet .opt').forEach(o=>{o.onclick=()=>{document.querySelectorAll('.sheet .opt').forEach(x=>x.classList.remove('sel'));o.classList.add('sel');document.getElementById('curSel').textContent=o.dataset.c;closeSheet()}});
+const obs=new MutationObserver(()=>{const l=document.body.classList.contains('light');const u=l?'light':'dark';document.getElementById('ri1').src=`https://tsdvxl.dunfinz.org/static/my/${u}/record.png`;document.getElementById('ri2').src=`https://tsdvxl.dunfinz.org/static/my/${u}/record.png`;document.getElementById('emp').src=`https://tsdvxl.dunfinz.org/static/theme/${u}/icon/empty.png`});obs.observe(document.body,{attributes:true,attributeFilter:['class']});
+</script>
+</body></html>
