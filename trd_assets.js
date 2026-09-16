@@ -1,0 +1,32 @@
+trdHTML='<style>@keyframes trdpls{0%,100%{opacity:1}50%{opacity:.3}}@keyframes trdglow{0%,100%{box-shadow:0 10px 30px rgba(20,90,220,.45),0 0 18px rgba(0,229,255,.25)}50%{box-shadow:0 10px 30px rgba(20,90,220,.6),0 0 34px rgba(0,229,255,.5)}}</style>'
++'<div style="padding:8px 14px 40px">'
+// ===== Header =====
++'<div style="display:flex;align-items:center;gap:12px;padding:6px 2px 16px">'
++'<div onclick="goHome()" style="width:40px;height:40px;border-radius:13px;background:rgba(47,123,246,.14);border:1px solid rgba(150,195,245,.28);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0"><img src="https://i.ibb.co/k69JQ9LS/IMG.png" alt="back" style="width:20px;height:20px"></div>'
++'<h1 style="font-size:19px;font-weight:700;flex:1;letter-spacing:.3px">التزامن بالصفقة</h1>'
++'<span style="display:flex;align-items:center;gap:6px;font-size:11px;color:#7ff0c8;background:rgba(20,180,130,.12);border:1px solid rgba(60,220,170,.3);padding:6px 11px;border-radius:999px;flex-shrink:0"><i style="width:7px;height:7px;border-radius:50%;background:#2fe6a8;box-shadow:0 0 8px #2fe6a8;animation:trdpls 1.4s infinite"></i>متصل</span>'
++'</div>'
+// ===== Hero (same image, same professional style) =====
++'<div style="position:relative;border-radius:22px;overflow:hidden;border:1px solid rgba(0,229,255,.35);box-shadow:0 0 0 1px rgba(47,123,246,.18),0 18px 44px rgba(0,20,60,.6),inset 0 0 40px rgba(0,229,255,.07);background:radial-gradient(ellipse at 50% 82%,#062046 0%,#041226 58%,#020a18 100%)">'
++'<img src="https://i.ibb.co/Pv3gPVXM/file-0000000034348210919c6cf6b2d1473f.png" alt="trade sync" style="width:100%;display:block">'
++'<div style="position:absolute;top:12px;right:12px;background:rgba(4,14,30,.74);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(0,229,255,.4);border-radius:12px;padding:7px 12px;font-size:11px;color:#9fdcff;letter-spacing:.5px">ExCoreX SYNC ENGINE&nbsp;<b style="color:#00e5ff">v3.2</b></div>'
++'<div style="position:absolute;bottom:12px;left:12px;right:12px;background:rgba(4,14,30,.68);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(150,195,245,.25);border-radius:14px;padding:10px 14px;font-size:12px;color:#cfe6ff;line-height:1.7">محرّك التزامن اللحظي يربط صفقاتك بعمق السوق مباشرة عبر عقد شبكة عالية السرعة</div>'
++'</div>'
+// ===== Stats =====
++'<div style="display:flex;gap:10px;margin-top:14px">'
++'<div style="flex:1;background:linear-gradient(160deg,rgba(60,110,180,.14),rgba(10,20,40,.55));border:1px solid rgba(150,195,245,.25);border-radius:16px;padding:13px 8px;text-align:center"><div style="font-size:17px;font-weight:700;color:#00e5ff">1,284</div><div style="font-size:10.5px;color:#8fb4dd;margin-top:4px">صفقة متزامنة</div></div>'
++'<div style="flex:1;background:linear-gradient(160deg,rgba(60,110,180,.14),rgba(10,20,40,.55));border:1px solid rgba(150,195,245,.25);border-radius:16px;padding:13px 8px;text-align:center"><div style="font-size:17px;font-weight:700;color:#2fe6a8">98.6%</div><div style="font-size:10.5px;color:#8fb4dd;margin-top:4px">نسبة النجاح</div></div>'
++'<div style="flex:1;background:linear-gradient(160deg,rgba(60,110,180,.14),rgba(10,20,40,.55));border:1px solid rgba(150,195,245,.25);border-radius:16px;padding:13px 8px;text-align:center"><div style="font-size:17px;font-weight:700;color:#9fdcff">42ms</div><div style="font-size:10.5px;color:#8fb4dd;margin-top:4px">زمن الاستجابة</div></div>'
++'</div>'
+// ===== Sync button =====
++'<div onclick="this.firstElementChild.textContent=\'جاري التزامن...\';this.style.animation=\'trdglow 1.2s infinite\'" style="margin-top:16px;border-radius:16px;background:linear-gradient(135deg,#1a5fb4 0%,#2f7bf6 55%,#00b8e5 100%);border:1px solid rgba(160,215,255,.5);padding:15px;text-align:center;cursor:pointer;box-shadow:0 10px 30px rgba(20,90,220,.45),inset 0 1px 1px rgba(220,240,255,.4)"><span style="font-size:15px;font-weight:700;color:#fff;letter-spacing:.3px">بدء التزامن الآن</span></div>'
+// ===== Live pairs =====
++'<div style="margin-top:18px;background:linear-gradient(160deg,rgba(60,110,180,.12),rgba(10,20,40,.5));border:1px solid rgba(150,195,245,.22);border-radius:18px;padding:14px 14px 6px">'
++'<div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:#cfe6ff;margin-bottom:8px"><i style="width:8px;height:8px;border-radius:50%;background:#00e5ff;box-shadow:0 0 10px #00e5ff;animation:trdpls 1.2s infinite"></i>قنوات التزامن المباشرة</div>'
++'<div style="display:flex;align-items:center;gap:10px;padding:11px 2px;border-bottom:1px solid rgba(150,195,245,.12)"><img src="https://assets.coingecko.com/coins/images/1/large/bitcoin.png" alt="BTC" style="width:28px;height:28px;border-radius:50%"><div style="flex:1"><div style="font-size:13px;font-weight:700">BTC / USDT</div><div style="font-size:10.5px;color:#8fb4dd;margin-top:2px">تزامن نشط · عمق كامل</div></div><div style="text-align:left"><div style="font-size:13px;font-weight:700">$67,420.10</div><div style="font-size:11px;color:#2fe6a8;margin-top:2px">↑ 1.24%</div></div></div>'
++'<div style="display:flex;align-items:center;gap:10px;padding:11px 2px;border-bottom:1px solid rgba(150,195,245,.12)"><img src="https://assets.coingecko.com/coins/images/279/large/ethereum.png" alt="ETH" style="width:28px;height:28px;border-radius:50%"><div style="flex:1"><div style="font-size:13px;font-weight:700">ETH / USDT</div><div style="font-size:10.5px;color:#8fb4dd;margin-top:2px">تزامن نشط · عمق كامل</div></div><div style="text-align:left"><div style="font-size:13px;font-weight:700">$3,512.48</div><div style="font-size:11px;color:#2fe6a8;margin-top:2px">↑ 0.86%</div></div></div>'
++'<div style="display:flex;align-items:center;gap:10px;padding:11px 2px"><img src="https://assets.coingecko.com/coins/images/4128/large/solana.png" alt="SOL" style="width:28px;height:28px;border-radius:50%"><div style="flex:1"><div style="font-size:13px;font-weight:700">SOL / USDT</div><div style="font-size:10.5px;color:#8fb4dd;margin-top:2px">تزامن نشط · عمق كامل</div></div><div style="text-align:left"><div style="font-size:13px;font-weight:700">$162.75</div><div style="font-size:11px;color:#ff7a8a;margin-top:2px">↓ 0.84%</div></div></div>'
++'</div>'
+// ===== Note =====
++'<div style="margin-top:14px;font-size:11px;color:#6d8fb8;text-align:center;line-height:1.8">يتم تحديث بيانات التزامن لحظياً عبر بروتوكول ExCoreX الآمن</div>'
++'</div>';
