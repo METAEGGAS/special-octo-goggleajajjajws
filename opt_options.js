@@ -1,0 +1,144 @@
+/* ===== ExCoreX Options Page - Dynamic Injection Module ===== */
+var optHTML='';
+(function(){
+'use strict';
+
+/* ---------- CSS (matches main site palette/sizes exactly) ---------- */
+var css=''
++'.opt{display:none;position:fixed;inset:0;z-index:100;overflow-y:auto;background:radial-gradient(ellipse 130% 70% at 50% -10%,#16345f 0%,#0c2144 35%,#061224 65%,#030b18 100%)}'
++'.optin{max-width:520px;margin:0 auto;min-height:100vh;padding:26px 14px 140px;direction:ltr}'
++'.optg{display:grid;grid-template-columns:minmax(0,41%) minmax(0,1fr);gap:13px;align-items:start}'
++'.obb{padding-top:2px}'
++'.obh{display:flex;justify-content:space-between;margin-bottom:8px}'
++'.obh .c{font-size:12px;color:#60728c;line-height:1.35;text-align:center}'
++'.obh .c small{display:block;font-size:10.5px;color:#4c5f7c;font-weight:400}'
++'.obr2{display:flex;justify-content:space-between;padding:3.5px 1px;font-size:12.5px;letter-spacing:.2px;font-variant-numeric:tabular-nums}'
++'.obr2 .p{font-weight:600}'
++'.obr2 .q{color:#e8eef8;font-weight:500}'
++'.obg .p{color:#26a69a}'
++'.obs .p{color:#ef5350}'
++'.obs{margin-top:16px}'
++'.bst{display:flex;align-items:center;background:rgba(9,18,34,.72);border:1px solid #24406b;border-radius:12px;padding:4px;height:52px}'
++'.bst button{flex:1;height:100%;border:0;background:none;color:#8ba2c2;font-family:inherit;font-size:16.5px;font-weight:700;cursor:pointer;border-radius:10px;transition:all .18s}'
++'.bst button.onb{color:#fff;background:linear-gradient(135deg,#2f8bff,#0d47a1);box-shadow:0 3px 10px rgba(20,90,220,.55),inset 0 1px 2px rgba(200,230,255,.4)}'
++'.bst button.ons{color:#fff;background:linear-gradient(135deg,#ff6b6b,#b21f2d);box-shadow:0 3px 10px rgba(200,40,60,.5),inset 0 1px 2px rgba(255,210,210,.35)}'
++'.olbl{margin:16px 0 9px;text-align:center;font-size:14.5px;font-weight:600;color:#e8eef8}'
++'.tms{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;background:rgba(10,20,38,.6);border:1px solid #1c3d6e;border-radius:12px;padding:10px}'
++'.tm{text-align:center;padding:10px 2px 9px;border-radius:9px;cursor:pointer;transition:background .15s}'
++'.tm .tl{font-size:15px;font-weight:700;color:#e8eef8}'
++'.tm .td{width:22px;height:2px;background:#dbe6f5;border-radius:2px;margin:7px auto}'
++'.tm .tp{font-size:12.5px;color:#aebdd3;font-weight:600}'
++'.tm.on{background:rgba(47,123,246,.38);box-shadow:inset 0 1px 3px rgba(160,205,255,.35)}'
++'.cdo{margin-top:12px;border:1px solid #1e3354;border-radius:8px;background:rgba(9,17,31,.85);padding:12px 8px;text-align:center;font-size:14.5px;font-weight:600;color:#fff;letter-spacing:1.5px;font-variant-numeric:tabular-nums;direction:ltr}'
++'.aml{margin:13px 0 7px;font-size:13px;color:#9fb3d1;font-weight:600;direction:rtl;text-align:right}'
++'.amt{display:flex;align-items:center;background:rgba(11,19,32,.85);border:1px solid #1e3354;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.3)}'
++'.amt input{width:100%;background:none;border:0;outline:0;color:#e8eef8;font-size:13px;font-family:inherit;text-align:center;padding:14px 8px;direction:rtl}'
++'.amt input::placeholder{color:#7e93b3}'
++'.infr{display:flex;align-items:center;justify-content:space-between;direction:rtl;margin-top:12px}'
++'.infr .k{font-size:13.5px;color:#c9d8ec;font-weight:600}'
++'.infr .v{font-size:14px;color:#fff;font-weight:700;direction:ltr}'
++'.gob{width:100%;margin-top:20px;padding:15px;font-size:16px;font-weight:700;color:#fff;font-family:inherit;border:0;border-radius:12px;background:linear-gradient(180deg,#2ecc71,#27ae60);box-shadow:0 5px 15px rgba(46,204,113,.35),inset 0 1px 2px rgba(220,255,235,.4);cursor:pointer;transition:filter .15s}'
++'.gob:active{filter:brightness(.9)}'
++'.gob.sell{background:linear-gradient(180deg,#ff6b6b,#c0392b);box-shadow:0 5px 15px rgba(220,60,60,.35),inset 0 1px 2px rgba(255,220,220,.4)}'
++'.otb{display:flex;justify-content:flex-start;gap:34px;margin-top:26px;border-bottom:1px solid rgba(120,160,220,.14);direction:rtl;padding:0 6px}'
++'.ott{position:relative;padding:10px 2px 13px;font-size:15px;color:#8ba2c2;font-weight:600;cursor:pointer}'
++'.ott.on{color:#fff;font-weight:700}'
++'.ott.on::after{content:"";position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);width:44px;height:3.5px;border-radius:3px;background:#fff;box-shadow:0 0 8px rgba(255,255,255,.6)}'
++'.oemp{padding:46px 0 20px;text-align:center;color:#8ba2c2;font-size:14px;display:none}'
++'.oemp img{width:86px;opacity:.85;margin-bottom:10px}';
+
+/* ---------- HTML (pixel copy of the screenshot) ---------- */
+var html=''
++'<div class="optin">'
++' <div class="optg">'
+/* order book (left column) */
++'  <div class="obb">'
++'   <div class="obh">'
++'    <div class="c">السعر<small>(USDT)</small></div>'
++'    <div class="c">الكمية<small>(BTC)</small></div>'
++'   </div>'
++'   <div class="obg">'
++'    <div class="obr2"><span class="p">73,190.8000</span><span class="q">0.11</span></div>'
++'    <div class="obr2"><span class="p">73,190.2000</span><span class="q">0.00</span></div>'
++'    <div class="obr2"><span class="p">73,185.2600</span><span class="q">0.00</span></div>'
++'    <div class="obr2"><span class="p">73,184.3600</span><span class="q">0.00</span></div>'
++'    <div class="obr2"><span class="p">73,183.9700</span><span class="q">0.00</span></div>'
++'    <div class="obr2"><span class="p">73,183.8100</span><span class="q">0.00</span></div>'
++'   </div>'
++'   <div class="obs">'
++'    <div class="obr2"><span class="p">73,190.8100</span><span class="q">0.7515</span></div>'
++'    <div class="obr2"><span class="p">73,194.3800</span><span class="q">0.0025</span></div>'
++'    <div class="obr2"><span class="p">73,196.4000</span><span class="q">0.1452</span></div>'
++'    <div class="obr2"><span class="p">73,196.4100</span><span class="q">0.4865</span></div>'
++'    <div class="obr2"><span class="p">73,200.1500</span><span class="q">0.1920</span></div>'
++'    <div class="obr2"><span class="p">73,203.4000</span><span class="q">0.0958</span></div>'
++'   </div>'
++'  </div>'
+/* trading panel (right column) */
++'  <div class="optp">'
++'   <div class="bst">'
++'    <button id="optBuy" class="onb" onclick="optSide(1)">شراء</button>'
++'    <button id="optSell" onclick="optSide(0)">بيع</button>'
++'   </div>'
++'   <div class="olbl">اختر وقت الانتهاء</div>'
++'   <div class="tms">'
++'    <div class="tm on" data-tm="1" onclick="optTm(this)"><div class="tl">1min</div><div class="td"></div><div class="tp">50.00%</div></div>'
++'    <div class="tm" data-tm="5" onclick="optTm(this)"><div class="tl">5min</div><div class="td"></div><div class="tp">50.00%</div></div>'
++'    <div class="tm" data-tm="10" onclick="optTm(this)"><div class="tl">10min</div><div class="td"></div><div class="tp">50.00%</div></div>'
++'   </div>'
++'   <div class="cdo" id="optCd">00:29 - 00:30</div>'
++'   <div class="aml">USDT مبلغ الشراء</div>'
++'   <div class="amt"><input inputmode="decimal" placeholder="الحد الأدنى 1 ، الحد الأقصى 10000"></div>'
++'   <div class="infr"><span class="k">الرصيد المتوفر</span><span class="v">1008.7 USDT</span></div>'
++'   <div class="infr"><span class="k">الرسوم</span><span class="v">0.00 %</span></div>'
++'   <button class="gob" id="optGo" onclick="optExec()">BTC شراء للارتفاع</button>'
++'  </div>'
++' </div>'
+/* bottom tabs */
++' <div class="otb">'
++'  <div class="ott on" onclick="optTab(this)">الطلب الحالي</div>'
++'  <div class="ott" onclick="optTab(this)">الطلبات السابقة</div>'
++' </div>'
++' <div class="oemp" id="optEmp"><img src="https://gulfxdl.com/assets/empty-light-B1A8k_0V.png" alt=""><p>لا يوجد بيانات</p></div>'
++'</div>';
+
+/* ---------- inject style + markup ---------- */
+var st=document.createElement('style');st.textContent=css;document.head.appendChild(st);
+var w=document.createElement('div');w.className='opt';w.id='opt';w.innerHTML=html;document.body.appendChild(w);
+
+/* ---------- dynamic behaviour ---------- */
+var cdT=null;
+function pad(n){return(n<10?'0':'')+n}
+function tick(){var s=30-(Math.floor(Date.now()/1000)%30);var a=Math.max(s-1,0);var el=document.getElementById('optCd');if(el)el.textContent='00:'+pad(a)+' - 00:'+pad(s)}
+window.optTm=function(el){document.querySelectorAll('#opt .tm').forEach(function(t){t.classList.remove('on')});el.classList.add('on')};
+window.optSide=function(b){var bb=document.getElementById('optBuy'),ss=document.getElementById('optSell'),go=document.getElementById('optGo');if(b){bb.classList.add('onb');ss.classList.remove('ons');go.classList.remove('sell');go.textContent='BTC شراء للارتفاع'}else{ss.classList.add('ons');bb.classList.remove('onb');go.classList.add('sell');go.textContent='BTC بيع للانخفاض'}};
+window.optTab=function(el){document.querySelectorAll('#opt .ott').forEach(function(t){t.classList.remove('on')});el.classList.add('on');var e=document.getElementById('optEmp');if(e)e.style.display='block'};
+window.optExec=function(){var go=document.getElementById('optGo');var o=go.textContent;go.textContent='جاري تنفيذ الطلب...';go.style.opacity='.75';setTimeout(function(){go.textContent=o;go.style.opacity='1'},1100)};
+
+/* ---------- open / close (same pattern as other sections) ---------- */
+window.openOpt=function(){
+ if(typeof hideAll==='function')hideAll();
+ w.style.display='block';
+ var n=document.querySelector('.nav');if(n)n.style.display='flex';
+ if(typeof setNav==='function')setNav(3);
+ window.scrollTo(0,0);
+ if(typeof flashLd==='function')flashLd();
+ tick();if(cdT)clearInterval(cdT);cdT=setInterval(tick,1000);
+};
+window.closeOpt=function(){
+ w.style.display='none';
+ if(cdT){clearInterval(cdT);cdT=null}
+ if(typeof goHome==='function')goHome();
+};
+
+/* ---------- extend hideAll so other sections hide this panel ---------- */
+if(typeof hideAll==='function'){
+ var _h=hideAll;
+ window.hideAll=function(){_h();w.style.display='none'};
+}
+
+/* ---------- hook the nav "الخيارات" item ---------- */
+document.querySelectorAll('.ni').forEach(function(el,i){
+ if(i===3||el.querySelector('[data-t="navOptions"]')){el.setAttribute('onclick','openOpt()')}
+});
+})();
