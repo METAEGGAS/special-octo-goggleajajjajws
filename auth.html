@@ -5,54 +5,12 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>ExCoreX - Login</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,'Segoe UI',Arial,sans-serif}
-body{min-height:100vh;background:radial-gradient(ellipse 140% 60% at 50% -5%,#1a5fd0 0%,#0d3a8f 22%,#071e4d 45%,#040f28 70%,#02081a 100%);display:flex;flex-direction:column;align-items:center;overflow-x:hidden}
-.hero{width:100%;max-width:430px;padding:38px 22px 0;text-align:center;position:relative;z-index:2}
-.lgo{height:44px;mix-blend-mode:screen;filter:brightness(1.15)}
-.bdg{display:inline-flex;align-items:center;gap:7px;margin-top:22px;padding:8px 16px;background:rgba(10,25,60,.75);border:1px solid rgba(90,150,255,.28);border-radius:999px;font-size:13px;color:#dbe7ff;font-weight:500;backdrop-filter:blur(4px)}
-.bdg svg{width:15px;height:15px;stroke:#8fb6ff}
-h1{margin-top:26px;font-size:34px;line-height:1.28;font-weight:800;color:#fff;letter-spacing:.3px}
-h1 b{color:#3d8bff;font-weight:800}
-.coin{width:min(78%,320px);margin:24px auto -38px;display:block;mix-blend-mode:screen;filter:brightness(1.1);position:relative;z-index:3}
-.card{width:100%;max-width:430px;margin-top:auto;background:#0a1128;border-radius:34px 34px 0 0;padding:34px 22px 46px;position:relative;z-index:1;box-shadow:0 -18px 50px rgba(0,10,40,.6)}
-.card::before{content:"";position:absolute;top:-34px;left:0;right:0;height:35px;background:#0a1128;clip-path:polygon(0 100%,0 62%,12% 38%,28% 16%,50% 0,72% 16%,88% 38%,100% 62%,100% 100%)}
-.tabs{display:flex;gap:26px;margin-bottom:24px}
-.tabs span{font-size:16.5px;font-weight:700;color:#5c6c8f;cursor:pointer;padding-bottom:2px}
-.tabs span.on{color:#fff}
-.fld{display:flex;align-items:center;background:#131c36;border:1px solid #1e2a4d;border-radius:12px;margin-bottom:16px;height:56px;padding:0 16px;transition:border-color .15s}
-.fld:focus-within{border-color:#2f6fd8}
-.fld input{flex:1;min-width:0;background:none;border:0;outline:0;color:#e8eef8;font-size:15px;height:100%}
-.fld input::placeholder{color:#5c6c8f}
-.eye{width:22px;height:22px;stroke:#5c6c8f;cursor:pointer;flex-shrink:0}
-.cap{width:88px;height:40px;border-radius:7px;cursor:pointer;flex-shrink:0;background:#fff}
-.btn{width:100%;height:56px;margin-top:6px;border:0;border-radius:12px;background:linear-gradient(180deg,#3d8bff,#1a5cff);color:#fff;font-size:16.5px;font-weight:700;cursor:pointer;box-shadow:0 6px 18px rgba(30,100,255,.4),inset 0 1px 2px rgba(190,220,255,.5);transition:filter .15s}
-.btn:active{filter:brightness(.88)}
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,'Segoe UI',Arial,sans-serif}body{min-height:100vh;background:radial-gradient(ellipse 140% 60% at 50% -5%,#1a5fd0 0%,#0d3a8f 22%,#071e4d 45%,#040f28 70%,#02081a 100%);display:flex;flex-direction:column;align-items:center;overflow-x:hidden}.hero{width:100%;max-width:430px;padding:26px 22px 0;text-align:center;position:relative;z-index:1}.lgo{height:40px;mix-blend-mode:screen;filter:brightness(1.15)}.bdg{display:inline-flex;align-items:center;gap:7px;margin-top:14px;padding:7px 15px;background:rgba(10,25,60,.75);border:1px solid rgba(90,150,255,.28);border-radius:999px;font-size:13px;color:#dbe7ff;font-weight:500;backdrop-filter:blur(4px)}.bdg svg{width:15px;height:15px;stroke:#8fb6ff}h1{margin-top:15px;font-size:30px;line-height:1.25;font-weight:800;color:#fff;letter-spacing:.3px}h1 b{color:#3d8bff;font-weight:800}.coin{width:min(72%,290px);margin:12px auto -32px;display:block;mix-blend-mode:screen;filter:brightness(1.1);position:relative;z-index:1}.card{width:100%;max-width:430px;margin-top:auto;background:#0a1128;padding:28px 22px 36px;position:relative;z-index:2;box-shadow:0 -18px 50px rgba(0,10,40,.6)}.card::before{content:"";position:absolute;top:-34px;left:0;right:0;height:35px;background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 35" preserveAspectRatio="none"><path d="M0 1.5 Q50 33 100 1.5 L100 35 L0 35 Z" fill="%230a1128"/><path d="M0 1.5 Q50 33 100 1.5" fill="none" stroke="%23bcd6ff" stroke-width="1.2"/></svg>') 0 0/100% 100% no-repeat}.card::after{content:"";position:absolute;top:-44px;left:0;right:0;height:45px;pointer-events:none;background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 45" preserveAspectRatio="none"><path d="M0 11 Q50 42.5 100 11" fill="none" stroke="%23e8f2ff" stroke-width="1.6"/></svg>') 0 0/100% 100% no-repeat,radial-gradient(60% 85% at 50% 100%,rgba(140,185,255,.45),transparent 72%);filter:blur(1.8px)}.tabs{display:flex;gap:26px;margin-bottom:18px}.tabs span{font-size:16.5px;font-weight:700;color:#5c6c8f;cursor:pointer;padding-bottom:2px}.tabs span.on{color:#fff}.fld{display:flex;align-items:center;background:#131c36;border:1px solid #1e2a4d;border-radius:12px;margin-bottom:12px;height:52px;padding:0 16px;transition:border-color .15s}.fld:focus-within{border-color:#2f6fd8}.fld input{flex:1;min-width:0;background:none;border:0;outline:0;color:#e8eef8;font-size:15px;height:100%}.fld input::placeholder{color:#5c6c8f}.eye{width:22px;height:22px;stroke:#5c6c8f;cursor:pointer;flex-shrink:0}.cap{width:88px;height:40px;border-radius:7px;cursor:pointer;flex-shrink:0;background:#fff}.btn{width:100%;height:52px;margin-top:4px;border:0;border-radius:12px;background:linear-gradient(180deg,#3d8bff,#1a5cff);color:#fff;font-size:16.5px;font-weight:700;cursor:pointer;box-shadow:0 6px 18px rgba(30,100,255,.4),inset 0 1px 2px rgba(190,220,255,.5);transition:filter .15s}.btn:active{filter:brightness(.88)}
 </style>
 </head>
 <body>
-<div class="hero">
-<img class="lgo" src="https://i.ibb.co/tMSFK4WF/IMG.png" alt="ExCoreX">
-<div><span class="bdg"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-7 9 7"/><path d="M5 9v11h14V9"/><path d="M9 20v-6h6v6"/></svg>Trade cryptocurrencies anytime</span></div>
-<h1>Power up your<br><b>cryptocurrency</b><br>journey</h1>
-<img class="coin" src="https://i.ibb.co/2YFLgmNM/IMG.png" alt="">
-</div>
-<div class="card">
-<div class="tabs"><span class="on" id="tE" onclick="sw(1)">Email</span><span id="tP" onclick="sw(0)">Phone</span></div>
-<div class="fld"><input id="idIn" type="email" placeholder="Email"></div>
-<div class="fld"><input id="pw" type="password" placeholder="Password">
-<svg class="eye" id="eye" onclick="epw()" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg></div>
-<div class="fld"><input id="capIn" placeholder="Please enter the verification code"><canvas class="cap" id="cap" width="88" height="40" onclick="drawCap()"></canvas></div>
-<button class="btn" onclick="login()">Log In</button>
-</div>
-<script>
-var capCode='';
-function drawCap(){var c=document.getElementById('cap'),x=c.getContext('2d'),ch='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',cols=['#27ae60','#2980b9','#8e44ad','#c0392b','#16a085'];capCode='';x.fillStyle='#fff';x.fillRect(0,0,88,40);
-for(var i=0;i<3;i++){x.strokeStyle='rgba('+(Math.random()*150|0)+','+(Math.random()*150|0)+','+(Math.random()*150|0)+',.6)';x.beginPath();x.moveTo(Math.random()*88,Math.random()*40);x.lineTo(Math.random()*88,Math.random()*40);x.stroke()}
-for(i=0;i<4;i++){var t=ch[Math.random()*ch.length|0];capCode+=t;x.save();x.font='bold '+(20+Math.random()*6)+'px cursive';x.fillStyle=cols[Math.random()*cols.length|0];x.translate(10+i*19,26+Math.random()*5-2);x.rotate((Math.random()-.5)*.7);x.fillText(t,0,0);x.restore()}}
-drawCap();
-function epw(){var p=document.getElementById('pw');p.type=p.type==='password'?'text':'password'}
-function sw(e){document.getElementById('tE').className=e?'on':'';document.getElementById('tP').className=e?'':'on';var i=document.getElementById('idIn');i.placeholder=e?'Email':'Phone';i.type=e?'email':'tel';i.value=''}
-function login(){var v=document.getElementById('capIn').value.trim().toUpperCase();if(v&&v!==capCode){alert('Verification code is incorrect');drawCap();document.getElementById('capIn').value='';return}var b=document.querySelector('.btn'),o=b.textContent;b.textContent='Logging in...';b.style.opacity='.75';setTimeout(function(){b.textContent=o;b.style.opacity='1';drawCap()},1200)}
-</script>
+<div class="hero"><img class="lgo" src="https://i.ibb.co/tMSFK4WF/IMG.png" alt="ExCoreX"><div><span class="bdg"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-7 9 7"/><path d="M5 9v11h14V9"/><path d="M9 20v-6h6v6"/></svg>Trade cryptocurrencies anytime</span></div><h1>Power up your<br><b>cryptocurrency</b><br>journey</h1><img class="coin" src="https://i.ibb.co/2YFLgmNM/IMG.png" alt=""></div>
+<div class="card"><div class="tabs"><span class="on" id="tE" onclick="sw(1)">Email</span><span id="tP" onclick="sw(0)">Phone</span></div><div class="fld"><input id="idIn" type="email" placeholder="Email"></div><div class="fld"><input id="pw" type="password" placeholder="Password"><svg class="eye" id="eye" onclick="epw()" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg></div><div class="fld"><input id="capIn" placeholder="Please enter the verification code"><canvas class="cap" id="cap" width="88" height="40" onclick="drawCap()"></canvas></div><button class="btn" onclick="login()">Log In</button></div>
+<script>var capCode='';function drawCap(){var c=document.getElementById('cap'),x=c.getContext('2d'),ch='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',cols=['#27ae60','#2980b9','#8e44ad','#c0392b','#16a085'];capCode='';x.fillStyle='#fff';x.fillRect(0,0,88,40);for(var i=0;i<3;i++){x.strokeStyle='rgba('+(Math.random()*150|0)+','+(Math.random()*150|0)+','+(Math.random()*150|0)+',.6)';x.beginPath();x.moveTo(Math.random()*88,Math.random()*40);x.lineTo(Math.random()*88,Math.random()*40);x.stroke()}for(i=0;i<4;i++){var t=ch[Math.random()*ch.length|0];capCode+=t;x.save();x.font='bold '+(20+Math.random()*6)+'px cursive';x.fillStyle=cols[Math.random()*cols.length|0];x.translate(10+i*19,26+Math.random()*5-2);x.rotate((Math.random()-.5)*.7);x.fillText(t,0,0);x.restore()}}drawCap();function epw(){var p=document.getElementById('pw');p.type=p.type==='password'?'text':'password'}function sw(e){document.getElementById('tE').className=e?'on':'';document.getElementById('tP').className=e?'':'on';var i=document.getElementById('idIn');i.placeholder=e?'Email':'Phone';i.type=e?'email':'tel';i.value=''}function login(){var v=document.getElementById('capIn').value.trim().toUpperCase();if(v&&v!==capCode){alert('Verification code is incorrect');drawCap();document.getElementById('capIn').value='';return}var b=document.querySelector('.btn'),o=b.textContent;b.textContent='Logging in...';b.style.opacity='.75';setTimeout(function(){b.textContent=o;b.style.opacity='1';drawCap()},1200)}</script>
 </body>
 </html>
