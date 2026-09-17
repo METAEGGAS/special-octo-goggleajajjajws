@@ -1,4 +1,5 @@
-trdHTML='<style>@keyframes trdpls{0%,100%{opacity:1}50%{opacity:.3}}@keyframes trdglow{0%,100%{box-shadow:0 10px 30px rgba(20,90,220,.45),0 0 18px rgba(0,229,255,.25)}50%{box-shadow:0 10px 30px rgba(20,90,220,.6),0 0 34px rgba(0,229,255,.5)}}@keyframes trdspin{to{transform:rotate(360deg)}}</style>'
+
+var trdHTML='<style>@keyframes trdpls{0%,100%{opacity:1}50%{opacity:.3}}@keyframes trdglow{0%,100%{box-shadow:0 10px 30px rgba(20,90,220,.45),0 0 18px rgba(0,229,255,.25)}50%{box-shadow:0 10px 30px rgba(20,90,220,.6),0 0 34px rgba(0,229,255,.5)}}@keyframes trdspin{to{transform:rotate(360deg)}}@keyframes trdspinrev{to{transform:rotate(-360deg)}}</style>'
 +'<div style="padding:8px 14px 40px;background:#050a14;min-height:100%">'
 // ===== Top bar: السجل (top right) =====
 +'<div style="display:flex;align-items:center;justify-content:flex-end;padding:6px 2px 14px">'
@@ -99,33 +100,35 @@ function trdUsesLast24h(uses){
   return c;
 }
 
-// ===== طبقة التحميل السوداء الشفافة =====
+// ===== أيقونة دوران: قطعتان (حمراء وخضراء) تدوران عكس بعض بسرعة — بدون مربع أو خلفية أو تغطية =====
 function trdShowLoading(){
   trdHideLoading();
   var ov=document.createElement('div');
   ov.id='trdOverlay';
-  ov.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.72);z-index:99998;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px';
-  ov.innerHTML='<div style="width:52px;height:52px;border:4px solid rgba(255,255,255,.15);border-top-color:#2f7bf6;border-radius:50%;animation:trdspin .8s linear infinite"></div>'
-  +'<div style="font-size:14px;font-weight:600;color:#cfe2ff;letter-spacing:.3px">جاري التحقق من الكود...</div>';
+  ov.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;z-index:99998;display:flex;align-items:center;justify-content:center;pointer-events:none;background:transparent';
+  ov.innerHTML='<div style="position:relative;width:58px;height:58px">'
+  +'<div style="position:absolute;top:0;left:0;width:58px;height:58px;box-sizing:border-box;border:5px solid transparent;border-top-color:#ef4444;border-radius:50%;animation:trdspin .5s linear infinite"></div>'
+  +'<div style="position:absolute;top:10px;left:10px;width:38px;height:38px;box-sizing:border-box;border:5px solid transparent;border-top-color:#22c55e;border-radius:50%;animation:trdspinrev .5s linear infinite"></div>'
+  +'</div>';
   document.body.appendChild(ov);
 }
 function trdHideLoading(){var o=document.getElementById('trdOverlay');if(o)o.remove();}
 
-// ===== رسالة نجاح / خطأ بملء الشاشة =====
-function trdShowResult(ok,title,msg){
+// ===== رسالة النتيجة: مربع رمادي صغير بالأيقونة وكلمة أسفلها — لا يغطي الشاشة =====
+function trdShowResult(ok){
   trdHideLoading();
   var old=document.getElementById('trdResult');if(old)old.remove();
-  var color=ok?'#22c55e':'#ef4444';
   var icon=ok
-    ?'<svg width="74" height="74" viewBox="0 0 24 24" fill="none" stroke="'+color+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="8 12.5 11 15.5 16 9.5"/></svg>'
-    :'<svg width="74" height="74" viewBox="0 0 24 24" fill="none" stroke="'+color+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>';
+    ?'https://i.ibb.co/prhVWmWy/IMG.png'
+    :'https://i.ibb.co/6RN7BvjS/file-00000000baa882109658b900050054ca.png';
+  var txt=ok?'تم اتباع الطلب بنجاح':'نفذ وقت الطلب';
   var d=document.createElement('div');
   d.id='trdResult';
-  d.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(3,7,17,.96);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px';
-  d.innerHTML='<div style="margin-bottom:18px;filter:drop-shadow(0 0 18px '+(ok?'rgba(34,197,94,.5)':'rgba(239,68,68,.5)')+')">'+icon+'</div>'
-  +'<div style="font-size:24px;font-weight:800;color:'+color+';margin-bottom:10px">'+title+'</div>'
-  +'<div style="font-size:15px;font-weight:500;color:#e8f1ff;line-height:1.9;max-width:320px">'+msg+'</div>'
-  +'<div onclick="this.parentElement.remove()" style="margin-top:30px;border-radius:10px;background:linear-gradient(135deg,#1a5fb4 0%,#2f7bf6 55%,#00b8e5 100%);border:1px solid rgba(160,215,255,.5);padding:13px 44px;cursor:pointer;box-shadow:0 10px 30px rgba(20,90,220,.45)"><span style="font-size:15px;font-weight:700;color:#fff">حسناً</span></div>';
+  d.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;display:flex;align-items:center;justify-content:center;pointer-events:none;background:transparent';
+  d.innerHTML='<div onclick="document.getElementById(\'trdResult\').remove()" style="pointer-events:auto;background:#3f444f;border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:22px 34px;display:flex;flex-direction:column;align-items:center;gap:12px;cursor:pointer;box-shadow:0 12px 34px rgba(0,0,0,.5)">'
+  +'<img src="'+icon+'" alt="" style="width:84px;height:84px;object-fit:contain;display:block">'
+  +'<div style="font-size:15px;font-weight:700;color:#e8f1ff;text-align:center;letter-spacing:.2px">'+txt+'</div>'
+  +'</div>';
   document.body.appendChild(d);
 }
 
@@ -135,8 +138,8 @@ async function trdSync(){
   var btn=document.getElementById('trdSyncBtn'),txt=document.getElementById('trdSyncBtnTxt');
   var input=document.getElementById('trdCodeInput');
   var code=input?input.value.trim().toUpperCase():'';
-  if(!code){trdShowResult(false,'خطأ','يرجى إدخال كود الطلب أولاً');return;}
-  if(!trdFB.ready){trdShowResult(false,'خطأ','جاري التحقق من الجلسة، حاول مرة أخرى بعد ثوانٍ');return;}
+  if(!code){trdShowResult(false);return;}
+  if(!trdFB.ready){trdShowResult(false);return;}
   trdFB.busy=true;
   if(txt)txt.textContent='جاري التزامن...';
   if(btn)btn.style.animation='trdglow 1.2s infinite';
@@ -149,15 +152,15 @@ async function trdSync(){
     var udata=userSnap.exists()?userSnap.data():{balance:0,uses:[]};
     // 2) التحقق من حد 3 أكواد خلال آخر 24 ساعة
     if(trdUsesLast24h(udata.uses)>=TRD_MAX_CODES_PER_DAY){
-      trdShowResult(false,'خطأ','لقد تجاوزت الحد المسموح: 3 أكواد خلال 24 ساعة');
+      trdShowResult(false);
       return;
     }
     // 3) البحث عن الكود
     var q=fs.query(fs.collection(trdFB.db,'codes'),fs.where('code','==',code));
     var qs=await fs.getDocs(q);
-    if(qs.empty){trdShowResult(false,'خطأ','الكود غير صالح');return;}
+    if(qs.empty){trdShowResult(false);return;}
     var codeRef=qs.docs[0].ref;
-    if(qs.docs[0].data().used){trdShowResult(false,'خطأ','هذا الكود تم استخدامه من قبل');return;}
+    if(qs.docs[0].data().used){trdShowResult(false);return;}
     // 4) معاملة ذرّية: تعليم الكود كمستخدم + احتساب الربح وإضافته للرصيد
     var result=await fs.runTransaction(trdFB.db,async function(tx){
       var cSnap=await tx.get(codeRef);
@@ -181,12 +184,9 @@ async function trdSync(){
       if(balEl)balEl.textContent=result.newBalance.toFixed(2);
       localStorage.setItem('trdLastSync',JSON.stringify({code:code,profit:result.profit,balance:result.newBalance,at:Date.now()}));
     }catch(e){}
-    trdShowResult(true,'تم التزامن بنجاح','تمت إضافة ربح '+result.profit.toFixed(4)+' إلى رصيدك<br>رصيدك الجديد: '+result.newBalance.toFixed(4));
+    trdShowResult(true);
   }catch(e){
-    if(e==='used')trdShowResult(false,'خطأ','هذا الكود تم استخدامه من قبل');
-    else if(e==='invalid')trdShowResult(false,'خطأ','الكود غير صالح');
-    else if(e==='limit')trdShowResult(false,'خطأ','لقد تجاوزت الحد المسموح: 3 أكواد خلال 24 ساعة');
-    else trdShowResult(false,'خطأ','حدث خطأ أثناء التحقق، حاول مرة أخرى');
+    trdShowResult(false);
   }finally{
     trdHideLoading();
     trdFB.busy=false;
