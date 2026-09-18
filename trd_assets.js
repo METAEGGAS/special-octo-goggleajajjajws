@@ -1,7 +1,7 @@
-var trdHTML='<style>@keyframes trdpls{0%,100%{opacity:1}50%{opacity:.3}}@keyframes trdglow{0%,100%{box-shadow:0 10px 30px rgba(20,90,220,.45),0 0 18px rgba(0,229,255,.25)}50%{box-shadow:0 10px 30px rgba(20,90,220,.6),0 0 34px rgba(0,229,255,.5)}}@keyframes trdspin{to{transform:rotate(360deg)}}@keyframes trdspinrev{to{transform:rotate(-360deg)}}</style>'
+var trdHTML='<style>@keyframes trdpls{0%,100%{opacity:1}50%{opacity:.3}}@keyframes trdglow{0%,100%{box-shadow:0 10px 30px rgba(20,90,220,.45),0 0 18px rgba(0,229,255,.25)}50%{box-shadow:0 10px 30px rgba(20,90,220,.6),0 0 34px rgba(0,229,255,.5)}}@keyframes trdspin{to{transform:rotate(360deg)}}@keyframes trdspinrev{to{transform:rotate(-360deg)}}@keyframes trdslidein{from{transform:translateX(100%)}to{transform:translateX(0)}}@keyframes trdfadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}</style>'
 +'<div style="padding:8px 14px 40px;background:#050a14;min-height:100%">'
 +'<div style="display:flex;align-items:center;justify-content:flex-end;padding:6px 2px 14px">'
-+'<div onclick="goHome()" style="display:flex;align-items:center;gap:7px;cursor:pointer">'
++'<div onclick="trdOpenLog()" style="display:flex;align-items:center;gap:7px;cursor:pointer">'
 +'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2f7bf6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2.5"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>'
 +'<span style="font-size:15px;font-weight:600;color:#e8f1ff;letter-spacing:.3px">السجل</span>'
 +'</div>'
@@ -124,6 +124,80 @@ function trdShowResult(ok){
   document.addEventListener('click',trdHideResult,true);
 }
 
+var trdLogRecords=[];
+
+function trdFmtDate(t){
+  var d=new Date(t);
+  function p(n){return (n<10?'0':'')+n;}
+  return p(d.getDate())+'-'+p(d.getMonth()+1)+'-'+d.getFullYear()+' '+p(d.getHours())+':'+p(d.getMinutes())+':'+p(d.getSeconds());
+}
+
+function trdRecordRow(r){
+  var isBuy=r.type==='buy';
+  var label=isBuy?'خيار الشراء':'تسوية الخيارات';
+  var amt=(isBuy?'- ':'+ ')+Number(r.amount).toFixed(2)+' USDT';
+  var color=isBuy?'#ef4444':'#22c55e';
+  return '<div style="background:#141a26;border:1px solid rgba(150,195,245,.08);border-radius:12px;padding:16px 16px 14px;margin-bottom:14px;animation:trdfadein .45s ease">'
+  +'<div style="display:flex;align-items:center;justify-content:space-between;direction:ltr">'
+  +'<span style="font-size:15px;font-weight:600;color:#e8f1ff">'+label+'</span>'
+  +'<span style="font-size:13px;color:#8a93a6;letter-spacing:.3px">'+trdFmtDate(r.at)+'</span>'
+  +'</div>'
+  +'<div style="margin-top:10px;font-size:16px;font-weight:700;color:'+color+';direction:ltr;text-align:left">'+amt+'</div>'
+  +'</div>';
+}
+
+function trdRenderLogList(){
+  var list=document.getElementById('trdLogList');
+  if(!list)return;
+  var recs=(trdLogRecords||[]).slice().sort(function(a,b){return b.at-a.at;});
+  if(!recs.length){
+    list.innerHTML='<div style="text-align:center;color:#8a93a6;font-size:13px;padding:40px 0">لا توجد سجلات بعد</div>';
+    return;
+  }
+  var h='';
+  recs.forEach(function(r){h+=trdRecordRow(r);});
+  list.innerHTML=h;
+}
+
+function trdCloseLog(){var p=document.getElementById('trdLogPage');if(p)p.remove();}
+
+async function trdOpenLog(){
+  trdCloseLog();
+  var pg=document.createElement('div');
+  pg.id='trdLogPage';
+  pg.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;z-index:99997;background:#050a14;overflow-y:auto;animation:trdslidein .3s ease;padding:10px 14px 40px;box-sizing:border-box';
+  pg.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 2px 16px">'
+  +'<span style="font-size:16px;font-weight:700;color:#e8f1ff;letter-spacing:.3px">السجل</span>'
+  +'<div onclick="trdCloseLog()" style="cursor:pointer;padding:6px;display:flex;align-items:center">'
+  +'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8a93a6" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>'
+  +'</div>'
+  +'</div>'
+  +'<div id="trdLogList"></div>';
+  document.body.appendChild(pg);
+  var list=document.getElementById('trdLogList');
+  list.innerHTML='<div style="text-align:center;color:#8a93a6;font-size:13px;padding:40px 0">جاري التحميل...</div>';
+  try{
+    var fs=trdFB.fs;
+    var snap=await fs.getDoc(fs.doc(trdFB.db,'users',trdFB.uid));
+    if(snap.exists()&&snap.data().records){trdLogRecords=snap.data().records;}
+  }catch(e){}
+  trdRenderLogList();
+}
+
+async function trdAddRecord(type,amount,at){
+  var rec={type:type,amount:amount,at:at||Date.now()};
+  trdLogRecords=(trdLogRecords||[]).concat([rec]);
+  trdRenderLogList();
+  try{
+    var fs=trdFB.fs;
+    var ref=fs.doc(trdFB.db,'users',trdFB.uid);
+    var snap=await fs.getDoc(ref);
+    var recs=(snap.exists()&&snap.data().records)||[];
+    recs.push(rec);
+    await fs.setDoc(ref,{records:recs},{merge:true});
+  }catch(e){}
+}
+
 async function trdSync(){
   if(trdFB.busy)return;
   var btn=document.getElementById('trdSyncBtn'),txt=document.getElementById('trdSyncBtnTxt');
@@ -172,6 +246,9 @@ async function trdSync(){
       localStorage.setItem('trdLastSync',JSON.stringify({code:code,profit:result.profit,balance:result.newBalance,at:Date.now()}));
     }catch(e){}
     trdShowResult(true);
+    var trdTs=Date.now();
+    trdAddRecord('buy',result.profit,trdTs);
+    setTimeout(function(){trdAddRecord('settle',result.profit,trdTs);},3000);
   }catch(e){
     trdShowResult(false);
   }finally{
