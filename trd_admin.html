@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>لوحة تحكم الأكواد</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Tahoma,sans-serif}
+body{background:linear-gradient(180deg,#0c3168 0%,#082452 50%,#051737 100%);min-height:100vh;color:#e8f1ff;padding:20px}
+.wrap{max-width:900px;margin:0 auto}
+.card{background:#141a26;border:1px solid rgba(150,195,245,.14);border-radius:14px;padding:20px;margin-bottom:18px;box-shadow:0 10px 30px rgba(0,20,60,.4)}
+h1{font-size:22px;margin-bottom:16px;text-align:center;color:#00e5ff;text-shadow:0 0 12px rgba(0,229,255,.4)}
+h2{font-size:16px;margin-bottom:14px;color:#e8f1ff;border-right:3px solid #00b8e5;padding-right:10px}
+input,button{font-family:inherit;font-size:14px}
+input[type=text],input[type=password],input[type=number]{width:100%;background:#1a2130;border:1px solid rgba(150,195,245,.2);border-radius:8px;padding:12px 14px;color:#e8f1ff;outline:none;text-align:right}
+input:focus{border-color:#00b8e5}
+button{background:linear-gradient(135deg,#1a5fb4 0%,#2f7bf6 55%,#00b8e5 100%);color:#fff;border:none;border-radius:8px;padding:12px 18px;cursor:pointer;font-weight:700;box-shadow:0 6px 18px rgba(20,90,220,.4);transition:transform .15s}
+button:hover{transform:translateY(-1px)}
+button.danger{background:linear-gradient(135deg,#b41a1a 0%,#f62f2f 55%,#e50000 100%);box-shadow:0 6px 18px rgba(220,20,20,.4)}
+button.ghost{background:transparent;border:1px solid rgba(150,195,245,.3);box-shadow:none}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.row > *{flex:1}
+.row button{flex:0 0 auto}
+.msg{padding:10px 14px;border-radius:8px;margin-top:10px;font-size:13px;display:none}
+.msg.ok{background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.4);color:#22c55e}
+.msg.err{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.4);color:#ef4444}
+.tbl{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
+.tbl th,.tbl td{padding:10px 8px;text-align:center;border-bottom:1px solid rgba(150,195,245,.08)}
+.tbl th{background:#1a2130;color:#8a93a6;font-weight:600}
+.tbl td{color:#e8f1ff}
+.badge{display:inline-block;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700}
+.badge.on{background:rgba(34,197,94,.2);color:#22c55e}
+.badge.off{background:rgba(239,68,68,.2);color:#ef4444}
+.code-cell{font-family:'Courier New',monospace;font-weight:700;letter-spacing:1px;color:#00e5ff}
+#loginBox{max-width:400px;margin:80px auto}
+.hide{display:none !important}
+.stats{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.stat{flex:1;min-width:120px;background:#1a2130;border-radius:10px;padding:14px;text-align:center}
+.stat .v{font-size:22px;font-weight:800;color:#00e5ff}
+.stat .l{font-size:12px;color:#8a93a6;margin-top:4px}
+.tbl-wrap{max-height:500px;overflow-y:auto;margin-top:10px}
+</style>
+</head>
+<body>
+
+<div id="loginBox" class="card">
+  <h1>🔒 لوحة تحكم الأكواد</h1>
+  <input type="password" id="pwdInput" placeholder="أدخل كلمة السر" onkeydown="if(event.key==='Enter')doLogin()">
+  <div style="margin-top:12px"><button onclick="doLogin()" style="width:100%">دخول</button></div>
+  <div class="msg err" id="loginMsg">كلمة السر خاطئة</div>
+</div>
+
+<div id="panel" class="wrap hide">
+  <h1>🎛️ لوحة تحكم الأكواد</h1>
+
+  <div class="card">
+    <div class="stats">
+      <div class="stat"><div class="v" id="stTotal">0</div><div class="l">إجمالي الأكواد</div></div>
+      <div class="stat"><div class="v" id="stActive">0</div><div class="l">نشطة</div></div>
+      <div class="stat"><div class="v" id="stInactive">0</div><div class="l">موقوفة</div></div>
+      <div class="stat"><div class="v" id="stUses">0</div><div class="l">مرات الاستخدام</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>➕ إنشاء كود واحد مخصص</h2>
+    <div class="row">
+      <input type="text" id="customCode" placeholder="اكتب الكود (مثال: WINNER01)" maxlength="20">
+      <button onclick="createCustomCode()">إنشاء</button>
+    </div>
+    <div class="msg" id="msg1"></div>
+  </div>
+
+  <div class="card">
+    <h2>🎲 توليد أكواد عشوائية</h2>
+    <div class="row">
+      <input type="number" id="genCount" placeholder="عدد الأكواد" value="10" min="1" max="500">
+      <input type="number" id="genLen" placeholder="طول الكود" value="8" min="4" max="16">
+      <button onclick="generateRandomCodes()">توليد</button>
+    </div>
+    <div class="msg" id="msg2"></div>
+  </div>
+
+  <div class="card">
+    <h2>📋 قائمة الأكواد</h2>
+    <div class="row" style="margin-bottom:10px">
+      <input type="text" id="search" placeholder="بحث عن كود..." oninput="renderCodes()">
+      <button class="ghost" onclick="loadCodes()">🔄 تحديث</button>
+    </div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead>
+          <tr><th>الكود</th><th>الحالة</th><th>عدد الاستخدامات</th><th>آخر استخدام</th><th>إجراء</th></tr>
+        </thead>
+        <tbody id="codesBody">
+          <tr><td colspan="5" style="padding:30px;color:#8a93a6">جاري التحميل...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card" style="text-align:center">
+    <button class="ghost" onclick="doLogout()">🚪 خروج</button>
+  </div>
+</div>
+
+<script type="module">
+import {initializeApp} from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js';
+import {getAuth,signInAnonymously,onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js';
+import {getFirestore,doc,setDoc,getDoc,getDocs,deleteDoc,collection,writeBatch,updateDoc} from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js';
+
+const FB_CFG={apiKey:"AIzaSyBvzfJOOjRFZnTgTUrwEZQPr8Ba7zKKlNg",authDomain:"hhhxh-5ebe4.firebaseapp.com",projectId:"hhhxh-5ebe4",storageBucket:"hhhxh-5ebe4.firebasestorage.app",messagingSenderId:"79243000696",appId:"1:79243000696:web:ee0fb2d2ccce791954e68d",measurementId:"G-08BR6LN6PT"};
+const ADMIN_PWD='123456';
+
+const app=initializeApp(FB_CFG,'adminApp');
+const auth=getAuth(app);
+const db=getFirestore(app);
+
+let allCodes=[];
+
+window.doLogin=function(){
+  const pwd=document.getElementById('pwdInput').value;
+  const msg=document.getElementById('loginMsg');
+  if(pwd===ADMIN_PWD){
+    sessionStorage.setItem('trdAdminAuth','1');
+    showPanel();
+  }else{
+    msg.style.display='block';
+    setTimeout(()=>msg.style.display='none',2500);
+  }
+};
+
+window.doLogout=function(){
+  sessionStorage.removeItem('trdAdminAuth');
+  document.getElementById('panel').classList.add('hide');
+  document.getElementById('loginBox').classList.remove('hide');
+  document.getElementById('pwdInput').value='';
+};
+
+async function showPanel(){
+  document.getElementById('loginBox').classList.add('hide');
+  document.getElementById('panel').classList.remove('hide');
+  try{await signInAnonymously(auth);}catch(e){}
+  onAuthStateChanged(auth,(u)=>{if(u)loadCodes();});
+}
+
+function showMsg(id,txt,ok){
+  const m=document.getElementById(id);
+  m.textContent=txt;
+  m.className='msg '+(ok?'ok':'err');
+  m.style.display='block';
+  setTimeout(()=>m.style.display='none',3500);
+}
+
+function randCode(len){
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let s='';
+  for(let i=0;i<len;i++)s+=chars.charAt(Math.floor(Math.random()*chars.length));
+  return s;
+}
+
+window.createCustomCode=async function(){
+  const inp=document.getElementById('customCode');
+  const code=(inp.value||'').trim().toUpperCase();
+  if(!code){showMsg('msg1','يرجى إدخال الكود',false);return;}
+  if(!/^[A-Z0-9]+$/.test(code)){showMsg('msg1','الكود يجب أن يحتوي حروف وأرقام فقط',false);return;}
+  try{
+    const ref=doc(db,'codes',code);
+    const snap=await getDoc(ref);
+    if(snap.exists()){showMsg('msg1','الكود موجود بالفعل',false);return;}
+    await setDoc(ref,{code:code,active:true,usedBy:[],useCount:0,createdAt:Date.now(),lastUsedAt:null});
+    inp.value='';
+    showMsg('msg1','تم إنشاء الكود: '+code,true);
+    loadCodes();
+  }catch(e){showMsg('msg1','خطأ: '+e.message,false);}
+};
+
+window.generateRandomCodes=async function(){
+  const count=parseInt(document.getElementById('genCount').value)||0;
+  const len=parseInt(document.getElementById('genLen').value)||8;
+  if(count<1||count>500){showMsg('msg2','العدد بين 1 و 500',false);return;}
+  if(len<4||len>16){showMsg('msg2','طول الكود بين 4 و 16',false);return;}
+  try{
+    const existing={};
+    (await getDocs(collection(db,'codes'))).forEach(d=>existing[d.id]=1);
+    const batch=writeBatch(db);
+    const used={};
+    let created=0;
+    for(let i=0;i<count;i++){
+      let c;
+      let tries=0;
+      do{c=randCode(len);tries++;if(tries>50)break;}while(existing[c]||used[c]);
+      if(existing[c]||used[c])continue;
+      used[c]=1;
+      batch.set(doc(db,'codes',c),{code:c,active:true,usedBy:[],useCount:0,createdAt:Date.now(),lastUsedAt:null});
+      created++;
+    }
+    await batch.commit();
+    showMsg('msg2','تم إنشاء '+created+' كود',true);
+    loadCodes();
+  }catch(e){showMsg('msg2','خطأ: '+e.message,false);}
+};
+
+window.loadCodes=async function(){
+  const body=document.getElementById('codesBody');
+  body.innerHTML='<tr><td colspan="5" style="padding:30px;color:#8a93a6">جاري التحميل...</td></tr>';
+  try{
+    const snap=await getDocs(collection(db,'codes'));
+    allCodes=[];
+    snap.forEach(d=>{
+      const x=d.data();
+      allCodes.push({
+        code:d.id,
+        active:x.active!==false,
+        usedBy:x.usedBy||[],
+        useCount:x.useCount||(x.usedBy?x.usedBy.length:0),
+        lastUsedAt:x.lastUsedAt||null,
+        createdAt:x.createdAt||0
+      });
+    });
+    allCodes.sort((a,b)=>b.createdAt-a.createdAt);
+    updateStats();
+    renderCodes();
+  }catch(e){
+    body.innerHTML='<tr><td colspan="5" style="padding:30px;color:#ef4444">خطأ: '+e.message+'</td></tr>';
+  }
+};
+
+function updateStats(){
+  const total=allCodes.length;
+  const active=allCodes.filter(c=>c.active).length;
+  const inactive=total-active;
+  const uses=allCodes.reduce((s,c)=>s+c.useCount,0);
+  document.getElementById('stTotal').textContent=total;
+  document.getElementById('stActive').textContent=active;
+  document.getElementById('stInactive').textContent=inactive;
+  document.getElementById('stUses').textContent=uses;
+}
+
+window.renderCodes=function(){
+  const body=document.getElementById('codesBody');
+  const q=(document.getElementById('search').value||'').trim().toUpperCase();
+  const list=q?allCodes.filter(c=>c.code.indexOf(q)!==-1):allCodes;
+  if(!list.length){body.innerHTML='<tr><td colspan="5" style="padding:30px;color:#8a93a6">لا توجد أكواد</td></tr>';return;}
+  let h='';
+  list.forEach(c=>{
+    const dt=c.lastUsedAt?new Date(c.lastUsedAt).toLocaleString('ar-EG'):'—';
+    h+='<tr>'
+      +'<td class="code-cell">'+c.code+'</td>'
+      +'<td>'+(c.active?'<span class="badge on">نشط</span>':'<span class="badge off">موقوف</span>')+'</td>'
+      +'<td>'+c.useCount+'</td>'
+      +'<td style="font-size:11px;color:#8a93a6">'+dt+'</td>'
+      +'<td>'
+        +'<button class="ghost" style="padding:6px 10px;font-size:12px;margin-left:4px" onclick="toggleCode(\''+c.code+'\','+(!c.active)+')">'+(c.active?'إيقاف':'تفعيل')+'</button>'
+        +'<button class="danger" style="padding:6px 10px;font-size:12px" onclick="deleteCode(\''+c.code+'\')">حذف</button>'
+      +'</td>'
+    +'</tr>';
+  });
+  body.innerHTML=h;
+};
+
+window.toggleCode=async function(code,active){
+  try{
+    await updateDoc(doc(db,'codes',code),{active:active});
+    loadCodes();
+  }catch(e){alert('خطأ: '+e.message);}
+};
+
+window.deleteCode=async function(code){
+  if(!confirm('حذف الكود '+code+' نهائياً؟'))return;
+  try{
+    await deleteDoc(doc(db,'codes',code));
+    loadCodes();
+  }catch(e){alert('خطأ: '+e.message);}
+};
+
+if(sessionStorage.getItem('trdAdminAuth')==='1'){showPanel();}
+</script>
+</body>
+</html>
