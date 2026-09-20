@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نظام الدعوات — تسجيل الدخول وإنشاء حساب</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Arial, sans-serif; }
+
+  body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    color: #fff;
+  }
+
+  .card {
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 20px;
+    padding: 35px 30px;
+    width: 100%;
+    max-width: 460px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+  }
+
+  h1 { font-size: 24px; text-align: center; margin-bottom: 6px; }
+  .subtitle { text-align: center; color: #9fb3c8; font-size: 14px; margin-bottom: 25px; }
+
+  .tabs {
+    display: flex;
+    background: rgba(0,0,0,0.25);
+    border-radius: 12px;
+    padding: 5px;
+    margin-bottom: 25px;
+  }
+  .tab {
+    flex: 1;
+    text-align: center;
+    padding: 11px;
+    border-radius: 9px;
+    cursor: pointer;
+    font-size: 15px;
+    color: #9fb3c8;
+    transition: all 0.25s;
+    user-select: none;
+  }
+  .tab.active { background: #00b4db; color: #fff; font-weight: bold; }
+
+  label { display: block; font-size: 13px; color: #b8c9d9; margin: 14px 0 6px; }
+
+  input {
+    width: 100%;
+    padding: 13px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(0,0,0,0.3);
+    color: #fff;
+    font-size: 15px;
+    outline: none;
+    transition: border 0.2s;
+  }
+  input:focus { border-color: #00b4db; }
+  input::placeholder { color: #6b7f90; }
+
+  .optional-badge {
+    display: inline-block;
+    background: rgba(0,180,219,0.15);
+    color: #00b4db;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-right: 6px;
+  }
+
+  button.main {
+    width: 100%;
+    margin-top: 22px;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #00b4db, #0083b0);
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+  button.main:hover { opacity: 0.9; }
+  button.main:active { transform: scale(0.98); }
+  button.main:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .msg {
+    margin-top: 16px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 14px;
+    text-align: center;
+    display: none;
+  }
+  .msg.error { display: block; background: rgba(231,76,60,0.15); border: 1px solid rgba(231,76,60,0.4); color: #ff8a80; }
+  .msg.success { display: block; background: rgba(46,204,113,0.15); border: 1px solid rgba(46,204,113,0.4); color: #7ee2a8; }
+
+  /* ===== لوحة التحكم ===== */
+  #dashboard { display: none; width: 100%; max-width: 640px; }
+
+  .dash-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .dash-header h1 { text-align: right; margin: 0; font-size: 22px; }
+  .dash-header .email { color: #9fb3c8; font-size: 13px; margin-top: 4px; }
+
+  button.logout {
+    background: rgba(231,76,60,0.2);
+    border: 1px solid rgba(231,76,60,0.5);
+    color: #ff8a80;
+    padding: 9px 18px;
+    border-radius: 9px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  button.logout:hover { background: rgba(231,76,60,0.35); }
+
+  .code-box {
+    background: rgba(0,180,219,0.08);
+    border: 1px dashed rgba(0,180,219,0.5);
+    border-radius: 14px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 22px;
+  }
+  .code-box .label { color: #9fb3c8; font-size: 13px; margin-bottom: 8px; }
+  .code-box .code {
+    font-size: 30px;
+    font-weight: bold;
+    letter-spacing: 5px;
+    color: #00e5ff;
+    direction: ltr;
+  }
+  .copy-btn {
+    margin-top: 12px;
+    background: #00b4db;
+    border: none;
+    color: #fff;
+    padding: 8px 22px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .copy-btn:hover { opacity: 0.85; }
+
+  .stats {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 22px;
+  }
+  .stat {
+    flex: 1;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    padding: 18px;
+    text-align: center;
+  }
+  .stat .num { font-size: 30px; font-weight: bold; color: #00b4db; }
+  .stat .txt { color: #9fb3c8; font-size: 13px; margin-top: 5px; }
+
+  .section-title { font-size: 17px; margin-bottom: 12px; color: #dbe7f0; }
+
+  .ref-list { display: flex; flex-direction: column; gap: 10px; }
+  .ref-item {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .ref-item .info .name { font-weight: bold; font-size: 15px; }
+  .ref-item .info .mail { color: #9fb3c8; font-size: 13px; direction: ltr; text-align: right; }
+  .ref-item .date { color: #6b7f90; font-size: 12px; }
+  .empty {
+    text-align: center;
+    color: #6b7f90;
+    padding: 30px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 12px;
+    font-size: 14px;
+  }
+
+  .loader {
+    display: none;
+    text-align: center;
+    color: #9fb3c8;
+    padding: 40px;
+    font-size: 15px;
+  }
+</style>
+</head>
+<body>
+
+<!-- شاشة التحميل -->
+<div id="loader" class="loader">⏳ جاري التحميل...</div>
+
+<!-- صفحة تسجيل الدخول / إنشاء حساب -->
+<div id="authCard" class="card" style="display:none;">
+  <h1>👋 أهلاً بيك</h1>
+  <p class="subtitle">سجّل دخولك أو اعمل حساب جديد</p>
+
+  <div class="tabs">
+    <div class="tab active" id="tabLogin" onclick="switchTab('login')">تسجيل الدخول</div>
+    <div class="tab" id="tabSignup" onclick="switchTab('signup')">إنشاء حساب</div>
+  </div>
+
+  <!-- فورم تسجيل الدخول -->
+  <div id="loginForm">
+    <label>البريد الإلكتروني</label>
+    <input type="email" id="loginEmail" placeholder="example@mail.com">
+    <label>كلمة المرور</label>
+    <input type="password" id="loginPassword" placeholder="••••••••">
+    <button class="main" id="loginBtn" onclick="doLogin()">دخول 🚀</button>
+  </div>
+
+  <!-- فورم إنشاء حساب -->
+  <div id="signupForm" style="display:none;">
+    <label>الاسم</label>
+    <input type="text" id="signupName" placeholder="اسمك الكامل">
+    <label>البريد الإلكتروني</label>
+    <input type="email" id="signupEmail" placeholder="example@mail.com">
+    <label>كلمة المرور</label>
+    <input type="password" id="signupPassword" placeholder="6 أحرف على الأقل">
+    <label>كود الدعوة <span class="optional-badge">اختياري</span></label>
+    <input type="text" id="signupInvite" placeholder="لو معاك كود دعوة اكتبه هنا" style="direction:ltr;text-align:right;">
+    <button class="main" id="signupBtn" onclick="doSignup()">إنشاء الحساب ✨</button>
+  </div>
+
+  <div id="authMsg" class="msg"></div>
+</div>
+
+<!-- لوحة التحكم بعد الدخول -->
+<div id="dashboard" class="card" style="max-width:640px;">
+  <div class="dash-header">
+    <div>
+      <h1>👤 لوحة التحكم</h1>
+      <div class="email" id="userEmail"></div>
+    </div>
+    <button class="logout" onclick="doLogout()">تسجيل الخروج 🚪</button>
+  </div>
+
+  <div class="code-box">
+    <div class="label">🎁 كود الدعوة الخاص بيك — شاركه مع أصحابك</div>
+    <div class="code" id="myCode">...</div>
+    <button class="copy-btn" onclick="copyCode()">📋 نسخ الكود</button>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="num" id="refCount">0</div>
+      <div class="txt">مستخدم سجّل بكودك</div>
+    </div>
+  </div>
+
+  <div class="section-title">📋 الأشخاص اللي استخدموا كود الدعوة بتاعك</div>
+  <div class="ref-list" id="refList"></div>
+
+  <div id="dashMsg" class="msg"></div>
+</div>
+
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-analytics.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc, setDoc, collection, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyBvzfJOOjRFZnTgTUrwEZQPr8Ba7zKKlNg",
+    authDomain: "hhhxh-5ebe4.firebaseapp.com",
+    projectId: "hhhxh-5ebe4",
+    storageBucket: "hhhxh-5ebe4.firebasestorage.app",
+    messagingSenderId: "79243000696",
+    appId: "1:79243000696:web:ee0fb2d2ccce791954e68d",
+    measurementId: "G-08BR6LN6PT"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  let analytics = null;
+  try { analytics = getAnalytics(app); } catch (e) { /* analytics مش متاح على كل البيئات */ }
+
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  // ===== عناصر الواجهة =====
+  const loader = document.getElementById('loader');
+  const authCard = document.getElementById('authCard');
+  const dashboard = document.getElementById('dashboard');
+
+  // ===== أدوات مساعدة =====
+  function showMsg(elId, text, type) {
+    const el = document.getElementById(elId);
+    el.textContent = text;
+    el.className = 'msg ' + type;
+    if (type === 'success') setTimeout(() => { el.className = 'msg'; }, 6000);
+  }
+
+  // توليد كود دعوة عشوائي فريد (8 أحرف)
+  function generateCode() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let code = '';
+    for (let i = 0; i < 8; i++) code += chars[Math.floor(Math.random() * chars.length)];
+    return code;
+  }
+
+  // توليد كود فريد فعلاً (مش متاخد قبل كده في Firestore)
+  async function generateUniqueCode() {
+    for (let attempt = 0; attempt < 10; attempt++) {
+      const code = generateCode();
+      const snap = await getDoc(doc(db, 'inviteCodes', code));
+      if (!snap.exists()) return code;
+    }
+    throw new Error('تعذر توليد كود فريد، حاول مرة أخرى');
+  }
+
+  // ترجمة أخطاء Firebase للعربي
+  function translateError(code) {
+    const map = {
+      'auth/email-already-in-use': 'البريد الإلكتروني ده مستخدم قبل كده، جرّب تسجيل الدخول',
+      'auth/invalid-email': 'البريد الإلكتروني غير صالح',
+      'auth/weak-password': 'كلمة المرور ضعيفة، لازم تكون 6 أحرف على الأقل',
+      'auth/user-not-found': 'مفيش حساب بالبريد ده، اعمل حساب جديد',
+      'auth/wrong-password': 'كلمة المرور غير صحيحة',
+      'auth/invalid-credential': 'بيانات الدخول غير صحيحة',
+      'auth/too-many-requests': 'محاولات كتير، استنى شوية وحاول تاني',
+      'auth/network-request-failed': 'مشكلة في الاتصال بالإنترنت'
+    };
+    return map[code] || 'حصل خطأ: ' + code;
+  }
+
+  // ===== تبديل التبويبات =====
+  window.switchTab = function(tab) {
+    document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+    document.getElementById('tabSignup').classList.toggle('active', tab === 'signup');
+    document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
+    document.getElementById('signupForm').style.display = tab === 'signup' ? 'block' : 'none';
+    document.getElementById('authMsg').className = 'msg';
+  };
+
+  // ===== إنشاء حساب =====
+  window.doSignup = async function() {
+    const name = document.getElementById('signupName').value.trim();
+    const email = document.getElementById('signupEmail').value.trim();
+    const password = document.getElementById('signupPassword').value;
+    const inviteCode = document.getElementById('signupInvite').value.trim().toUpperCase();
+    const btn = document.getElementById('signupBtn');
+
+    if (!name) return showMsg('authMsg', 'من فضلك اكتب اسمك', 'error');
+    if (!email || !password) return showMsg('authMsg', 'من فضلك املأ البريد وكلمة المرور', 'error');
+
+    btn.disabled = true;
+    btn.textContent = '⏳ جاري إنشاء الحساب...';
+
+    try {
+      // 1) لو فيه كود دعوة مكتوب → نتأكد إنه صحيح قبل إنشاء الحساب
+      let referrerData = null;
+      if (inviteCode) {
+        const codeSnap = await getDoc(doc(db, 'inviteCodes', inviteCode));
+        if (!codeSnap.exists()) {
+          btn.disabled = false;
+          btn.textContent = 'إنشاء الحساب ✨';
+          return showMsg('authMsg', '❌ كود الدعوة ده غير صحيح، اتأكد منه أو سيبه فاضي', 'error');
+        }
+        referrerData = codeSnap.data();
+      }
+
+      // 2) إنشاء المستخدم في Firebase Auth
+      const cred = await createUserWithEmailAndPassword(auth, email, password);
+      const uid = cred.user.uid;
+
+      // 3) توليد كود دعوة فريد للمستخدم الجديد وحفظه
+      const myCode = await generateUniqueCode();
+      await setDoc(doc(db, 'inviteCodes', myCode), {
+        uid: uid,
+        name: name,
+        email: email,
+        createdAt: serverTimestamp()
+      });
+
+      // 4) حفظ بيانات المستخدم
+      await setDoc(doc(db, 'users', uid), {
+        name: name,
+        email: email,
+        inviteCode: myCode,
+        usedInviteCode: inviteCode || null,
+        createdAt: serverTimestamp()
+      });
+
+      // 5) لو استخدم كود دعوة → نسجّله عند صاحب الكود (مع منع دعوة النفس)
+      if (referrerData && referrerData.uid !== uid) {
+        await setDoc(doc(db, 'users', referrerData.uid, 'referrals', uid), {
+          name: name,
+          email: email,
+          uid: uid,
+          usedAt: serverTimestamp()
+        });
+      }
+
+      showMsg('authMsg', '✅ تم إنشاء حسابك بنجاح! كود الدعوة بتاعك: ' + myCode, 'success');
+    } catch (err) {
+      showMsg('authMsg', translateError(err.code || err.message), 'error');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'إنشاء الحساب ✨';
+    }
+  };
+
+  // ===== تسجيل الدخول =====
+  window.doLogin = async function() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const btn = document.getElementById('loginBtn');
+
+    if (!email || !password) return showMsg('authMsg', 'من فضلك املأ البريد وكلمة المرور', 'error');
+
+    btn.disabled = true;
+    btn.textContent = '⏳ جاري الدخول...';
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (err) {
+      showMsg('authMsg', translateError(err.code || err.message), 'error');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'دخول 🚀';
+    }
+  };
+
+  // ===== تسجيل الخروج =====
+  window.doLogout = async function() {
+    await signOut(auth);
+  };
+
+  // ===== نسخ كود الدعوة =====
+  window.copyCode = function() {
+    const code = document.getElementById('myCode').textContent;
+    navigator.clipboard.writeText(code).then(() => {
+      showMsg('dashMsg', '✅ تم نسخ الكود: ' + code, 'success');
+    });
+  };
+
+  // ===== تحميل لوحة التحكم =====
+  async function loadDashboard(user) {
+    document.getElementById('userEmail').textContent = user.email;
+
+    // جلب بيانات المستخدم (كود الدعوة بتاعه)
+    const userSnap = await getDoc(doc(db, 'users', user.uid));
+    if (userSnap.exists()) {
+      document.getElementById('myCode').textContent = userSnap.data().inviteCode;
+    } else {
+      // حساب قديم من غير كود → نولّدله كود ونحفظه
+      const newCode = await generateUniqueCode();
+      await setDoc(doc(db, 'inviteCodes', newCode), {
+        uid: user.uid, email: user.email, createdAt: serverTimestamp()
+      });
+      await setDoc(doc(db, 'users', user.uid), {
+        email: user.email, inviteCode: newCode, createdAt: serverTimestamp()
+      }, { merge: true });
+      document.getElementById('myCode').textContent = newCode;
+    }
+
+    // جلب قائمة اللي استخدموا كود الدعوة بتاعه + العدد
+    const refSnap = await getDocs(collection(db, 'users', user.uid, 'referrals'));
+    document.getElementById('refCount').textContent = refSnap.size;
+
+    const list = document.getElementById('refList');
+    list.innerHTML = '';
+
+    if (refSnap.empty) {
+      list.innerHTML = '<div class="empty">لسه محدش استخدم كودك… شاركه مع أصحابك! 🚀</div>';
+    } else {
+      const refs = [];
+      refSnap.forEach(d => refs.push(d.data()));
+      refs.sort((a, b) => (b.usedAt?.seconds || 0) - (a.usedAt?.seconds || 0));
+      refs.forEach(r => {
+        const date = r.usedAt?.toDate ? r.usedAt.toDate().toLocaleString('ar-EG') : '—';
+        const item = document.createElement('div');
+        item.className = 'ref-item';
+        item.innerHTML =
+          '<div class="info"><div class="name">👤 ' + escapeHtml(r.name || 'بدون اسم') + '</div>' +
+          '<div class="mail">✉️ ' + escapeHtml(r.email || '') + '</div></div>' +
+          '<div class="date">🕒 ' + date + '</div>';
+        list.appendChild(item);
+      });
+    }
+  }
+
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+  }
+
+  // ===== مراقبة حالة تسجيل الدخول =====
+  onAuthStateChanged(auth, async (user) => {
+    loader.style.display = 'block';
+    authCard.style.display = 'none';
+    dashboard.style.display = 'none';
+
+    if (user) {
+      try {
+        await loadDashboard(user);
+        dashboard.style.display = 'block';
+      } catch (err) {
+        showMsg('dashMsg', 'حصل خطأ أثناء تحميل البيانات: ' + err.message, 'error');
+        dashboard.style.display = 'block';
+      }
+    } else {
+      authCard.style.display = 'block';
+    }
+    loader.style.display = 'none';
+  });
+</script>
+</body>
+</html>
