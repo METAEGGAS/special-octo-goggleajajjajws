@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/pages/register/login",
+      "destination": "/auth.html"
+    }
+  ]
+}
