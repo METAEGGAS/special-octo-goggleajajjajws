@@ -3,6 +3,10 @@
     {
       "source": "/pages/register/login",
       "destination": "/auth.html"
+    },
+    {
+      "source": "/pages/home",
+      "destination": "/index.html"
     }
   ]
 }
