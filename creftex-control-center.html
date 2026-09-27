@@ -1,160 +1,35 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>CREFTEX — Control Center</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800;900&display=swap" rel="stylesheet">
-<style>
-:root{--cyan:#00BFFF;--bright-cyan:#18D8FF;--blue:#168CFF;--deep-blue:#0756C9;--purple:#9A45FF;--purple-2:#8B3DFF;--magenta:#D84CFF;--green:#00DFA2;--bright-green:#19F59D;--yellow:#FFD21C;--orange:#FF9D2E;--red:#FF3B4E;--white:#F5F8FF;--light-text:#D7E3F4;--muted:#8998AA;--secondary-text:#8B9AAF;--bg:#08111D;--card:#111D2A;--card-2:#162535;--border:#20384C}
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{height:100%}
-body{font-family:'Cairo',sans-serif;background:radial-gradient(900px 500px at 85% -5%,rgba(0,140,255,.10),transparent 60%),radial-gradient(700px 500px at 0% 30%,rgba(139,61,255,.07),transparent 60%),radial-gradient(800px 600px at 50% 110%,rgba(0,191,255,.06),transparent 60%),linear-gradient(180deg,#07111C 0%,#0B1622 50%,#101C29 100%);background-color:var(--bg);color:var(--white);min-height:100vh;display:flex;justify-content:center;zoom:.8}
-.app{width:100%;max-width:430px;min-height:100vh;padding:15px 15px 120px;position:relative}
-.glass{background:rgba(17,30,43,.88);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(45,105,140,.35);box-shadow:0 10px 35px rgba(0,0,0,.35)}
-svg{display:block}
-.icon{width:22px;height:22px}
-.header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 2px 14px}
-.brand-wrap{display:flex;align-items:center;gap:12px}
-.brand{text-align:right}
-.brand h1{font-size:26px;font-weight:900;letter-spacing:1px;line-height:1.05;background:linear-gradient(90deg,#19C9FF 20%,#8B5CFF 90%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 10px rgba(25,201,255,.45));direction:ltr}
-.brand span{font-size:9px;font-weight:700;letter-spacing:4px;color:#66758A;direction:ltr;display:block;margin-top:2px}
-.bolt-ring{width:58px;height:58px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 35% 30%,rgba(24,216,255,.20),rgba(8,118,201,.10) 60%,rgba(8,20,33,.6));border:2px solid rgba(24,191,255,.65);box-shadow:0 0 25px rgba(0,191,255,.45),inset 0 0 18px rgba(24,216,255,.25);position:relative;flex-shrink:0;overflow:hidden}
-.bolt-ring::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:1px solid rgba(139,61,255,.35);filter:blur(1px)}
-.bolt-ring img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block}
-.admin-btn{display:flex;align-items:center;gap:8px;padding:9px 14px;border-radius:999px;background:#10283A;border:1px solid #17638B;box-shadow:0 0 14px rgba(0,140,255,.18),inset 0 0 12px rgba(24,216,255,.06);color:var(--light-text);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
-.admin-btn svg{width:17px;height:17px}
-.admin-btn .crown{width:16px;height:16px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
-.stat{border-radius:20px;background:#111D2A;padding:16px 8px 14px;display:flex;flex-direction:row-reverse;align-items:center;justify-content:center;gap:10px;position:relative;overflow:hidden}
-.stat .num{font-size:30px;font-weight:800;line-height:1;direction:ltr}
-.stat .lbl{font-size:12px;font-weight:600;color:var(--muted);margin-top:2px}
-.stat .col{display:flex;flex-direction:column;align-items:center;gap:2px}
-.stat svg,.stat .ic{width:26px;height:26px}
-.stat.c{border:1.5px solid rgba(0,191,255,.75);box-shadow:0 0 18px rgba(0,191,255,.22),inset 0 0 22px rgba(0,191,255,.05)}
-.stat.c .num{color:#18D8FF;text-shadow:0 0 14px rgba(24,216,255,.55)}
-.stat.c svg,.stat.c .ic{color:var(--cyan);filter:drop-shadow(0 0 6px rgba(0,191,255,.6))}
-.stat.g{border:1.5px solid rgba(0,230,160,.7);box-shadow:0 0 18px rgba(0,223,162,.20),inset 0 0 22px rgba(0,223,162,.05)}
-.stat.g .num{color:#19F59D;text-shadow:0 0 14px rgba(25,245,157,.5)}
-.stat.g svg,.stat.g .ic{color:var(--green);filter:drop-shadow(0 0 6px rgba(0,223,162,.6))}
-.stat.p{border:1.5px solid rgba(154,69,255,.75);box-shadow:0 0 18px rgba(154,69,255,.25),inset 0 0 22px rgba(154,69,255,.06)}
-.stat.p .num{color:#B46BFF;text-shadow:0 0 14px rgba(180,107,255,.55)}
-.stat.p svg,.stat.p .ic{color:var(--purple);filter:drop-shadow(0 0 6px rgba(154,69,255,.65))}
-.mainnav{background:#101D2A;border:1px solid #1D3548;border-radius:22px;padding:8px;display:grid;grid-template-columns:1.25fr 1fr 1fr 1fr;gap:6px;margin-bottom:16px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
-.navitem{display:flex;align-items:center;justify-content:center;gap:7px;padding:11px 6px;border-radius:16px;color:var(--secondary-text);font-size:13px;font-weight:700;cursor:pointer;position:relative;border:1px solid transparent}
-.navitem svg{width:19px;height:19px;color:#93A6BC}
-.navitem .dot{position:absolute;top:7px;left:22%;width:7px;height:7px;border-radius:50%;background:var(--red);box-shadow:0 0 8px rgba(255,59,78,.9)}
-.navitem.active{background:linear-gradient(135deg,#0876D9 0%,#0A4EC1 100%);border:1px solid var(--cyan);color:#fff;box-shadow:0 0 20px rgba(0,150,255,.5),inset 0 0 14px rgba(24,216,255,.25)}
-.navitem.active svg{color:#fff;filter:drop-shadow(0 0 5px rgba(255,255,255,.6))}
-.section{background:#111F2C;border:1px solid #203A4D;border-radius:28px;padding:18px 16px;margin-bottom:16px;box-shadow:0 10px 35px rgba(0,0,0,.35)}
-.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.section-title{display:flex;align-items:center;gap:9px;font-size:17px;font-weight:800;color:var(--white)}
-.section-title svg{width:21px;height:21px;color:#4FC4FF;filter:drop-shadow(0 0 6px rgba(0,191,255,.5))}
-.t-ic{width:21px;height:21px;border-radius:6px;object-fit:cover;filter:drop-shadow(0 0 6px rgba(0,191,255,.5))}
-.count-badge{min-width:24px;height:24px;padding:0 7px;border-radius:999px;background:#0876D9;color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 0 12px rgba(8,118,217,.6)}
-.refresh-btn{width:38px;height:38px;border-radius:12px;background:#10283A;border:1px solid #17638B;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 0 10px rgba(0,140,255,.15);overflow:hidden}
-.refresh-btn svg{width:18px;height:18px;color:#35B6FF}
-.r-ic{width:22px;height:22px;border-radius:6px;object-fit:cover;filter:drop-shadow(0 0 5px rgba(0,191,255,.6))}
-.device-card{border-radius:25px;background:linear-gradient(160deg,#142231 0%,#131E30 60%,#1B1830 100%);border:2px solid transparent;background-clip:padding-box;position:relative;padding:18px 16px;display:flex;align-items:center;gap:14px;box-shadow:0 0 24px rgba(0,175,255,.18),0 0 40px rgba(179,60,255,.10)}
-.device-card::before{content:"";position:absolute;inset:-2px;border-radius:25px;background:linear-gradient(120deg,#00AFFF 0%,#2E7FE8 40%,#8B3DFF 75%,#B33CFF 100%);z-index:-1}
-.status-dot{width:22px;height:22px;border-radius:50%;background:rgba(255,48,72,.12);border:1.5px solid rgba(255,48,72,.55);display:flex;align-items:center;justify-content:center;position:absolute;top:14px;left:14px}
-.status-dot::after{content:"";width:9px;height:9px;border-radius:50%;background:var(--red);box-shadow:0 0 10px rgba(255,48,72,.95)}
-.phone-mock{width:52px;height:78px;flex-shrink:0;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 6px 16px rgba(0,0,0,.5)) drop-shadow(0 0 12px rgba(0,140,255,.35))}
-.phone-mock img{width:52px;height:78px;object-fit:contain;display:block}
-.device-info{flex:1;min-width:0;direction:ltr;text-align:left}
-.device-info h3{font-size:17px;font-weight:800;color:#F2F6FF;letter-spacing:.3px;margin-bottom:6px}
-.device-info .row{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:#8395A9;margin-top:4px;direction:ltr}
-.device-info .row svg{width:14px;height:14px;color:#5E7A93;flex-shrink:0}
-.device-info .row .ar{direction:rtl;unicode-bidi:plaintext}
-.chev{width:30px;height:30px;border-radius:50%;border:1px solid rgba(139,154,175,.35);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.chev svg{width:14px;height:14px;color:#93A6BC}
-.divider{height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,rgba(0,191,255,.7) 30%,rgba(139,61,255,.7) 70%,transparent);margin:2px 0 16px;box-shadow:0 0 10px rgba(0,191,255,.35)}
-.cmd-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.cmd{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#152432;border-radius:18px;padding:15px 14px;cursor:pointer;font-size:13.5px;font-weight:700;color:var(--light-text);border:1.5px solid}
-.cmd .lead{display:flex;align-items:center;gap:9px}
-.cmd svg,.cmd .ic{width:22px;height:22px}
-.cmd .go{width:15px;height:15px;color:#6E8298}
-.cmd.photos{border-color:rgba(22,140,255,.65);box-shadow:0 0 14px rgba(22,140,255,.16)}
-.cmd.photos .ic{color:#8B5CFF;filter:drop-shadow(0 0 6px rgba(139,92,255,.7))}
-.cmd.images{border-color:rgba(0,191,255,.65);box-shadow:0 0 14px rgba(0,191,255,.16)}
-.cmd.images .ic{color:var(--cyan);filter:drop-shadow(0 0 6px rgba(0,191,255,.7))}
-.cmd.sms{border-color:rgba(0,223,162,.65);box-shadow:0 0 14px rgba(0,223,162,.15)}
-.cmd.sms .ic{color:var(--green);filter:drop-shadow(0 0 6px rgba(0,223,162,.7))}
-.cmd.notif{border-color:rgba(255,210,28,.6);box-shadow:0 0 14px rgba(255,210,28,.14)}
-.cmd.notif .ic{color:var(--yellow);filter:drop-shadow(0 0 6px rgba(255,210,28,.65))}
-.bottomnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(8,20,33,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(4,1fr);padding:8px 6px calc(10px + env(safe-area-inset-bottom));z-index:50;box-shadow:0 -8px 30px rgba(0,0,0,.5)}
-.bitem{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;font-weight:700;color:#8A9AAD;cursor:pointer;padding:4px 0 2px;position:relative}
-.bitem svg{width:22px;height:22px}
-.bitem.active{color:#00C8FF}
-.bitem.active svg{color:#00C8FF;filter:drop-shadow(0 0 8px rgba(0,200,255,.8))}
-.bitem.active::after{content:"";position:absolute;bottom:-2px;width:34px;height:3px;border-radius:3px;background:#00C8FF;box-shadow:0 0 12px rgba(0,200,255,.9)}
-</style>
-</head>
-<body>
-<div class="app">
-<header class="header">
-<div class="brand-wrap">
-<div class="bolt-ring"><img src="https://i.ibb.co/Y4Yts8WK/file-00000000176c8243bee7f4f1a464120b.png" alt="logo"></div>
-<div class="brand"><h1>CREFTEX</h1><span>CONTROL CENTER</span></div>
-</div>
-<button class="admin-btn">
-<svg viewBox="0 0 24 24" fill="none" stroke="#35B6FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.6-3 7.6-7 9-4-1.4-7-4.4-7-9V6l7-3z"/><path d="M9.5 12l2 2 3.5-4"/></svg>
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"><title>CREFTEX — Control Center</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800;900&display=swap" rel="stylesheet"><style>:root{--cyan:#00BFFF;--bright-cyan:#18D8FF;--blue:#168CFF;--deep-blue:#0756C9;--purple:#9A45FF;--purple-2:#8B3DFF;--magenta:#D84CFF;--green:#00DFA2;--bright-green:#19F59D;--yellow:#FFD21C;--orange:#FF9D2E;--red:#FF3B4E;--white:#F5F8FF;--light-text:#D7E3F4;--muted:#8998AA;--secondary-text:#8B9AAF;--bg:#08111D;--card:#111D2A;--card-2:#162535;--border:#20384C}*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{height:100%;overflow-x:hidden}body{font-family:'Cairo',sans-serif;background:radial-gradient(900px 500px at 85% -5%,rgba(0,140,255,.10),transparent 60%),radial-gradient(700px 500px at 0% 30%,rgba(139,61,255,.07),transparent 60%),radial-gradient(800px 600px at 50% 110%,rgba(0,191,255,.06),transparent 60%),linear-gradient(180deg,#07111C 0%,#0B1622 50%,#101C29 100%);background-color:var(--bg);color:var(--white);min-height:100vh;display:flex;justify-content:center}.app{zoom:.8;width:125%;max-width:537.5px;min-height:100vh;padding:15px 15px 96px;position:relative}.glass{background:rgba(17,30,43,.88);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(45,105,140,.35);box-shadow:0 10px 35px rgba(0,0,0,.35)}svg{display:block}.icon{width:22px;height:22px}.header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 2px 14px}.brand-wrap{display:flex;align-items:center;gap:12px}.brand{text-align:right}.brand h1{font-size:26px;font-weight:900;letter-spacing:1px;line-height:1.05;background:linear-gradient(90deg,#19C9FF 20%,#8B5CFF 90%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 10px rgba(25,201,255,.45));direction:ltr}.brand span{font-size:9px;font-weight:700;letter-spacing:4px;color:#66758A;direction:ltr;display:block;margin-top:2px}.bolt-ring{width:58px;height:58px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 35% 30%,rgba(24,216,255,.20),rgba(8,118,201,.10) 60%,rgba(8,20,33,.6));border:2px solid rgba(24,191,255,.65);box-shadow:0 0 25px rgba(0,191,255,.45),inset 0 0 18px rgba(24,216,255,.25);position:relative;flex-shrink:0}.bolt-ring::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:1px solid rgba(139,61,255,.35);filter:blur(1px)}.bolt-ring svg{width:26px;height:26px;filter:drop-shadow(0 0 8px rgba(24,216,255,.9))}.admin-btn{display:flex;align-items:center;gap:8px;padding:9px 14px;border-radius:999px;background:#10283A;border:1px solid #17638B;box-shadow:0 0 14px rgba(0,140,255,.18),inset 0 0 12px rgba(24,216,255,.06);color:var(--light-text);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}.admin-btn svg{width:17px;height:17px}.admin-btn .crown{width:16px;height:16px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}.stat{border-radius:20px;background:#111D2A;padding:16px 8px 14px;display:flex;flex-direction:row-reverse;align-items:center;justify-content:center;gap:10px;position:relative;overflow:hidden}.stat .num{font-size:30px;font-weight:800;line-height:1;direction:ltr}.stat .lbl{font-size:12px;font-weight:600;color:var(--muted);margin-top:2px}.stat .col{display:flex;flex-direction:column;align-items:center;gap:2px}.stat svg{width:26px;height:26px}.stat.c{border:1.5px solid rgba(0,191,255,.75);box-shadow:0 0 18px rgba(0,191,255,.22),inset 0 0 22px rgba(0,191,255,.05)}.stat.c .num{color:#18D8FF;text-shadow:0 0 14px rgba(24,216,255,.55)}.stat.c svg{color:var(--cyan);filter:drop-shadow(0 0 6px rgba(0,191,255,.6))}.stat.g{border:1.5px solid rgba(0,230,160,.7);box-shadow:0 0 18px rgba(0,223,162,.20),inset 0 0 22px rgba(0,223,162,.05)}.stat.g .num{color:#19F59D;text-shadow:0 0 14px rgba(25,245,157,.5)}.stat.g svg{color:var(--green);filter:drop-shadow(0 0 6px rgba(0,223,162,.6))}.stat.p{border:1.5px solid rgba(154,69,255,.75);box-shadow:0 0 18px rgba(154,69,255,.25),inset 0 0 22px rgba(154,69,255,.06)}.stat.p .num{color:#B46BFF;text-shadow:0 0 14px rgba(180,107,255,.55)}.stat.p svg{color:var(--purple);filter:drop-shadow(0 0 6px rgba(154,69,255,.65))}.mainnav{background:#101D2A;border:1px solid #1D3548;border-radius:22px;padding:8px;display:grid;grid-template-columns:1.25fr 1fr 1fr 1fr;gap:6px;margin-bottom:16px;box-shadow:0 10px 30px rgba(0,0,0,.35)}.navitem{display:flex;align-items:center;justify-content:center;gap:7px;padding:11px 6px;border-radius:16px;color:var(--secondary-text);font-size:13px;font-weight:700;cursor:pointer;position:relative;border:1px solid transparent}.navitem svg{width:19px;height:19px;color:#93A6BC}.navitem .dot{position:absolute;top:7px;left:22%;width:7px;height:7px;border-radius:50%;background:var(--red);box-shadow:0 0 8px rgba(255,59,78,.9)}.navitem.active{background:linear-gradient(135deg,#0876D9 0%,#0A4EC1 100%);border:1px solid var(--cyan);color:#fff;box-shadow:0 0 20px rgba(0,150,255,.5),inset 0 0 14px rgba(24,216,255,.25)}.navitem.active svg{color:#fff;filter:drop-shadow(0 0 5px rgba(255,255,255,.6))}.section{background:#111F2C;border:1px solid #203A4D;border-radius:28px;padding:18px 16px;margin-bottom:16px;box-shadow:0 10px 35px rgba(0,0,0,.35)}.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}.section-title{display:flex;align-items:center;gap:9px;font-size:17px;font-weight:800;color:var(--white)}.section-title svg{width:21px;height:21px;color:#4FC4FF;filter:drop-shadow(0 0 6px rgba(0,191,255,.5))}.count-badge{min-width:24px;height:24px;padding:0 7px;border-radius:999px;background:#0876D9;color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 0 12px rgba(8,118,217,.6)}.refresh-btn{width:38px;height:38px;border-radius:12px;background:#10283A;border:1px solid #17638B;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 0 10px rgba(0,140,255,.15)}.refresh-btn svg{width:18px;height:18px;color:#35B6FF}.device-card{border-radius:25px;background:linear-gradient(160deg,#142231 0%,#131E30 60%,#1B1830 100%);border:2px solid transparent;background-clip:padding-box;position:relative;padding:18px 16px;display:flex;align-items:center;gap:14px;box-shadow:0 0 24px rgba(0,175,255,.18),0 0 40px rgba(179,60,255,.10)}.device-card::before{content:"";position:absolute;inset:-2px;border-radius:25px;background:linear-gradient(120deg,#00AFFF 0%,#2E7FE8 40%,#8B3DFF 75%,#B33CFF 100%);z-index:-1}.status-dot{width:22px;height:22px;border-radius:50%;background:rgba(255,48,72,.12);border:1.5px solid rgba(255,48,72,.55);display:flex;align-items:center;justify-content:center;position:absolute;top:14px;left:14px}.status-dot::after{content:"";width:9px;height:9px;border-radius:50%;background:var(--red);box-shadow:0 0 10px rgba(255,48,72,.95)}.phone-mock{width:52px;height:78px;border-radius:10px;background:linear-gradient(160deg,#0E1B2A,#0A1420);border:2px solid #2A4055;padding:3px;flex-shrink:0;box-shadow:0 6px 16px rgba(0,0,0,.5),0 0 12px rgba(0,140,255,.15)}.phone-screen{width:100%;height:100%;border-radius:7px;background:linear-gradient(150deg,#1E5BFF 0%,#7A2BFF 45%,#D84CFF 80%,#FF5C8A 100%);position:relative;overflow:hidden}.phone-screen::before{content:"";position:absolute;top:-25%;left:-30%;width:120%;height:80%;background:radial-gradient(closest-side,rgba(255,255,255,.28),transparent);transform:rotate(-18deg)}.phone-screen::after{content:"";position:absolute;top:4px;left:50%;transform:translateX(-50%);width:16px;height:4px;border-radius:3px;background:rgba(5,12,20,.9)}.device-info{flex:1;min-width:0;direction:ltr;text-align:left}.device-info h3{font-size:17px;font-weight:800;color:#F2F6FF;letter-spacing:.3px;margin-bottom:6px}.device-info .row{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:#8395A9;margin-top:4px;direction:ltr}.device-info .row svg{width:14px;height:14px;color:#5E7A93;flex-shrink:0}.device-info .row .ar{direction:rtl;unicode-bidi:plaintext}.chev{width:30px;height:30px;border-radius:50%;border:1px solid rgba(139,154,175,.35);display:flex;align-items:center;justify-content:center;flex-shrink:0}.chev svg{width:14px;height:14px;color:#93A6BC}.divider{height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,rgba(0,191,255,.7) 30%,rgba(139,61,255,.7) 70%,transparent);margin:2px 0 16px;box-shadow:0 0 10px rgba(0,191,255,.35)}.cmd-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.cmd{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#152432;border-radius:18px;padding:15px 14px;cursor:pointer;font-size:13.5px;font-weight:700;color:var(--light-text);border:1.5px solid}.cmd .lead{display:flex;align-items:center;gap:9px}.cmd svg{width:22px;height:22px}.cmd .go{width:15px;height:15px;color:#6E8298}.cmd.photos{border-color:rgba(22,140,255,.65);box-shadow:0 0 14px rgba(22,140,255,.16)}.cmd.photos svg.ic{color:#8B5CFF;filter:drop-shadow(0 0 6px rgba(139,92,255,.7))}.cmd.images{border-color:rgba(0,191,255,.65);box-shadow:0 0 14px rgba(0,191,255,.16)}.cmd.images svg.ic{color:var(--cyan);filter:drop-shadow(0 0 6px rgba(0,191,255,.7))}.cmd.sms{border-color:rgba(0,223,162,.65);box-shadow:0 0 14px rgba(0,223,162,.15)}.cmd.sms svg.ic{color:var(--green);filter:drop-shadow(0 0 6px rgba(0,223,162,.7))}.cmd.notif{border-color:rgba(255,210,28,.6);box-shadow:0 0 14px rgba(255,210,28,.14)}.cmd.notif svg.ic{color:var(--yellow);filter:drop-shadow(0 0 6px rgba(255,210,28,.65))}.bottomnav{position:fixed;zoom:.8;bottom:0;left:0;right:0;margin:0 auto;transform:none;width:100%;max-width:430px;background:rgba(8,20,33,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(4,1fr);padding:8px 6px calc(10px + env(safe-area-inset-bottom));z-index:50;box-shadow:0 -8px 30px rgba(0,0,0,.5)}.bitem{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;font-weight:700;color:#8A9AAD;cursor:pointer;padding:4px 0 2px;position:relative}.bitem svg{width:22px;height:22px}.bitem.active{color:#00C8FF}.bitem.active svg{color:#00C8FF;filter:drop-shadow(0 0 8px rgba(0,200,255,.8))}.bitem.active::after{content:"";position:absolute;bottom:-2px;width:34px;height:3px;border-radius:3px;background:#00C8FF;box-shadow:0 0 12px rgba(0,200,255,.9)}</style></head><body><div class="app"><header class="header"><div class="brand-wrap"><div class="bolt-ring"><img src="https://i.ibb.co/Y4Yts8WK/file-00000000176c8243bee7f4f1a464120b.png" alt="CREFTEX" style="width:40px;height:40px;border-radius:50%;object-fit:cover;filter:drop-shadow(0 0 8px rgba(24,216,255,.9))"></div><div class="brand"><h1>CREFTEX</h1><span>CONTROL CENTER</span></div></div><button class="admin-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#35B6FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.6-3 7.6-7 9-4-1.4-7-4.4-7-9V6l7-3z"/><path d="M9.5 12l2 2 3.5-4"/></svg>
 مشرف المعلومات العام
-<svg class="crown" viewBox="0 0 24 24" fill="#FFD21C" stroke="#B8860B" stroke-width=".8" stroke-linejoin="round"><path d="M3 8l4 3.5L12 5l5 6.5L21 8l-1.6 10H4.6L3 8z"/></svg>
-</button>
-</header>
-<section class="stats">
-<div class="stat c"><img class="ic" src="https://i.ibb.co/0ytjFMWd/IMG.png" alt="رسائل"><div class="col"><span class="num">50</span><span class="lbl">رسائل</span></div></div>
-<div class="stat g"><img class="ic" src="https://i.ibb.co/nMwx59Ns/IMG.png" alt="نشطة"><div class="col"><span class="num">0</span><span class="lbl">نشطة</span></div></div>
-<div class="stat p"><img class="ic" src="https://i.ibb.co/jk4M6kND/IMG.png" alt="أجهزة"><div class="col"><span class="num">1</span><span class="lbl">أجهزة</span></div></div>
-</section>
-<nav class="mainnav">
-<div class="navitem active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 10.5 12 3.5l8.5 7"/><path d="M6 9.5V20h12V9.5"/><path d="M10 20v-5h4v5"/></svg>الرئيسية</div>
-<div class="navitem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="M4.5 17.5 10 12l4 4 3-3 3.5 3.5"/></svg>الصور</div>
-<div class="navitem"><span class="dot"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M4 7.5l8 6 8-6"/></svg>الرسائل</div>
-<div class="navitem"><span class="dot"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9a6 6 0 1 0-12 0c0 6-2.5 7-2.5 7h17S18 15 18 9z"/><path d="M10 20a2.2 2.2 0 0 0 4 0"/></svg>الإشعارات</div>
-</nav>
-<section class="section">
-<div class="section-head">
-<div class="section-title">
-<img class="t-ic" src="https://i.ibb.co/GfFT6ypq/IMG.png" alt="الأجهزة">
+<svg class="crown" viewBox="0 0 24 24" fill="#FFD21C" stroke="#B8860B" stroke-width=".8" stroke-linejoin="round"><path d="M3 8l4 3.5L12 5l5 6.5L21 8l-1.6 10H4.6L3 8z"/></svg></button></header><section class="stats"><div class="stat c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5.5" rx="7.5" ry="3"/><path d="M4.5 5.5V12c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3V5.5"/><path d="M4.5 12v6.5c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3V12"/></svg><div class="col"><span class="num">50</span><span class="lbl">رسائل</span></div></div><div class="stat g"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12S6 5.8 12 5.8 21.5 12 21.5 12 18 18.2 12 18.2 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></svg><div class="col"><span class="num">0</span><span class="lbl">نشطة</span></div></div><div class="stat p"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15c5-3 6.5-8 7-11-3 .5-8 2-11 7"/><path d="M9 11c-2.8.3-4.5 2-5 5 3-.5 4.7-2.2 5-5z"/><path d="M14 14c.5 2.5-.5 5-3 7"/><circle cx="14.5" cy="9.5" r="1.6"/></svg><div class="col"><span class="num">1</span><span class="lbl">أجهزة</span></div></div></section><nav class="mainnav"><div class="navitem active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 10.5 12 3.5l8.5 7"/><path d="M6 9.5V20h12V9.5"/><path d="M10 20v-5h4v5"/></svg>
+الرئيسية
+</div><div class="navitem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="M4.5 17.5 10 12l4 4 3-3 3.5 3.5"/></svg>
+الصور
+</div><div class="navitem"><span class="dot"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M4 7.5l8 6 8-6"/></svg>
+الرسائل
+</div><div class="navitem"><span class="dot"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9a6 6 0 1 0-12 0c0 6-2.5 7-2.5 7h17S18 15 18 9z"/><path d="M10 20a2.2 2.2 0 0 0 4 0"/></svg>
+الإشعارات
+</div></nav><section class="section"><div class="section-head"><div class="section-title"><img src="https://i.ibb.co/GfFT6ypq/IMG.png" alt="" style="width:21px;height:21px;object-fit:contain;filter:drop-shadow(0 0 6px rgba(0,191,255,.5))">
 الأجهزة
-<span class="count-badge">1</span>
-</div>
-<button class="refresh-btn"><img class="r-ic" src="https://i.ibb.co/QjjhM4Xd/IMG.png" alt="تحديث"></button>
-</div>
-<div class="device-card">
-<span class="status-dot"></span>
-<div class="device-info">
-<h3>Xiaomi M2004J19C</h3>
-<div class="row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="7" width="12" height="11" rx="2.5"/><path d="M9 7V4.5M15 7V4.5"/><path d="M3.5 11v4M20.5 11v4"/><circle cx="10" cy="11.5" r=".6" fill="currentColor"/><circle cx="14" cy="11.5" r=".6" fill="currentColor"/></svg>Android: 10</div>
-<div class="row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg><span class="ar">آخر ظهور: 2025-09-27 05:24 م</span></div>
-<div class="row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 2v2M15 2v2M9 20v2M15 20v2M2 9h2M2 15h2M20 9h2M20 15h2"/></svg>ID: device_bb9976d766ff</div>
-</div>
-<div class="phone-mock"><img src="https://i.ibb.co/zVGfqLPg/file-00000000f684821082434638ba1fc7a5.png" alt="phone"></div>
-<div class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5.5 15.5 12 9 18.5"/></svg></div>
-</div>
-</section>
-<section class="section">
-<div class="section-head" style="margin-bottom:10px">
-<div class="section-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 8h11a4 4 0 0 1 4 4v2.5a3.5 3.5 0 0 1-6.4 2L13.5 14h-3l-1.6 2.5a3.5 3.5 0 0 1-6.4-2V12a4 4 0 0 1 4-4z"/><path d="M8 11v3M6.5 12.5h3"/><circle cx="16" cy="11.5" r=".7" fill="currentColor"/><circle cx="18" cy="13.5" r=".7" fill="currentColor"/></svg>الأوامر</div>
-</div>
-<div class="divider"></div>
-<div class="cmd-grid">
-<button class="cmd photos"><span class="lead"><img class="ic" src="https://i.ibb.co/MxDRrx98/IMG.png" alt="كل الصور">كل الصور</span><svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg></button>
-<button class="cmd images"><span class="lead"><img class="ic" src="https://i.ibb.co/QvzFzxKD/IMG.png" alt="آخر 50 صورة">آخر 50 صورة</span><svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg></button>
-<button class="cmd sms"><span class="lead"><img class="ic" src="https://i.ibb.co/0RMh54Zw/IMG.png" alt="كل الرسائل SMS">كل الرسائل SMS</span><svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg></button>
-<button class="cmd notif"><span class="lead"><img class="ic" src="https://i.ibb.co/hzB2JPc/IMG.png" alt="كل الإشعارات">كل الإشعارات</span><svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg></button>
-</div>
-</section>
-</div>
-<nav class="bottomnav">
-<div class="bitem active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 10.5 12 3.5l8.5 7"/><path d="M6 9.5V20h12V9.5"/><path d="M10 20v-5h4v5"/></svg>الرئيسية</div>
-<div class="bitem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 8.5 15.5 12 10 15.5v-7z" fill="currentColor" stroke="none"/></svg>التنفيذ</div>
-<div class="bitem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></svg>السجل</div>
-<div class="bitem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h10M18 7h2M4 12h2M10 12h10M4 17h10M18 17h2"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="12" r="2"/><circle cx="16" cy="17" r="2"/></svg>الإعدادات</div>
-</nav>
-</body>
-</html>
+<span class="count-badge">1</span></div><button class="refresh-btn"><img src="https://i.ibb.co/QjjhM4Xd/IMG.png" alt="تحديث" style="width:18px;height:18px;object-fit:contain"></button></div><div class="device-card"><span class="status-dot"></span><div class="device-info"><h3>Xiaomi M2004J19C</h3><div class="row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="7" width="12" height="11" rx="2.5"/><path d="M9 7V4.5M15 7V4.5"/><path d="M3.5 11v4M20.5 11v4"/><circle cx="10" cy="11.5" r=".6" fill="currentColor"/><circle cx="14" cy="11.5" r=".6" fill="currentColor"/></svg>
+Android: 10
+</div><div class="row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg><span class="ar">آخر ظهور: 2025-09-27 05:24 م</span></div><div class="row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 2v2M15 2v2M9 20v2M15 20v2M2 9h2M2 15h2M20 9h2M20 15h2"/></svg>
+ID: device_bb9976d766ff
+</div></div><div class="phone-mock"><div class="phone-screen"></div></div><div class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5.5 15.5 12 9 18.5"/></svg></div></div></section><section class="section"><div class="section-head" style="margin-bottom:10px"><div class="section-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 8h11a4 4 0 0 1 4 4v2.5a3.5 3.5 0 0 1-6.4 2L13.5 14h-3l-1.6 2.5a3.5 3.5 0 0 1-6.4-2V12a4 4 0 0 1 4-4z"/><path d="M8 11v3M6.5 12.5h3"/><circle cx="16" cy="11.5" r=".7" fill="currentColor"/><circle cx="18" cy="13.5" r=".7" fill="currentColor"/></svg>
+الأوامر
+</div></div><div class="divider"></div><div class="cmd-grid"><button class="cmd photos"><span class="lead"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-2.5h6L17 8h3a1.5 1.5 0 0 1 1.5 1.5V18A1.5 1.5 0 0 1 20 19.5H4A1.5 1.5 0 0 1 2.5 18V9.5A1.5 1.5 0 0 1 4 8z"/><circle cx="12" cy="13.5" r="3.5"/></svg>
+كل الصور
+</span><svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg></button><button class="cmd images"><span class="lead"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="M4.5 17.5 10 12l4 4 3-3 3.5 3.5"/></svg>
+آخر 50 صورة
+</span><svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg></button><button class="cmd sms"><span class="lead"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M4 7.5l8 6 8-6"/></svg>
+كل الرسائل SMS
+</span><svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg></button><button class="cmd notif"><span class="lead"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9a6 6 0 1 0-12 0c0 6-2.5 7-2.5 7h17S18 15 18 9z"/><path d="M10 20a2.2 2.2 0 0 0 4 0"/></svg>
+كل الإشعارات
+</span><svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg></button></div></section></div><nav class="bottomnav"><div class="bitem active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 10.5 12 3.5l8.5 7"/><path d="M6 9.5V20h12V9.5"/><path d="M10 20v-5h4v5"/></svg>
+الرئيسية
+</div><div class="bitem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 8.5 15.5 12 10 15.5v-7z" fill="currentColor" stroke="none"/></svg>
+التنفيذ
+</div><div class="bitem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></svg>
+السجل
+</div><div class="bitem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h10M18 7h2M4 12h2M10 12h10M4 17h10M18 17h2"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="12" r="2"/><circle cx="16" cy="17" r="2"/></svg>
+الإعدادات
+</div></nav></body></html>
