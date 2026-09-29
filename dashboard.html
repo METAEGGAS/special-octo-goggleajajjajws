@@ -78,8 +78,6 @@ input,textarea{user-select:text}
 .empty{text-align:center;color:var(--sub);padding:24px;font-size:14px}
 .nadd{display:flex;gap:8px}
 .nadd input,.brbar input,.urow input,.urow select{flex:1;border:none;background:var(--card);color:var(--apptx);border-radius:13px;padding:11px 14px;font-family:inherit;font-size:14px;outline:none;min-width:0}
-.nlist{display:flex;flex-direction:column;gap:8px;margin-top:12px}
-.note{background:var(--card);border-radius:14px;padding:12px 14px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;font-size:14px;white-space:pre-wrap;word-break:break-word}
 .cwrap{display:flex;flex-direction:column;height:100%;gap:10px}
 .cdsp{background:var(--card);border-radius:18px;padding:18px;text-align:left;direction:ltr;min-height:96px;display:flex;flex-direction:column;justify-content:flex-end;gap:4px;overflow:hidden}
 .cex{color:var(--sub);font-size:16px;min-height:20px;word-break:break-all}
@@ -123,6 +121,32 @@ input,textarea{user-select:text}
 .dtools input[type=range]{flex:1}
 .dcv{flex:1;width:100%;min-height:250px;background:#fff;border-radius:16px;touch-action:none;cursor:crosshair}
 audio{width:100%;margin-top:12px}
+.phead{display:flex;align-items:baseline;gap:16px;padding:2px 4px 14px}
+.phead b{font-size:24px}
+.phead span{color:#2f6fed;font-size:20px;font-weight:800}
+.alb{display:grid;grid-template-columns:repeat(3,1fr);gap:16px 12px}
+.a{cursor:pointer}
+.th{aspect-ratio:1;border-radius:18px;position:relative;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.1);overflow:hidden}
+.ph{font-size:26px;filter:grayscale(1);opacity:.45}
+.bdg{position:absolute;bottom:6px;left:6px;background:rgba(255,255,255,.95);color:#e0245e;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.an{font-size:13px;font-weight:700;margin-top:6px}
+.ac{font-size:12px;color:var(--sub)}
+.ah2{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:800;margin-bottom:10px}
+.gt{aspect-ratio:1;border-radius:10px;background:#e7eaf2}
+.csearch{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:26px;padding:2px 16px;box-shadow:0 1px 5px rgba(0,0,0,.08);margin-bottom:8px;flex:none}
+.csearch input{flex:1;border:none;background:none;outline:none;font-family:inherit;font-size:14px;color:var(--apptx);padding:10px 0;min-width:0}
+.csearch span{color:var(--sub);font-size:16px}
+.clist{flex:1;overflow-y:auto;padding-bottom:70px}
+.crow{display:flex;align-items:center;gap:14px;padding:10px 2px;cursor:pointer}
+.crow:active{opacity:.6}
+.cav{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none}
+.cn{flex:1;font-size:15px;font-weight:600}
+.ctabs{display:flex;border-top:1px solid rgba(128,136,168,.25);flex:none}
+.ct{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:15px;color:var(--sub);cursor:pointer;padding:8px 0 4px}
+.ct span{font-size:11px}
+.ct.on{color:#2f6fed;font-weight:700}
+.cdial{position:absolute;bottom:64px;left:16px;width:56px;height:56px;border-radius:50%;border:none;background:#2f6fed;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 6px 16px rgba(47,111,237,.4);z-index:4}
+.toast{position:absolute;bottom:130px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:8px 16px;border-radius:20px;font-size:13px;z-index:9;white-space:nowrap}
 @media (max-width:520px),(max-height:620px){
 #phone{height:100dvh;width:100vw;aspect-ratio:auto;border-radius:0;padding:0;box-shadow:none}
 #scr{border-radius:0}
@@ -167,12 +191,10 @@ const fmtSize=b=>b<1024?b+' B':b<1048576?(b/1024).toFixed(1)+' KB':(b/1048576).t
 function dl(url,name){const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove()}
 function tap(el,fn){let x=0,y=0;el.addEventListener('pointerdown',e=>{x=e.clientX;y=e.clientY});el.addEventListener('pointerup',e=>{if(Math.hypot(e.clientX-x,e.clientY-y)<12)fn(e)})}
 const icIn=d=>d.ic[0]=='h'?'<img src="'+d.ic+'" alt="">':d.ic;
-/* ============ نظام التطبيقات ============ */
 const openWins={};let zT=20,cur=null,nav=[],recOpen=false;
 function iconCenter(id){const sr=scr.getBoundingClientRect();const ic=document.querySelector('.icon[data-app="'+id+'"]');if(!ic)return[sr.width/2,sr.height/2,sr];const r=ic.getBoundingClientRect();return[r.left-sr.left+r.width/2,r.top-sr.top+r.height/2,sr]}
 function openApp(id){
-const d=RMAP[id];if(!d)return;
-hideRec();
+const d=RMAP[id];if(!d)return;hideRec();
 let w=openWins[id];
 if(!w){
 w=document.createElement('div');w.className='appwin';w.dataset.app=id;
@@ -184,8 +206,7 @@ w.querySelector('.abk').addEventListener('click',e=>{e.stopPropagation();back()}
 w._open=true;
 for(const k in openWins)if(k!==id)openWins[k].style.display='none';
 const[ox,oy,sr]=iconCenter(id);
-w.style.display='flex';w.style.zIndex=++zT;
-w.style.transition='none';
+w.style.display='flex';w.style.zIndex=++zT;w.style.transition='none';
 w.style.transform='translate('+(ox-sr.width/2)+'px,'+(oy-sr.height/2)+'px) scale(.06)';
 w.style.opacity='0';w.style.borderRadius='44px';
 requestAnimationFrame(()=>requestAnimationFrame(()=>{
@@ -211,10 +232,7 @@ if(w&&w._stack.length){w._stack.pop()();return}
 if(nav.length>1){animClose(nav.pop());cur=nav[nav.length-1];const p=openWins[cur];p._open=true;p.style.display='flex';p.style.zIndex=++zT;return}
 goHome();
 }
-function goHome(){
-if(!nav.length)return;
-nav.forEach(animClose);nav=[];cur=null;home.classList.remove('shrunk');
-}
+function goHome(){if(!nav.length)return;nav.forEach(animClose);nav=[];cur=null;home.classList.remove('shrunk')}
 function killApp(id){
 const w=openWins[id];
 if(w){if(w._kill)try{w._kill()}catch(e){}w.remove();delete openWins[id]}
@@ -237,7 +255,6 @@ c.addEventListener('pointerup',e=>{if(sy!==null&&sy-e.clientY>60)killApp(id);sy=
 }
 function hideRec(){recOpen=false;rec.style.display='none'}
 rec.addEventListener('click',e=>{if(e.target===rec)hideRec()});
-/* ============ الشاشة الرئيسية ============ */
 const P1=['gallery','files','notes','calc','clock','browser','camera','settings'],P2=['units','draw','timer','music'],DK=['music','gallery','notes','settings'];
 function icHTML(id){const d=RMAP[id];return '<div class="icon" data-app="'+id+'"><div class="ic" style="background:'+d.grad+'">'+icIn(d)+'</div><div class="il">'+d.name+'</div></div>'}
 let page=0;const PGC=2;
@@ -257,7 +274,6 @@ else{const t=document.elementFromPoint(e.clientX,e.clientY);const ic=t&&t.closes
 drag=null;
 });
 tap(dock,e=>{const ic=e.target.closest('.icon');if(ic)openApp(ic.dataset.app)});
-/* ============ شريط التنقل والإيماءات ============ */
 tap($('#nbk'),()=>back());tap($('#nhm'),()=>goHome());tap($('#nrc'),()=>recOpen?hideRec():showRec());
 let ge=null;
 scr.addEventListener('pointerdown',e=>{const r=scr.getBoundingClientRect();const x=e.clientX-r.left,y=e.clientY-r.top;ge={x:e.clientX,y:e.clientY,el:x<8,er:x>r.width-8,bb:y>r.height-70}});
@@ -272,7 +288,6 @@ ge=null;
 scr.addEventListener('contextmenu',e=>e.preventDefault());
 window.addEventListener('keydown',e=>{if(e.key==='Escape')back()});
 window.addEventListener('resize',()=>setPage(page,false));
-/* ============ شريط الحالة ============ */
 function tick(){
 const d=new Date();
 $('#clock').textContent=d.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});
@@ -282,33 +297,35 @@ if(wd)wd.textContent=d.toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',
 }
 tick();setInterval(tick,5000);
 if(navigator.getBattery)navigator.getBattery().then(b=>{const u=()=>{$('#bat').textContent=Math.round(b.level*100)+'%';$('#batf').setAttribute('width',Math.round(b.level*15))};u();b.addEventListener('levelchange',u)});
-/* ============ تطبيق: المعرض ============ */
+/* المعرض */
 function buildGallery(el,w){
 w._imgs=w._imgs||[];
-el.innerHTML='<div class="dz"><div style="font-size:34px">🖼️</div><div>اسحب الصور هنا أو اضغط لاختيارها من جهازك</div><input type="file" accept="image/*" multiple hidden></div><div class="ggrid"></div>';
-const dz=el.children[0],gin=dz.querySelector('input'),grid=el.children[1];
-const render=()=>grid.innerHTML=w._imgs.map((o,i)=>'<img src="'+o.u+'" data-i="'+i+'" alt="">').join('');
-const add=fs=>{[...fs].forEach(f=>{if(f.type.startsWith('image/'))w._imgs.push({u:URL.createObjectURL(f),n:f.name})});render()};
-dz.addEventListener('click',()=>gin.click());
-gin.addEventListener('click',e=>e.stopPropagation());
-gin.addEventListener('change',()=>{add(gin.files);gin.value=''});
-dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('ov')});
-dz.addEventListener('dragleave',()=>dz.classList.remove('ov'));
-dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('ov');add(e.dataTransfer.files)});
-grid.addEventListener('click',e=>{
+const AL=[['كل الصور',6834,'linear-gradient(135deg,#262a36,#0d0f16)',''],['المفضلة',1,'#181b26','♥'],['الكاميرا',166,'linear-gradient(135deg,#7fa5d8,#3c5f8f)',''],['فيديوهات',82,'linear-gradient(135deg,#9aa0af,#565c6d)','▶'],['لقطات الشاشة',1968,'linear-gradient(135deg,#f2f3f7,#dfe2ec)',''],['Picsart',0,'',''],['DCIM',1,'',''],['Pictures',794,'linear-gradient(135deg,#8a1140,#31104a)','']];
+const cell=(a,i)=>'<div class="a" data-i="'+i+'"><div class="th" style="background:'+(a[2]||'#eceef4')+'">'+(a[2]?'':'<span class="ph">⛰</span>')+(a[3]?'<span class="bdg">'+a[3]+'</span>':'')+'</div><div class="an">'+a[0]+'</div><div class="ac">'+a[1]+'</div></div>';
+const homeG=()=>{el.innerHTML='<div class="phead"><b>الصور</b><span>الألبومات</span></div><div class="alb">'+AL.slice(0,5).map(cell).join('')+'</div><div class="stitle" style="font-size:17px;color:var(--apptx)">المزيد من الألبومات</div><div class="alb">'+AL.slice(5).map((a,i)=>cell(a,i+5)).join('')+'</div>'};
+const openA=i=>{
+const a=AL[i];
+el.innerHTML='<div class="ah2"><button class="abk" id="abk2">‹</button><span>'+a[0]+'</span><span class="ac">'+a[1]+' عنصر</span></div>'+(i===0?'<div class="dz" style="margin-bottom:10px;padding:14px"><div>＋ إضافة صور من جهازك</div><input type="file" accept="image/*" multiple hidden></div>':'')+'<div class="ggrid" style="margin-top:0">'+w._imgs.map((o,j)=>'<img src="'+o.u+'" data-j="'+j+'">').join('')+'<div class="gt"></div>'.repeat(Math.min(Math.max(a[1]-w._imgs.length,0),60))+'</div>';
+el.querySelector('#abk2').onclick=()=>{if(w._stack.length)w._stack.pop()()};
+if(i===0){const dz=el.querySelector('.dz'),gin=dz.querySelector('input');
+dz.onclick=()=>gin.click();gin.onclick=e=>e.stopPropagation();
+gin.onchange=()=>{[...gin.files].forEach(f=>{if(f.type.startsWith('image/'))w._imgs.push({u:URL.createObjectURL(f),n:f.name})});openA(0)}}
+el.querySelector('.ggrid').addEventListener('click',e=>{
 const im=e.target.closest('img');if(!im)return;
-const i=+im.dataset.i,o=w._imgs[i];
+const j=+im.dataset.j,o=w._imgs[j];
 const v=document.createElement('div');v.className='gview';
 v.innerHTML='<img src="'+o.u+'"><div class="gtools"><button class="gbtn" id="g1">⬇ تحميل</button><button class="gbtn" id="g2">🗑 حذف</button></div>';
 el.appendChild(v);
 const close=()=>v.remove();
 w._stack.push(close);
 v.querySelector('#g1').onclick=()=>dl(o.u,o.n||'صورة.png');
-v.querySelector('#g2').onclick=()=>{w._imgs.splice(i,1);render();w._stack.pop();close()};
+v.querySelector('#g2').onclick=()=>{w._imgs.splice(j,1);w._stack.pop();close();openA(i)};
 });
-render();
+};
+homeG();
+el.addEventListener('click',e=>{const a=e.target.closest('.a');if(a){w._stack.push(homeG);openA(+a.dataset.i)}});
 }
-/* ============ تطبيق: الملفات ============ */
+/* الملفات */
 function buildFiles(el,w){
 w._files=w._files||[];
 el.innerHTML='<div class="dz"><div style="font-size:34px">📁</div><div>اسحب أي ملفات هنا أو اضغط لاختيارها من جهازك</div><input type="file" multiple hidden></div><div class="flist"></div>';
@@ -328,20 +345,37 @@ if(d.rm!==undefined){URL.revokeObjectURL(w._files[d.rm].url);w._files.splice(d.r
 });
 render();
 }
-/* ============ تطبيق: جهات الاتصال ============ */
+/* جهات الاتصال */
 function buildNotes(el,w){
-el.innerHTML='<div class="nadd"><input id="nt" placeholder="اكتب ملاحظة جديدة..."><button class="pbtn2" id="nadd">＋</button></div><div class="nlist"></div>';
-const list=el.querySelector('.nlist'),inp=el.querySelector('#nt');
-let notes=[];try{notes=JSON.parse(localStorage.getItem('vnotes')||'[]')}catch(e){}
-const save=()=>localStorage.setItem('vnotes',JSON.stringify(notes));
-const render=()=>list.innerHTML=notes.length?notes.map((n,i)=>'<div class="note"><div>'+esc(n)+'</div><button class="gbtn" data-i="'+i+'">✕</button></div>').join(''):'<div class="empty">لا توجد ملاحظات</div>';
-const addN=()=>{const t=inp.value.trim();if(!t)return;notes.unshift(t);save();inp.value='';render()};
-el.querySelector('#nadd').addEventListener('click',addN);
-inp.addEventListener('keydown',e=>{if(e.key==='Enter')addN()});
-list.addEventListener('click',e=>{const i=e.target.dataset.i;if(i!==undefined){notes.splice(i,1);save();render()}});
+const CS=[['آدميلتي (🥺❤️🔐..."ء','#f9ab00'],['اب عبود القلب','#34a853'],['ابن الرئاصه','#ea4335'],['ابو احمد الاحمد','#a142f4'],['ابو اسد','#00b8d4'],['ابو الحسنس','#f2730c'],['ابو الكر','#34a853'],['ابو ايوب','#ea4335'],['ابو براهيم','#f9ab00'],['ابو جراح القلب','#34a853'],['ابو جني','#ea4335'],['ابو جود','#ea4335']];
+const psvg='<svg viewBox="0 0 24 24" width="24" height="24" fill="#fff"><path d="M12 12a5 5 0 100-10 5 5 0 000 10zm0 2c-5 0-9 2.5-9 6v2h18v-2c0-3.5-4-6-9-6z"/></svg>';
+el.classList.add('flexcol');
+el.innerHTML='<div class="csearch"><input placeholder="البحث في جهات الاتصال والأماكن"><span>🎙</span><span style="font-weight:800">⋮</span></div><div class="clist"></div><div class="ctabs"><div class="ct on" data-t="0">👥<span>جهات اتصال</span></div><div class="ct" data-t="1">🕒<span>الأخيرة</span></div><div class="ct" data-t="2">⭐<span>مفضلة</span></div></div><button class="cdial"><svg viewBox="0 0 24 24" width="22" height="22" fill="#fff"><circle cx="6" cy="6" r="2.2"/><circle cx="12" cy="6" r="2.2"/><circle cx="18" cy="6" r="2.2"/><circle cx="6" cy="12" r="2.2"/><circle cx="12" cy="12" r="2.2"/><circle cx="18" cy="12" r="2.2"/><circle cx="6" cy="18" r="2.2"/><circle cx="12" cy="18" r="2.2"/><circle cx="18" cy="18" r="2.2"/></svg></button>';
+const list=el.querySelector('.clist'),inp=el.querySelector('.csearch input');
+const row=c=>'<div class="crow" data-i="'+CS.indexOf(c)+'"><div class="cav" style="background:'+c[1]+'">'+psvg+'</div><div class="cn">'+c[0]+'</div></div>';
+let tab=0;
+const render=()=>{
+if(tab===1){list.innerHTML='<div class="empty" style="padding-top:60px">لا توجد مكالمات حديثة</div>';return}
+let a=tab===2?CS.slice(0,1):CS;
+const f=inp.value.trim();
+if(f)a=a.filter(c=>c[0].includes(f));
+list.innerHTML=a.length?a.map(row).join(''):'<div class="empty">لا توجد نتائج</div>';
+};
+inp.addEventListener('input',render);
+el.querySelector('.ctabs').addEventListener('click',e=>{const t=e.target.closest('.ct');if(!t)return;tab=+t.dataset.t;el.querySelectorAll('.ct').forEach(x=>x.classList.toggle('on',x===t));render()});
+const toast=t=>{const d=document.createElement('div');d.className='toast';d.textContent=t;el.appendChild(d);setTimeout(()=>d.remove(),1500)};
+el.querySelector('.cdial').onclick=()=>toast('لوحة المفاتيح غير متاحة في النسخة التجريبية');
+list.addEventListener('click',e=>{
+const r=e.target.closest('.crow');if(!r)return;
+const i=+r.dataset.i,c=CS[i],old=list.innerHTML;
+list.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;gap:10px;padding-top:46px"><div class="cav" style="width:92px;height:92px;background:'+c[1]+'">'+psvg+'</div><div style="font-size:19px;font-weight:800">'+c[0]+'</div><div dir="ltr" style="color:var(--sub);font-size:15px">0770'+String(1000000+i*137913).slice(0,7)+'</div><div style="display:flex;gap:10px;margin-top:8px"><button class="pbtn2" id="cc">📞 اتصال</button><button class="gbtn" id="cm">💬 رسالة</button></div></div>';
+w._stack.push(()=>{list.innerHTML=old});
+list.querySelector('#cc').onclick=()=>toast('جارٍ الاتصال بـ '+c[0]+' ...');
+list.querySelector('#cm').onclick=()=>toast('الرسائل غير متاحة في النسخة التجريبية');
+});
 render();
 }
-/* ============ تطبيق: الحاسبة ============ */
+/* الحاسبة */
 function buildCalc(el,w){
 const keys=['C','⌫','±','÷','7','8','9','×','4','5','6','−','1','2','3','+','0','.','%','='];
 el.innerHTML='<div class="cwrap"><div class="cdsp"><div class="cex" id="cex"></div><div class="cres" id="cres">0</div></div><div class="ckbd">'+keys.map(k=>'<button class="ck '+('÷×−+='.includes(k)?'cop':('C⌫'.includes(k)?'csp':''))+'" data-k="'+k+'">'+k+'</button>').join('')+'</div></div>';
@@ -357,7 +391,7 @@ else ex+=k;
 cex.textContent=ex;
 });
 }
-/* ============ تطبيق: الساعة ============ */
+/* الساعة */
 function buildClock(el,w){
 el.innerHTML='<div class="bigclock" id="bck"></div><div class="bigdate" id="bdt"></div><div class="sep"></div><div class="sw"><div class="swd" id="swd">00:00.0</div><div class="swb"><button class="pbtn2" id="swst">بدء</button><button class="gbtn" id="swrs">تصفير</button></div></div>';
 const bck=el.querySelector('#bck'),bdt=el.querySelector('#bdt'),swd=el.querySelector('#swd');
@@ -372,7 +406,7 @@ else{acc+=Date.now()-t0;clearInterval(siv);e.target.textContent='بدء'}
 el.querySelector('#swrs').addEventListener('click',()=>{run=false;acc=0;clearInterval(siv);swd.textContent='00:00.0';el.querySelector('#swst').textContent='بدء'});
 const old=w._kill;w._kill=()=>{clearInterval(iv);clearInterval(siv);old&&old()};
 }
-/* ============ تطبيق: المتصفح ============ */
+/* المتصفح */
 function buildBrowser(el,w){
 el.classList.add('flexcol');
 el.innerHTML='<div class="brbar"><input id="brin" placeholder="example.com" value="https://example.com" dir="ltr"><button class="pbtn2" id="brgo">ذهاب</button></div><iframe class="brfr" id="brfr" src="https://example.com" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe><div class="brhint">بعض المواقع تمنع عرضها داخل إطار — جرّب ويكيبيديا أو example.com</div>';
@@ -380,7 +414,7 @@ const go=()=>{let u=el.querySelector('#brin').value.trim();if(u&&!/^https?:\/\//
 el.querySelector('#brgo').addEventListener('click',go);
 el.querySelector('#brin').addEventListener('keydown',e=>{if(e.key==='Enter')go()});
 }
-/* ============ تطبيق: الكاميرا ============ */
+/* الكاميرا */
 function buildCamera(el,w){
 el.innerHTML='<div class="camv"><video id="cv" autoplay playsinline muted></video><img id="cshot" style="display:none"></div><div class="cbtns"><button class="pbtn2" id="con">تشغيل الكاميرا</button><button class="shut" id="csnap" style="display:none" title="التقاط"></button><button class="gbtn" id="cdl" style="display:none">⬇ تحميل</button><button class="gbtn" id="cret" style="display:none">↺ إعادة</button><button class="gbtn" id="cstop" style="display:none">إيقاف</button></div><div class="brhint" id="cmsg"></div>';
 let stream=null,durl='';
@@ -406,7 +440,7 @@ const stop=()=>{if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}q
 q('#cstop').addEventListener('click',stop);
 const old=w._kill;w._kill=()=>{stop();old&&old()};
 }
-/* ============ تطبيق: الإعدادات ============ */
+/* الإعدادات */
 function buildSettings(el,w){
 const walls=['linear-gradient(160deg,#2b5876,#4e4376)','linear-gradient(160deg,#0f2027,#2c5364)','linear-gradient(160deg,#42275a,#734b6d)','linear-gradient(160deg,#136a8a,#267871)','linear-gradient(160deg,#232526,#414345)','linear-gradient(160deg,#e96443,#904e95)'];
 el.innerHTML='<div class="stitle">الخلفية</div><div class="wrow">'+walls.map((wl,i)=>'<button class="wsw" data-i="'+i+'" style="background:'+wl+'"></button>').join('')+'</div><div class="stitle">المظهر</div><div class="srow"><span>الوضع الداكن للتطبيقات</span><button class="tgl" id="tg"><i></i></button></div><div class="stitle">البيانات</div><div class="srow"><span>مسح الملاحظات المحفوظة</span><button class="gbtn" id="clr">مسح</button></div><div class="stitle">حول الجهاز</div><div class="about">هاتف افتراضي · الإصدار 1.0<br>يعمل بالكامل داخل المتصفح بدون خادم</div>';
@@ -416,7 +450,7 @@ tg.classList.toggle('on',scr.classList.contains('dark'));
 tg.addEventListener('click',()=>{scr.classList.toggle('dark');tg.classList.toggle('on')});
 el.querySelector('#clr').addEventListener('click',e=>{localStorage.removeItem('vnotes');e.target.textContent='تم ✓'});
 }
-/* ============ تطبيق: التحويل ============ */
+/* التحويل */
 function buildUnits(el,w){
 const U={'طول':{'متر':1,'كيلومتر':1000,'سنتيمتر':.01,'مليمتر':.001,'ميل':1609.34,'قدم':.3048,'بوصة':.0254},'وزن':{'كيلوجرام':1,'جرام':.001,'رطل':.453592,'أونصة':.0283495},'بيانات':{'بايت':1,'كيلوبايت':1024,'ميجابايت':1048576,'جيجابايت':1073741824}};
 el.innerHTML='<div class="useg">'+Object.keys(U).map((c,i)=>'<button class="usegb '+(i?'':'on')+'" data-c="'+c+'">'+c+'</button>').join('')+'</div><div class="urow"><input id="uv" type="number" value="1" dir="ltr"><select id="uf"></select></div><div class="ueq">=</div><div class="urow"><input id="ur" readonly dir="ltr"><select id="ut"></select></div>';
@@ -428,7 +462,7 @@ el.querySelector('.useg').addEventListener('click',e=>{const b=e.target.closest(
 [uv,uf,ut].forEach(x=>{x.addEventListener('input',conv);x.addEventListener('change',conv)});
 fill();
 }
-/* ============ تطبيق: الرسم ============ */
+/* الرسم */
 function buildDraw(el,w){
 el.classList.add('flexcol');
 el.innerHTML='<div class="dtools"><input type="color" id="dc0" value="#e0245e"><input type="range" id="dc1" min="2" max="30" value="6"><button class="gbtn" id="dc2">مسح</button><button class="gbtn" id="dc3">⬇ حفظ</button></div><canvas class="dcv"></canvas>';
@@ -444,7 +478,7 @@ cv.addEventListener('pointerup',()=>d=false);
 el.querySelector('#dc2').onclick=()=>{ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height)};
 el.querySelector('#dc3').onclick=()=>dl(cv.toDataURL('image/png'),'رسمتي.png');
 }
-/* ============ تطبيق: المؤقت ============ */
+/* المؤقت */
 function buildTimer(el,w){
 el.innerHTML='<div class="sw" style="margin-top:20px"><div class="swd" id="td">05:00</div><div class="swb"><button class="gbtn" data-m="1">1 دقيقة</button><button class="gbtn" data-m="5">5 دقائق</button><button class="gbtn" data-m="10">10 دقائق</button></div><div class="swb"><button class="pbtn2" id="tst">بدء</button><button class="gbtn" id="trs">إيقاف</button></div><div class="brhint" id="tmsg"></div></div>';
 let left=300,iv=null;
@@ -461,7 +495,7 @@ el.querySelector('#trs').addEventListener('click',()=>{clearInterval(iv);iv=null
 const old=w._kill;w._kill=()=>{clearInterval(iv);old&&old()};
 show();
 }
-/* ============ تطبيق: الموسيقى ============ */
+/* الموسيقى */
 function buildMusic(el,w){
 w._tr=w._tr||[];
 el.innerHTML='<div class="dz"><div style="font-size:34px">🎵</div><div>اضغط لاختيار ملفات صوتية من جهازك</div><input type="file" accept="audio/*" multiple hidden></div><div class="flist"></div><audio id="ma" controls></audio>';
@@ -473,7 +507,6 @@ min.addEventListener('change',()=>{[...min.files].forEach(f=>w._tr.push({name:f.
 list.addEventListener('click',e=>{const i=e.target.dataset.p;if(i!==undefined){au.src=w._tr[i].url;au.play()}});
 render();
 }
-/* ============ تسجيل التطبيقات وبناء الواجهة ============ */
 def('gallery','المعرض','https://cdn-icons-png.flaticon.com/128/8418/8418513.png','linear-gradient(135deg,#f6d365,#fda085)',buildGallery);
 def('files','الملفات','https://cdn-icons-png.flaticon.com/128/1379/1379905.png','linear-gradient(135deg,#89f7fe,#66a6ff)',buildFiles);
 def('notes','جهات الاتصال','https://cdn-icons-png.flaticon.com/128/752/752326.png','linear-gradient(135deg,#fbc2eb,#a6c1ee)',buildNotes);
