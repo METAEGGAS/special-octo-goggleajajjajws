@@ -38,7 +38,8 @@ input,textarea{user-select:text}
 #wdat{font-size:13px;opacity:.85}
 .icon{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;transition:transform .12s}
 .icon:active{transform:scale(.85)}
-.ic{width:58px;height:58px;border-radius:17px;display:flex;align-items:center;justify-content:center;font-size:27px;box-shadow:0 6px 14px rgba(0,0,0,.28),inset 0 1px 1px rgba(255,255,255,.4)}
+.ic{width:58px;height:58px;border-radius:17px;display:flex;align-items:center;justify-content:center;font-size:27px;box-shadow:0 6px 14px rgba(0,0,0,.28),inset 0 1px 1px rgba(255,255,255,.4);overflow:hidden}
+.ic img{width:100%;height:100%;object-fit:cover;display:block}
 .il{font-size:11px;font-weight:600;text-shadow:0 1px 3px rgba(0,0,0,.55);max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #dots{display:flex;gap:7px;justify-content:center;padding:8px 0 4px}
 .dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.4);transition:.25s}
@@ -52,7 +53,8 @@ input,textarea{user-select:text}
 #rec{position:absolute;inset:0;z-index:390;display:none;background:rgba(8,10,18,.55);backdrop-filter:blur(20px);padding:60px 18px;overflow-x:auto}
 .rcs{display:flex;gap:16px;height:100%;align-items:center;direction:ltr}
 .rcard{flex:none;width:180px;height:300px;border-radius:24px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;cursor:pointer;position:relative;user-select:none;touch-action:pan-x}
-.ric{width:70px;height:70px;border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:34px;box-shadow:0 8px 18px rgba(0,0,0,.3)}
+.ric{width:70px;height:70px;border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:34px;box-shadow:0 8px 18px rgba(0,0,0,.3);overflow:hidden}
+.ric img{width:100%;height:100%;object-fit:cover;display:block}
 .rn{font-size:14px;font-weight:700}
 .rkill{position:absolute;top:8px;left:8px;width:28px;height:28px;border-radius:50%;border:none;background:rgba(255,255,255,.2);color:#fff;cursor:pointer;font-size:13px}
 .rempty{display:flex;height:100%;align-items:center;justify-content:center;color:rgba(255,255,255,.75);font-size:15px}
@@ -96,8 +98,12 @@ input,textarea{user-select:text}
 .brbar{display:flex;gap:8px}
 .brfr{width:100%;flex:1;border:none;border-radius:14px;margin-top:10px;background:#fff;min-height:280px}
 .brhint{font-size:11px;color:var(--sub);text-align:center;margin-top:8px}
-.camv{background:#000;border-radius:16px;overflow:hidden;min-height:240px;display:flex;align-items:center;justify-content:center}
-.camv video,.camv img{width:100%;display:block}
+.camv{background:#000;border-radius:20px;overflow:hidden;min-height:240px;aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 26px rgba(0,0,0,.3);border:1px solid rgba(128,136,168,.3)}
+.camv video{width:100%;display:block;transform:scaleX(-1)}
+.camv img{width:100%;display:block}
+.cbtns{display:flex;justify-content:center;align-items:center;gap:12px;margin-top:16px;flex-wrap:wrap}
+.shut{width:58px;height:58px;border-radius:50%;border:5px solid #fff;background:radial-gradient(circle at 35% 35%,#ff5b7f,#e0245e);box-shadow:0 6px 16px rgba(0,0,0,.35),0 0 0 2px rgba(0,0,0,.15);cursor:pointer;transition:.12s;flex:none;padding:0}
+.shut:active{transform:scale(.86)}
 .stitle{font-size:13px;font-weight:700;color:var(--sub);margin:16px 0 8px}
 .wrow{display:flex;gap:10px;flex-wrap:wrap}
 .wsw{width:46px;height:46px;border-radius:14px;border:2px solid rgba(255,255,255,.5);cursor:pointer}
@@ -160,6 +166,7 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',
 const fmtSize=b=>b<1024?b+' B':b<1048576?(b/1024).toFixed(1)+' KB':(b/1048576).toFixed(1)+' MB';
 function dl(url,name){const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove()}
 function tap(el,fn){let x=0,y=0;el.addEventListener('pointerdown',e=>{x=e.clientX;y=e.clientY});el.addEventListener('pointerup',e=>{if(Math.hypot(e.clientX-x,e.clientY-y)<12)fn(e)})}
+const icIn=d=>d.ic[0]=='h'?'<img src="'+d.ic+'" alt="">':d.ic;
 /* ============ نظام التطبيقات ============ */
 const openWins={};let zT=20,cur=null,nav=[],recOpen=false;
 function iconCenter(id){const sr=scr.getBoundingClientRect();const ic=document.querySelector('.icon[data-app="'+id+'"]');if(!ic)return[sr.width/2,sr.height/2,sr];const r=ic.getBoundingClientRect();return[r.left-sr.left+r.width/2,r.top-sr.top+r.height/2,sr]}
@@ -218,7 +225,7 @@ showRec();
 function showRec(){
 recOpen=true;rec.style.display='block';
 const ids=Object.keys(openWins);
-rec.innerHTML=ids.length?'<div class="rcs">'+ids.map(id=>{const d=RMAP[id];return '<div class="rcard" data-id="'+id+'"><button class="rkill">✕</button><div class="ric" style="background:'+d.grad+'">'+d.ic+'</div><div class="rn">'+d.name+'</div></div>'}).join('')+'</div>':'<div class="rempty">لا توجد تطبيقات مفتوحة</div>';
+rec.innerHTML=ids.length?'<div class="rcs">'+ids.map(id=>{const d=RMAP[id];return '<div class="rcard" data-id="'+id+'"><button class="rkill">✕</button><div class="ric" style="background:'+d.grad+'">'+icIn(d)+'</div><div class="rn">'+d.name+'</div></div>'}).join('')+'</div>':'<div class="rempty">لا توجد تطبيقات مفتوحة</div>';
 ids.forEach(id=>{
 const c=rec.querySelector('.rcard[data-id="'+id+'"]');
 c.addEventListener('click',e=>{if(e.target.closest('.rkill'))return;openApp(id)});
@@ -231,8 +238,8 @@ c.addEventListener('pointerup',e=>{if(sy!==null&&sy-e.clientY>60)killApp(id);sy=
 function hideRec(){recOpen=false;rec.style.display='none'}
 rec.addEventListener('click',e=>{if(e.target===rec)hideRec()});
 /* ============ الشاشة الرئيسية ============ */
-const P1=['gallery','files','notes','calc','clock','browser','camera','settings'],P2=['units','draw','timer','music'],DK=['browser','gallery','notes','settings'];
-function icHTML(id){const d=RMAP[id];return '<div class="icon" data-app="'+id+'"><div class="ic" style="background:'+d.grad+'">'+d.ic+'</div><div class="il">'+d.name+'</div></div>'}
+const P1=['gallery','files','notes','calc','clock','browser','camera','settings'],P2=['units','draw','timer','music'],DK=['music','gallery','notes','settings'];
+function icHTML(id){const d=RMAP[id];return '<div class="icon" data-app="'+id+'"><div class="ic" style="background:'+d.grad+'">'+icIn(d)+'</div><div class="il">'+d.name+'</div></div>'}
 let page=0;const PGC=2;
 function setPage(p,anim){page=Math.max(0,Math.min(PGC-1,p));pages.style.transition=anim?'transform .32s cubic-bezier(.25,.9,.3,1)':'none';pages.style.transform='translateX('+(-page*pw.clientWidth)+'px)';$$('.dot').forEach((d,i)=>d.classList.toggle('on',i===page))}
 let drag=null;
@@ -321,7 +328,7 @@ if(d.rm!==undefined){URL.revokeObjectURL(w._files[d.rm].url);w._files.splice(d.r
 });
 render();
 }
-/* ============ تطبيق: الملاحظات ============ */
+/* ============ تطبيق: جهات الاتصال ============ */
 function buildNotes(el,w){
 el.innerHTML='<div class="nadd"><input id="nt" placeholder="اكتب ملاحظة جديدة..."><button class="pbtn2" id="nadd">＋</button></div><div class="nlist"></div>';
 const list=el.querySelector('.nlist'),inp=el.querySelector('#nt');
@@ -375,25 +382,28 @@ el.querySelector('#brin').addEventListener('keydown',e=>{if(e.key==='Enter')go()
 }
 /* ============ تطبيق: الكاميرا ============ */
 function buildCamera(el,w){
-el.innerHTML='<div class="camv"><video id="cv" autoplay playsinline muted></video><img id="cshot" style="display:none"></div><div class="swb"><button class="pbtn2" id="con">تشغيل الكاميرا</button><button class="pbtn2" id="csnap" style="display:none">التقاط</button><button class="gbtn" id="cstop" style="display:none">إيقاف</button></div><div class="brhint" id="cmsg"></div>';
-let stream=null;
-const v=el.querySelector('#cv'),shot=el.querySelector('#cshot'),msg=el.querySelector('#cmsg');
-el.querySelector('#con').addEventListener('click',async()=>{
+el.innerHTML='<div class="camv"><video id="cv" autoplay playsinline muted></video><img id="cshot" style="display:none"></div><div class="cbtns"><button class="pbtn2" id="con">تشغيل الكاميرا</button><button class="shut" id="csnap" style="display:none" title="التقاط"></button><button class="gbtn" id="cdl" style="display:none">⬇ تحميل</button><button class="gbtn" id="cret" style="display:none">↺ إعادة</button><button class="gbtn" id="cstop" style="display:none">إيقاف</button></div><div class="brhint" id="cmsg"></div>';
+let stream=null,durl='';
+const q=s=>el.querySelector(s),v=q('#cv'),shot=q('#cshot'),msg=q('#cmsg');
+q('#con').addEventListener('click',async()=>{
 try{
 stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:false});
 v.srcObject=stream;
-el.querySelector('#csnap').style.display='';el.querySelector('#cstop').style.display='';msg.textContent='';
+q('#csnap').style.display='';q('#cstop').style.display='';msg.textContent='';
 }catch(e){msg.textContent='تعذر الوصول إلى الكاميرا: '+e.message}
 });
-el.querySelector('#csnap').addEventListener('click',()=>{
+q('#csnap').addEventListener('click',()=>{
 if(!stream||!v.videoWidth)return;
 const c=document.createElement('canvas');c.width=v.videoWidth;c.height=v.videoHeight;
-c.getContext('2d').drawImage(v,0,0);
-shot.src=c.toDataURL('image/png');shot.style.display='block';v.style.display='none';
-w._stack.push(()=>{shot.style.display='none';v.style.display=''});
+const x=c.getContext('2d');x.translate(c.width,0);x.scale(-1,1);x.drawImage(v,0,0);
+durl=c.toDataURL('image/png');shot.src=durl;shot.style.display='block';v.style.display='none';
+q('#cdl').style.display='';q('#cret').style.display='';
+w._stack.push(()=>{shot.style.display='none';v.style.display='';q('#cdl').style.display='none';q('#cret').style.display='none'});
 });
-const stop=()=>{if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}el.querySelector('#csnap').style.display='none';el.querySelector('#cstop').style.display='none'};
-el.querySelector('#cstop').addEventListener('click',stop);
+q('#cdl').addEventListener('click',()=>dl(durl,'صورتي.png'));
+q('#cret').addEventListener('click',()=>{if(w._stack.length)w._stack.pop()()});
+const stop=()=>{if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}q('#csnap').style.display='none';q('#cstop').style.display='none'};
+q('#cstop').addEventListener('click',stop);
 const old=w._kill;w._kill=()=>{stop();old&&old()};
 }
 /* ============ تطبيق: الإعدادات ============ */
@@ -464,18 +474,18 @@ list.addEventListener('click',e=>{const i=e.target.dataset.p;if(i!==undefined){a
 render();
 }
 /* ============ تسجيل التطبيقات وبناء الواجهة ============ */
-def('gallery','المعرض','🖼️','linear-gradient(135deg,#f6d365,#fda085)',buildGallery);
-def('files','الملفات','📁','linear-gradient(135deg,#89f7fe,#66a6ff)',buildFiles);
-def('notes','الملاحظات','📝','linear-gradient(135deg,#fbc2eb,#a6c1ee)',buildNotes);
-def('calc','الحاسبة','🧮','linear-gradient(135deg,#84fab0,#8fd3f4)',buildCalc);
-def('clock','الساعة','⏰','linear-gradient(135deg,#fa709a,#fee140)',buildClock);
-def('browser','المتصفح','🌐','linear-gradient(135deg,#30cfd0,#330867)',buildBrowser);
-def('camera','الكاميرا','📷','linear-gradient(135deg,#a8edea,#fed6e3)',buildCamera);
-def('settings','الإعدادات','⚙️','linear-gradient(135deg,#bdc3c7,#2c3e50)',buildSettings);
+def('gallery','المعرض','https://cdn-icons-png.flaticon.com/128/8418/8418513.png','linear-gradient(135deg,#f6d365,#fda085)',buildGallery);
+def('files','الملفات','https://cdn-icons-png.flaticon.com/128/1379/1379905.png','linear-gradient(135deg,#89f7fe,#66a6ff)',buildFiles);
+def('notes','جهات الاتصال','https://cdn-icons-png.flaticon.com/128/752/752326.png','linear-gradient(135deg,#fbc2eb,#a6c1ee)',buildNotes);
+def('calc','الحاسبة','https://cdn-icons-png.flaticon.com/128/891/891175.png','linear-gradient(135deg,#84fab0,#8fd3f4)',buildCalc);
+def('clock','الساعة','https://cdn-icons-png.flaticon.com/128/850/850960.png','linear-gradient(135deg,#fa709a,#fee140)',buildClock);
+def('browser','المتصفح','https://cdn-icons-png.flaticon.com/128/5968/5968827.png','linear-gradient(135deg,#30cfd0,#330867)',buildBrowser);
+def('camera','الكاميرا','https://cdn-icons-png.flaticon.com/128/12956/12956311.png','linear-gradient(135deg,#a8edea,#fed6e3)',buildCamera);
+def('settings','الإعدادات','https://cdn-icons-png.flaticon.com/128/10024/10024002.png','linear-gradient(135deg,#bdc3c7,#2c3e50)',buildSettings);
 def('units','التحويل','📐','linear-gradient(135deg,#fddb92,#d1fdff)',buildUnits);
 def('draw','الرسم','🎨','linear-gradient(135deg,#ff9a9e,#fecfef)',buildDraw);
 def('timer','المؤقت','⏳','linear-gradient(135deg,#f093fb,#f5576c)',buildTimer);
-def('music','الموسيقى','🎵','linear-gradient(135deg,#4facfe,#00f2fe)',buildMusic);
+def('music','الموسيقى','https://cdn-icons-png.flaticon.com/128/16076/16076080.png','linear-gradient(135deg,#4facfe,#00f2fe)',buildMusic);
 pages.innerHTML='<div class="pg"><div class="wgt"><div id="wclk"></div><div id="wdat"></div></div>'+P1.map(icHTML).join('')+'</div><div class="pg">'+P2.map(icHTML).join('')+'</div>';
 dock.innerHTML=DK.map(icHTML).join('');
 setPage(0,false);
