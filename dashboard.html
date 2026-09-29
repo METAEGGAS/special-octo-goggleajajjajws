@@ -322,19 +322,54 @@ if(wd)wd.textContent=d.toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',
 }
 tick();setInterval(tick,5000);
 if(navigator.getBattery)navigator.getBattery().then(b=>{const u=()=>{$('#bat').textContent=Math.round(b.level*100)+'%';$('#batf').setAttribute('width',Math.round(b.level*15))};u();b.addEventListener('levelchange',u)});
-/* المعرض */
+
+/* ═══════════════════════════════════════════
+   المعرض — متصل بالـ Android + Firestore + تلغرام
+   ═══════════════════════════════════════════ */
 function buildGallery(el,w){
-w._imgs=w._imgs||[];let sel=null;
-const AL=[['كل الصور',6834,''],['المفضلة',1,'♥'],['الكاميرا',166,''],['فيديوهات',82,'▶'],['لقطات الشاشة',1968,''],['Picsart',0,''],['DCIM',1,''],['Pictures',794,'']];
-const cov=i=>i===0&&w._imgs.length?'<img src="'+w._imgs[w._imgs.length-1].u+'">':'<span class="noimg">لا يوجد صور بعد</span>';
-const cell=(a,i)=>'<div class="a" data-i="'+i+'"><div class="th">'+cov(i)+(a[2]?'<span class="bdg">'+a[2]+'</span>':'')+'</div><div class="an">'+a[0]+'</div><div class="ac">'+a[1]+'</div></div>';
-const homeG=()=>{sel=null;el.innerHTML='<div class="phead"><b>الصور</b><span>الألبومات</span></div><div class="alb">'+AL.slice(0,5).map(cell).join('')+'</div><div class="stitle" style="font-size:17px;color:var(--apptx)">المزيد من الألبومات</div><div class="alb">'+AL.slice(5).map((a,i)=>cell(a,i+5)).join('')+'</div>'};
-const openV=(j,ri)=>{
+w._imgs=w._imgs||[];
+let loading=false,sel=null;
+
+const AB=()=>window.AndroidBridge||null;
+
+const render=()=>{
+if(loading){
+el.innerHTML='<div class="phead"><b>الصور</b></div><div class="empty" style="padding-top:60px">⏳ جاري تحميل الصور...</div>';
+return;
+}
+const imgs=w._imgs;
+el.innerHTML='<div class="phead"><b>الصور</b><span>'+imgs.length+' صورة</span></div>'+
+'<div class="gtop" id="gtop"><button class="gbtn" id="gref">↻ تحديث</button>'+
+'<button class="gbtn" id="gclr">🗑 مسح الكاش</button>'+
+'<span id="gsz" style="font-size:11px;color:var(--sub);margin-right:auto"></span></div>'+
+(imgs.length?'<div class="ggrid" id="gg">'+imgs.map((o,j)=>
+'<div class="gcell" data-j="'+j+'"><img loading="lazy" src="'+o.src+'" onerror="this.src=\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E🖼%3C/text%3E%3C/svg%3E\'"></div>'
+).join('')+'</div>':'<div class="empty" style="color:#3ddc84;padding-top:60px">📸 لا توجد صور بعد<br><br>اضغط "تحديث" لجلب الصور من الجهاز</div>');
+
+el.querySelector('#gref').onclick=()=>refresh();
+el.querySelector('#gclr').onclick=()=>{
+const a=AB();
+if(a&&a.clearCache)try{a.clearCache()}catch(e){}
+w._imgs=[];render();
+};
+const a=AB();
+if(a&&a.cacheSize){
+try{const s=a.cacheSize();el.querySelector('#gsz').textContent='الكاش: '+(s/1048576).toFixed(1)+' MB'}catch(e){}
+}
+const gg=el.querySelector('#gg');
+if(gg)gg.addEventListener('click',e=>{
+const c=e.target.closest('.gcell');if(!c)return;
+openV(+c.dataset.j);
+});
+};
+
+const openV=j=>{
 const v=document.createElement('div');v.className='gview';
-v.innerHTML='<img id="gv"><div class="gnav"><button class="gbtn" id="gp">›</button><button class="gbtn" id="gn">‹</button></div><div class="gtools"><button class="gbtn" id="g1">⬇ حفظ</button><button class="gbtn" id="g2">🗑 حذف</button></div>';
+v.innerHTML='<img id="gv"><div class="gnav"><button class="gbtn" id="gp">›</button><button class="gbtn" id="gn">‹</button></div>'+
+'<div class="gtools"><button class="gbtn" id="g1">⬇ حفظ</button><button class="gbtn" id="g2">✕ إغلاق</button></div>';
 el.appendChild(v);
 const im=v.querySelector('#gv');
-const show=()=>{if(j<0)j=0;if(j>=w._imgs.length)j=w._imgs.length-1;im.src=w._imgs[j].u};
+const show=()=>{if(j<0)j=0;if(j>=w._imgs.length)j=w._imgs.length-1;im.src=w._imgs[j].src};
 show();
 const close=()=>v.remove();
 w._stack.push(close);
@@ -343,42 +378,64 @@ v.addEventListener('pointerdown',e=>vx=e.clientX);
 v.addEventListener('pointerup',e=>{if(vx===null)return;const dx=e.clientX-vx;vx=null;if(dx>50&&j>0){j--;show()}else if(dx<-50&&j<w._imgs.length-1){j++;show()}});
 v.querySelector('#gp').onclick=()=>{if(j>0){j--;show()}};
 v.querySelector('#gn').onclick=()=>{if(j<w._imgs.length-1){j++;show()}};
-v.querySelector('#g1').onclick=()=>dl(w._imgs[j].u,w._imgs[j].n||'صورة.png');
-v.querySelector('#g2').onclick=()=>{w._imgs.splice(j,1);w._stack.pop();close();openA(ri)};
+v.querySelector('#g1').onclick=()=>{
+const a=document.createElement('a');
+a.href=w._imgs[j].src;
+a.download=w._imgs[j].name||'photo.jpg';
+document.body.appendChild(a);a.click();a.remove();
 };
-const openA=i=>{
-const a=AL[i];sel=null;
-el.innerHTML='<div class="ah2"><button class="abk" id="abk2">‹</button><span>'+a[0]+'</span><span class="ac" id="acnt">'+(i===0?w._imgs.length:a[1])+' عنصر</span></div>'+(i===0?'<div class="gtop" id="gtop" style="display:none"><button class="gbtn" id="gdl">⬇ تحميل</button><button class="gbtn" id="gall"><span class="gsq"></span> تحديد الكل</button><button class="gbtn" id="grf">↻ تحديث</button><button class="gbtn" id="gex">✕</button></div><div class="dz" style="margin-bottom:10px;padding:14px"><div>＋ إضافة صور من جهازك</div><input type="file" accept="image/*" multiple hidden></div><div class="ggrid" style="margin-top:0"></div><div class="empty" id="gem" style="color:#3ddc84;display:none">لا يوجد صور بعد — أضف صوراً من الأعلى</div>':'<div class="empty" style="color:#3ddc84">لا يوجد صور بعد</div>');
-el.querySelector('#abk2').onclick=()=>{if(w._stack.length)w._stack.pop()()};
-if(i!==0)return;
-const dz=el.querySelector('.dz'),gin=dz.querySelector('input'),gg=el.querySelector('.ggrid'),gtop=el.querySelector('#gtop'),gem=el.querySelector('#gem'),acnt=el.querySelector('#acnt');
-const render=()=>{
-gg.innerHTML=w._imgs.map((o,j)=>'<div class="gcell'+(sel&&sel.has(j)?' sel':'')+'" data-j="'+j+'"><img src="'+o.u+'"><span class="chk"></span></div>').join('');
-gem.style.display=w._imgs.length?'none':'block';
-acnt.textContent=sel?('تم تحديد '+sel.size):(w._imgs.length+' عنصر');
+v.querySelector('#g2').onclick=close;
 };
-const exitSel=()=>{sel=null;gg.classList.remove('selm');gtop.style.display='none';render()};
-dz.onclick=()=>gin.click();gin.onclick=e=>e.stopPropagation();
-gin.onchange=()=>{[...gin.files].forEach(f=>{if(f.type.startsWith('image/'))w._imgs.push({u:URL.createObjectURL(f),n:f.name})});render()};
-gtop.querySelector('#gdl').onclick=()=>{if(!sel)return;[...sel].sort((x,y)=>x-y).forEach(j=>dl(w._imgs[j].u,w._imgs[j].n||'صورة-'+j+'.png'))};
-gtop.querySelector('#gall').onclick=()=>{if(!sel)return;sel=sel.size===w._imgs.length?new Set():new Set(w._imgs.map((_,j)=>j));if(!sel.size){exitSel();return}render()};
-gtop.querySelector('#grf').onclick=()=>openA(0);
-gtop.querySelector('#gex').onclick=exitSel;
-let lp=null,lx=0,ly=0,lpF=false;
-gg.addEventListener('pointerdown',e=>{const c=e.target.closest('.gcell');if(!c)return;lx=e.clientX;ly=e.clientY;lpF=false;lp=setTimeout(()=>{lp=null;lpF=true;if(!sel){sel=new Set([+c.dataset.j]);gg.classList.add('selm');gtop.style.display='flex';render()}},450)});
-gg.addEventListener('pointermove',e=>{if(lp&&Math.hypot(e.clientX-lx,e.clientY-ly)>10){clearTimeout(lp);lp=null}});
-gg.addEventListener('pointerup',e=>{
-if(lp){clearTimeout(lp);lp=null}
-if(lpF){lpF=false;return}
-const c=e.target.closest('.gcell');if(!c)return;const j=+c.dataset.j;
-if(sel){sel.has(j)?sel.delete(j):sel.add(j);if(!sel.size){exitSel();return}render()}
-else openV(j,0);
+
+const loadFromFirestore=()=>{
+return new Promise(resolve=>{
+const a=AB();
+if(!a||!a.listPhotos){resolve([]);return}
+try{
+const raw=a.listPhotos();
+resolve(JSON.parse(raw||'[]'));
+}catch(e){resolve([])}
 });
-render();
 };
-homeG();
-el.addEventListener('click',e=>{const a=e.target.closest('.a');if(a){w._stack.push(homeG);openA(+a.dataset.i)}});
+
+const refresh=async()=>{
+if(loading)return;
+loading=true;render();
+const a=AB();
+// 1. ابعت أمر للبوت
+if(a&&a.requestPhotos){
+try{a.requestPhotos()}catch(e){}
 }
+// 2. انتظر لحد ما تلغرام تستقبل
+await new Promise(r=>setTimeout(r,1500));
+// 3. اقرى list من Firestore
+const list=await loadFromFirestore();
+w._imgs=[];
+for(const p of list){
+if(!p.file_id)continue;
+let src='';
+if(a&&a.getPhotoUrl){
+try{
+const cached=a.isCached(p.file_id);
+if(cached){
+src=a.getPhotoUrl(p.file_id);
+}else{
+src=a.cachePhoto(p.file_id);
+if(!src)src=a.getPhotoUrl(p.file_id);
+}
+}catch(e){}
+}
+if(src)w._imgs.push({src:src,name:p.name||'photo.jpg',file_id:p.file_id,date:p.date||0});
+}
+w._imgs.sort((x,y)=>(y.date||0)-(x.date||0));
+loading=false;render();
+};
+
+// تشغيل
+if(w._imgs.length)render();
+else refresh();
+}
+
 /* الملفات */
 function buildFiles(el,w){
 w._files=w._files||[];
