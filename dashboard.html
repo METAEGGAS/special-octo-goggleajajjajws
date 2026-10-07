@@ -2,750 +2,326 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#0b0e1a">
-<title>الهاتف الافتراضي</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;600;800&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Quotex Direct</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overscroll-behavior:none}
-body{font-family:'Noto Sans Arabic',Tahoma,sans-serif;background:#05070d;background-image:radial-gradient(1200px 800px at 70% -10%,#1c2547,transparent),radial-gradient(900px 700px at 10% 110%,#12233b,transparent);display:flex;align-items:center;justify-content:center;min-height:100dvh;overflow:hidden;touch-action:manipulation;color:#fff;user-select:none}
-input,textarea{user-select:text}
-#phone{position:relative;height:min(94dvh,860px);aspect-ratio:9/19;border-radius:56px;background:linear-gradient(150deg,#434958,#12151d 45%,#2b303c 75%,#0a0c11);box-shadow:0 50px 100px -20px rgba(0,0,0,.9),0 0 0 2px #05060a,inset 0 1px 1px rgba(255,255,255,.35);padding:11px;flex:none}
-#phone::after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.12) 48%,transparent 62%);pointer-events:none;z-index:402}
-.pbtn{position:absolute;width:4px;border-radius:3px;background:linear-gradient(90deg,#454b59,#0d1016)}
-#bPwr{left:-3px;top:200px;height:92px}#bV1{right:-3px;top:150px;height:54px}#bV2{right:-3px;top:214px;height:54px}
-#scr{position:relative;width:100%;height:100%;border-radius:46px;overflow:hidden;background:var(--wall,linear-gradient(160deg,#2b5876,#4e4376));touch-action:pan-y;--appbg:#f4f5fa;--apptx:#181b26;--card:#ffffff;--sub:#7a8199}
-#scr.dark{--appbg:#14161f;--apptx:#eef0f7;--card:#1e2230;--sub:#8a90a6}
-#notch{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:104px;height:26px;border-radius:14px;background:#000;z-index:401;pointer-events:none}
-#notch::after{content:"";position:absolute;top:8px;left:14px;width:10px;height:10px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#234,#000 70%)}
-#sbar{position:absolute;top:0;left:0;right:0;height:42px;display:flex;align-items:center;justify-content:space-between;padding:10px 24px 0;font-size:13px;font-weight:600;z-index:400;pointer-events:none;text-shadow:0 1px 3px rgba(0,0,0,.45);transition:background .25s}
-#sbar.dark{background:rgba(0,0,0,.55);border-radius:44px 44px 0 0}
-.sicons{display:flex;align-items:center;gap:6px}
-#boot{position:absolute;inset:0;z-index:500;background:#05070d;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;transition:opacity .5s}
-#boot.off{opacity:0;pointer-events:none}
-.blogo{font-size:52px;animation:bpulse 1.2s ease-in-out infinite}
-@keyframes bpulse{50%{transform:scale(1.12)}}
-.btxt{font-size:16px;font-weight:700;color:#dfe4f2}
-.bbar{width:60%;height:6px;border-radius:3px;background:rgba(255,255,255,.12);overflow:hidden}
-.bbar i{display:block;height:100%;width:0;border-radius:3px;background:linear-gradient(90deg,#4f8cff,#3ddc84);animation:bprog 2.2s linear forwards}
-@keyframes bprog{to{width:100%}}
-.bspin{width:26px;height:26px;border-radius:50%;border:3px solid rgba(255,255,255,.15);border-top-color:#4f8cff;animation:brot .8s linear infinite}
-@keyframes brot{to{transform:rotate(360deg)}}
-#picker{position:absolute;inset:0;z-index:600;background:#05070d;background-image:radial-gradient(900px 600px at 50% 0%,#1a2340,transparent);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;transition:opacity .4s}
-#picker.off{opacity:0;pointer-events:none}
-.pk-head{text-align:center;margin-bottom:28px}
-.pk-ic{font-size:54px;margin-bottom:10px}
-.pk-t{font-size:22px;font-weight:800;color:#fff}
-.pk-s{font-size:13px;color:#8a90a6;margin-top:6px}
-#pk-list{width:100%;max-width:400px;max-height:52vh;overflow-y:auto;display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
-.pk-empty{text-align:center;color:#8a90a6;padding:40px 16px;font-size:14px}
-.pk-empty b{color:#3ddc84;display:block;margin-top:12px;font-size:16px}
-.pk-card{background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);border-radius:18px;padding:16px 18px;cursor:pointer;transition:.18s;display:flex;align-items:center;gap:14px}
-.pk-card:active{transform:scale(.97);background:rgba(79,140,255,.12)}
-.pk-card.on{border-color:#4f8cff;background:rgba(79,140,255,.14);box-shadow:0 0 0 3px rgba(79,140,255,.15)}
-.pk-av{width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,#4f8cff,#2f5fe0);display:flex;align-items:center;justify-content:center;font-size:24px;flex:none}
-.pk-meta{flex:1;min-width:0}
-.pk-nm{font-size:15px;font-weight:700;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pk-cd{font-size:12px;color:#8a90a6;font-family:monospace;margin-top:3px;letter-spacing:1px}
-.pk-dot{width:10px;height:10px;border-radius:50%;flex:none}
-.pk-dot.on{background:#3ddc84;box-shadow:0 0 8px #3ddc84}
-.pk-dot.off{background:#5a5f6e}
-.pk-btn{width:100%;max-width:400px;border:none;background:linear-gradient(135deg,#4f8cff,#2f5fe0);color:#fff;padding:15px;border-radius:16px;font-family:inherit;font-size:16px;font-weight:800;cursor:pointer;box-shadow:0 6px 20px rgba(47,95,224,.4);transition:.15s}
-.pk-btn:active{transform:scale(.97)}
-.pk-btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
-.pk-refresh{background:transparent;border:none;color:#4f8cff;font-family:inherit;font-size:13px;margin-top:14px;cursor:pointer;font-weight:600}
-#switch-dev{position:absolute;top:52px;left:14px;z-index:410;background:rgba(0,0,0,.55);border:none;color:#fff;font-family:inherit;font-size:11px;padding:6px 12px;border-radius:14px;cursor:pointer;backdrop-filter:blur(8px);display:none;font-weight:600}
-#switch-dev.show{display:block}
-#apps{position:absolute;inset:0;z-index:10;pointer-events:none}
-.appwin{position:absolute;inset:0;display:none;flex-direction:column;background:var(--appbg);color:var(--apptx);pointer-events:auto;will-change:transform,opacity}
-.ah{display:flex;align-items:center;gap:10px;padding:50px 14px 10px;font-weight:800;font-size:17px;flex:none}
-.abk{width:34px;height:34px;border:none;border-radius:50%;background:rgba(128,136,168,.18);color:inherit;font-size:19px;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;flex:none}
-.abk:active{transform:scale(.88)}
-.ab{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:6px 14px 72px;position:relative;touch-action:pan-y}
-.flexcol{display:flex;flex-direction:column}
-#home{position:absolute;inset:0;padding-top:48px;display:flex;flex-direction:column;z-index:2;transition:transform .3s cubic-bezier(.3,.8,.4,1),opacity .3s}
-#home.shrunk{transform:scale(.9);opacity:.35;pointer-events:none}
-#pw{flex:1;overflow:hidden}
-#pages{display:flex;width:100%;height:100%;direction:ltr}
-.pg{flex:0 0 100%;height:100%;direction:rtl;display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:min-content;padding:8px 12px;gap:14px 6px;align-content:start}
-.wgt{grid-column:1/-1;background:rgba(255,255,255,.14);backdrop-filter:blur(12px);border-radius:22px;padding:14px 18px;margin-bottom:4px;box-shadow:0 8px 20px rgba(0,0,0,.18)}
-#wclk{font-size:34px;font-weight:800;line-height:1.1}
-#wdat{font-size:13px;opacity:.85}
-.icon{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;transition:transform .12s}
-.icon:active{transform:scale(.85)}
-.ic{width:58px;height:58px;border-radius:17px;display:flex;align-items:center;justify-content:center;font-size:27px;box-shadow:0 6px 14px rgba(0,0,0,.28),inset 0 1px 1px rgba(255,255,255,.4);overflow:hidden}
-.ic img{width:100%;height:100%;object-fit:cover;display:block}
-.il{font-size:11px;font-weight:600;text-shadow:0 1px 3px rgba(0,0,0,.55);max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#dots{display:flex;gap:7px;justify-content:center;padding:8px 0 4px}
-.dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.4);transition:.25s}
-.dot.on{background:#fff;width:18px;border-radius:4px}
-#dock{margin:2px 12px 60px;padding:12px 10px;display:flex;justify-content:space-around;background:rgba(255,255,255,.16);backdrop-filter:blur(14px);border-radius:26px}
-#dock .il{display:none}
-#nbar{position:absolute;bottom:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:center;gap:70px;z-index:400;background:linear-gradient(transparent,rgba(0,0,0,.28));touch-action:none}
-.nb{width:46px;height:46px;display:flex;align-items:center;justify-content:center;border-radius:50%;cursor:pointer;transition:.15s}
-.nb:active{background:rgba(255,255,255,.2);transform:scale(.88)}
-.nb svg{width:21px;height:21px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:.92;filter:drop-shadow(0 1px 2px rgba(0,0,0,.4))}
-#rec{position:absolute;inset:0;z-index:390;display:none;background:rgba(8,10,18,.55);backdrop-filter:blur(20px);padding:60px 18px;overflow-x:auto}
-.rcs{display:flex;gap:16px;height:100%;align-items:center;direction:ltr}
-.rcard{flex:none;width:180px;height:300px;border-radius:24px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;cursor:pointer;position:relative;user-select:none;touch-action:pan-x}
-.ric{width:70px;height:70px;border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:34px;box-shadow:0 8px 18px rgba(0,0,0,.3);overflow:hidden}
-.ric img{width:100%;height:100%;object-fit:cover;display:block}
-.rn{font-size:14px;font-weight:700}
-.rkill{position:absolute;top:8px;left:8px;width:28px;height:28px;border-radius:50%;border:none;background:rgba(255,255,255,.2);color:#fff;cursor:pointer;font-size:13px}
-.rempty{display:flex;height:100%;align-items:center;justify-content:center;color:rgba(255,255,255,.75);font-size:15px}
-.dz{background:var(--card);border:2px dashed rgba(128,136,168,.5);border-radius:18px;padding:26px 14px;text-align:center;color:var(--sub);cursor:pointer;display:flex;flex-direction:column;gap:8px;align-items:center;font-size:14px;transition:.2s}
-.ggrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:12px}
-.gcell{position:relative;aspect-ratio:1;border-radius:12px;overflow:hidden;cursor:pointer;transition:transform .15s;background:#e7eaf2}
-.gcell:active{transform:scale(.94)}
-.gcell img{width:100%;height:100%;object-fit:cover;display:block}
-.gtop{display:flex;gap:8px;align-items:center;margin-bottom:10px;background:var(--card);border-radius:14px;padding:8px 10px;flex-wrap:wrap}
-.gview{position:absolute;inset:0;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5;touch-action:pan-y}
-.gview img{width:min(86%,340px);aspect-ratio:1;object-fit:cover;border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
-.gnav{position:absolute;top:50%;left:0;right:0;display:flex;justify-content:space-between;padding:0 10px;transform:translateY(-50%);pointer-events:none}
-.gnav .gbtn{pointer-events:auto;font-size:20px;padding:8px 14px;border-radius:50%}
-.gtools{position:absolute;bottom:14px;left:0;right:0;display:flex;justify-content:center;gap:10px}
-.gbtn{border:none;background:rgba(128,136,168,.2);color:inherit;padding:8px 16px;border-radius:12px;font-family:inherit;font-size:13px;cursor:pointer}
-.pbtn2{border:none;background:linear-gradient(135deg,#4f8cff,#2f5fe0);color:#fff;padding:9px 20px;border-radius:13px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(47,95,224,.35)}
-.pbtn2:active,.gbtn:active{transform:scale(.94)}
-.flist{display:flex;flex-direction:column;gap:8px;margin-top:12px}
-.frow{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:14px;padding:10px 12px}
-.fic{font-size:22px}
-.fmeta{flex:1;min-width:0}
-.fn{font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.fs{font-size:11px;color:var(--sub)}
-.empty{text-align:center;color:var(--sub);padding:24px;font-size:14px}
-.csearch{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:26px;padding:2px 16px;box-shadow:0 1px 5px rgba(0,0,0,.08);margin-bottom:8px;flex:none}
-.csearch input{flex:1;border:none;background:none;outline:none;font-family:inherit;font-size:14px;color:var(--apptx);padding:10px 0;min-width:0}
-.csearch span{color:var(--sub);font-size:16px}
-.clist{flex:1;overflow-y:auto;padding-bottom:70px}
-.crow{display:flex;align-items:center;gap:14px;padding:10px 2px;cursor:pointer;border-bottom:1px solid rgba(128,136,168,.1)}
-.crow:active{opacity:.6}
-.cav{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none;color:#fff;font-weight:800;font-size:16px}
-.cn{flex:1;font-size:15px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.cp{font-size:11px;color:var(--sub);margin-top:2px}
-.srow{background:var(--card);border-radius:14px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;font-size:14px;margin-top:8px}
-.about{background:var(--card);border-radius:14px;padding:14px;font-size:13px;color:var(--sub);line-height:1.9}
-.email-row{display:flex;flex-direction:column;gap:4px;padding:10px 12px;background:var(--card);border-radius:12px;margin-bottom:8px}
-.email-row b{font-size:13px;color:var(--apptx)}
-.email-row span{font-size:12px;color:var(--sub);font-family:monospace;direction:ltr;word-break:break-all}
-audio{width:100%;margin-top:12px}
-.camv{background:#000;border-radius:20px;overflow:hidden;min-height:240px;aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 26px rgba(0,0,0,.3);border:1px solid rgba(128,136,168,.3)}
-.camv video{width:100%;display:block;transform:scaleX(-1)}
-.camv img{width:100%;display:block}
-.cbtns{display:flex;justify-content:center;align-items:center;gap:12px;margin-top:16px;flex-wrap:wrap}
-.shut{width:58px;height:58px;border-radius:50%;border:5px solid #fff;background:radial-gradient(circle at 35% 35%,#ff5b7f,#e0245e);box-shadow:0 6px 16px rgba(0,0,0,.35),0 0 0 2px rgba(0,0,0,.15);cursor:pointer;transition:.12s;flex:none;padding:0}
-.shut:active{transform:scale(.86)}
-.stitle{font-size:13px;font-weight:700;color:var(--sub);margin:16px 0 8px}
-.wrow{display:flex;gap:10px;flex-wrap:wrap}
-.wsw{width:46px;height:46px;border-radius:14px;border:2px solid rgba(255,255,255,.5);cursor:pointer}
-.tgl{width:48px;height:28px;border-radius:14px;border:none;background:rgba(128,136,168,.35);position:relative;cursor:pointer;transition:.2s;flex:none}
-.tgl i{position:absolute;top:3px;right:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:.2s}
-.tgl.on{background:#4f8cff}
-.tgl.on i{transform:translateX(-20px)}
-.cwrap{display:flex;flex-direction:column;height:100%;gap:10px}
-.cdsp{background:var(--card);border-radius:18px;padding:18px;text-align:left;direction:ltr;min-height:96px;display:flex;flex-direction:column;justify-content:flex-end;gap:4px;overflow:hidden}
-.cex{color:var(--sub);font-size:16px;min-height:20px;word-break:break-all}
-.cres{font-size:36px;font-weight:800;word-break:break-all}
-.ckbd{flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.ck{border:none;border-radius:16px;background:var(--card);color:var(--apptx);font-size:21px;font-weight:600;cursor:pointer;font-family:inherit}
-.cop{background:linear-gradient(135deg,#4f8cff,#2f5fe0);color:#fff}
-.csp{background:rgba(128,136,168,.25)}
-.bigclock{font-size:44px;font-weight:800;text-align:center;margin-top:14px}
-.bigdate{text-align:center;color:var(--sub);font-size:14px;margin-top:4px}
-.sw{text-align:center}
-.swd{font-size:42px;font-weight:800;direction:ltr;font-variant-numeric:tabular-nums}
-.swb{display:flex;justify-content:center;gap:10px;margin-top:14px;flex-wrap:wrap}
-.brbar{display:flex;gap:8px}
-.brfr{width:100%;flex:1;border:none;border-radius:14px;margin-top:10px;background:#fff;min-height:280px}
-.brhint{font-size:11px;color:var(--sub);text-align:center;margin-top:8px}
-audio{width:100%;margin-top:12px}
-.phead{display:flex;align-items:baseline;gap:16px;padding:2px 4px 14px}
-.phead b{font-size:24px}
-.phead span{color:#2f6fed;font-size:20px;font-weight:800}
-.hint{text-align:center;color:var(--sub);font-size:12px;padding:12px}
-@media (max-width:520px),(max-height:620px){
-#phone{height:100dvh;width:100vw;aspect-ratio:auto;border-radius:0;padding:0;box-shadow:none}
-#scr{border-radius:0}
-#notch,.pbtn{display:none}
-#sbar.dark{border-radius:0}
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif}
+body{background:#0d1117;color:#e6edf3;min-height:100vh;padding:14px}
+
+.card{background:#161b22;border:1px solid #30363d;border-radius:14px;
+  padding:18px;max-width:520px;margin:0 auto 12px}
+h1{font-size:17px;font-weight:700;margin-bottom:6px}
+.sub{font-size:12px;color:#8b949e;margin-bottom:16px;line-height:1.5}
+
+.label{display:block;font-size:12px;color:#8b949e;margin-bottom:6px;font-weight:600}
+.input{width:100%;height:46px;background:#0d1117;border:1px solid #30363d;
+  border-radius:10px;padding:0 12px;color:#e6edf3;font-size:12.5px;
+  outline:none;font-family:monospace;margin-bottom:12px}
+.input:focus{border-color:#1f6feb}
+
+.btn{width:100%;height:48px;border:0;border-radius:10px;
+  font-size:14.5px;font-weight:600;cursor:pointer;margin-top:8px}
+.btn:active{opacity:.75}
+.btn-primary{background:#1f6feb;color:#fff}
+.btn-success{background:#238636;color:#fff}
+.btn-secondary{background:#21262d;color:#e6edf3;border:1px solid #30363d}
+
+.status{padding:11px 14px;border-radius:10px;font-size:13px;
+  margin-top:12px;display:none;text-align:center;line-height:1.6}
+.status.show{display:block}
+.status.ok{background:#0d2818;color:#3fb950;border:1px solid #238636}
+.status.err{background:#2d0e0e;color:#f85149;border:1px solid #8b2121}
+.status.info{background:#0c2d6b;color:#58a6ff;border:1px solid #1f6feb}
+.status.warn{background:#2b1f00;color:#d29922;border:1px solid #9e6a03}
+
+.log{background:#000;padding:10px;border-radius:8px;
+  font-family:monospace;font-size:10.5px;color:#8b949e;
+  max-height:220px;overflow-y:auto;margin-top:12px;line-height:1.6}
+.log .ok{color:#3fb950}
+.log .err{color:#f85149}
+.log .info{color:#58a6ff}
+.log .warn{color:#d29922}
+
+.coin{display:flex;justify-content:space-between;align-items:center;
+  background:#0d1117;border:1px solid #30363d;border-radius:10px;
+  padding:12px 14px;margin-bottom:6px}
+.coin-sym{font-size:14px;font-weight:700}
+.coin-price{font-size:15px;font-weight:700;color:#3fb950;
+  font-variant-numeric:tabular-nums}
 </style>
 </head>
 <body>
-<div id="phone">
-<div class="pbtn" id="bPwr"></div><div class="pbtn" id="bV1"></div><div class="pbtn" id="bV2"></div>
-<div id="scr">
-<div id="notch"></div>
-<div id="picker">
-  <div class="pk-head">
-    <div class="pk-ic">📱</div>
-    <div class="pk-t">اختر الجهاز</div>
-    <div class="pk-s">يجب اختيار جهاز للمتابعة</div>
+
+<!-- ═══════ 1: بيانات الاتصال ═══════ -->
+<div class="card">
+  <h1>🔐 بيانات الحساب</h1>
+  <p class="sub">من qxbroker.com → F12 → Network → digest</p>
+
+  <label class="label">Token</label>
+  <input type="text" id="tokenInput" class="input"
+    placeholder="fK5MhIKtuWGG99uKo36s1t4iPMFmeElEltFjQjsp">
+
+  <label class="label">CSRF</label>
+  <input type="text" id="csrfInput" class="input"
+    placeholder="oJ4YwFLY9XWj2edE5DxTeZ96ln6SUSQEiPq8754n">
+
+  <button class="btn btn-success" onclick="tryConnect()">🔌 محاولة الاتصال</button>
+  <button class="btn btn-secondary" onclick="clearLog()">🗑 مسح السجل</button>
+
+  <div class="status" id="connStatus"></div>
+  <div class="log" id="log">جاهز...</div>
+</div>
+
+<!-- ═══════ 2: الأسعار ═══════ -->
+<div class="card">
+  <h1>💹 الأسعار</h1>
+  <p class="sub">تنعكس مباشرة بعد نجاح الاتصال</p>
+
+  <div id="pricesList">
+    <div class="log" style="margin:0">لا توجد أسعار بعد</div>
   </div>
-  <div id="pk-list"></div>
-  <button class="pk-btn" id="pk-go" disabled>متابعة</button>
-  <button class="pk-refresh" id="pk-ref">↻ إعادة تحميل الأجهزة</button>
+
+  <button class="btn btn-primary" onclick="fetchPrices()">📊 تحديث الأسعار</button>
+  <div class="status" id="priceStatus"></div>
 </div>
-<div id="home">
-<div id="pw"><div id="pages"></div></div>
-<div id="dots"><div class="dot on"></div><div class="dot"></div></div>
-<div id="dock"></div>
-</div>
-<button id="switch-dev">🔄 تبديل الجهاز</button>
-<div id="apps"></div>
-<div id="rec"></div>
-<div id="sbar">
-<span id="clock"></span>
-<span class="sicons">
-<svg viewBox="0 0 20 14" width="16" height="12" fill="#fff"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="8" rx="1"/><rect x="10" y="3" width="3" height="11" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/></svg>
-<svg viewBox="0 0 24 24" width="15" height="15" fill="#fff"><path d="M12 18a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm0-5c2.2 0 4.2.9 5.7 2.3l-1.5 1.5A6 6 0 0012 15.2a6 6 0 00-4.2 1.6L6.3 15.3A8 8 0 0112 13zm0-5c3.6 0 6.9 1.5 9.3 3.8l-1.5 1.5A11 11 0 0012 10.2c-3 0-5.7 1.2-7.8 3.1L2.7 11.8A13 13 0 0112 8z"/></svg>
-<span style="display:flex;align-items:center;gap:3px"><svg viewBox="0 0 28 14" width="24" height="13"><rect x="1" y="1.5" width="21" height="11" rx="3" fill="none" stroke="#fff" opacity=".6"/><rect id="batf" x="3" y="3.5" width="14" height="7" rx="1.5" fill="#fff"/><path d="M24 5v4a2.5 2.5 0 000-4z" fill="#fff" opacity=".6"/></svg><span id="bat"></span></span>
-</span>
-</div>
-<div id="nbar">
-<div class="nb" id="nbk"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></div>
-<div class="nb" id="nhm"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg></div>
-<div class="nb" id="nrc"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2.5"/></svg></div>
-</div>
-<div id="boot"><div class="blogo">📱</div><div class="btxt">جاري تشغيل الجهاز</div><div class="bbar"><i></i></div><div class="bspin"></div></div>
-</div>
-</div>
+
 <script>
 // ═══════════════════════════════════════════
-//  بيانات الاتصال
+//  Log Helper
 // ═══════════════════════════════════════════
-const BOT_TOKEN="8845943752:AAE9WMF0LGen7Ydelx3HVE_-C-lt4F1j608";
-const CHAT_ID="8599240795";
-const FB_KEY="AIzaSyBvzfJOOjRFZnTgTUrwEZQPr8Ba7zKKlNg";
-const FB_PROJECT="hhhxh-5ebe4";
-const FS_BASE="https://firestore.googleapis.com/v1/projects/"+FB_PROJECT+"/databases/(default)/documents";
+function log(msg, type) {
+  type = type || "info";
+  var el = document.getElementById("log");
+  var t = new Date().toLocaleTimeString();
+  el.innerHTML += '<div class="' + type + '">[' + t + '] ' + msg + '</div>';
+  el.scrollTop = el.scrollHeight;
+}
+function clearLog() {
+  document.getElementById("log").innerHTML = "جاهز...";
+}
 
-let DEVICE_CODE = localStorage.getItem("device_code") || "";
-let DEVICE_NAME = localStorage.getItem("device_name") || "";
+function setStatus(id, msg, type) {
+  var el = document.getElementById(id);
+  el.className = "status show " + type;
+  el.innerHTML = msg;
+}
 
-const $=q=>document.querySelector(q),$$=q=>[...document.querySelectorAll(q)];
-const scr=$('#scr'),pages=$('#pages'),pw=$('#pw'),dock=$('#dock'),appsEl=$('#apps'),rec=$('#rec'),home=$('#home'),sbar=$('#sbar');
-const REG=[],RMAP={};
-function def(id,name,ic,grad,build){const o={id,name,ic,grad,build};REG.push(o);RMAP[id]=o}
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const fmtSize=b=>b<1024?b+' B':b<1048576?(b/1024).toFixed(1)+' KB':(b/1048576).toFixed(1)+' MB';
-function dl(url,name){const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove()}
-function tap(el,fn){let x=0,y=0;el.addEventListener('pointerdown',e=>{x=e.clientX;y=e.clientY});el.addEventListener('pointerup',e=>{if(Math.hypot(e.clientX-x,e.clientY-y)<12)fn(e)})}
-const icIn=d=>d.ic[0]=='h'?'<img src="'+d.ic+'" alt="">':d.ic;
-const openWins={};let zT=20,cur=null,nav=[],recOpen=false;
-function upSb(){sbar.classList.toggle('dark',!!cur&&(cur==='gallery'||cur==='notes'))}
-function iconCenter(id){const sr=scr.getBoundingClientRect();const ic=document.querySelector('.icon[data-app="'+id+'"]');if(!ic)return[sr.width/2,sr.height/2,sr];const r=ic.getBoundingClientRect();return[r.left-sr.left+r.width/2,r.top-sr.top+r.height/2,sr]}
-function openApp(id){
-const d=RMAP[id];if(!d)return;hideRec();
-let w=openWins[id];
-if(!w){
-w=document.createElement('div');w.className='appwin';w.dataset.app=id;
-w.innerHTML='<div class="ah"><button class="abk">‹</button><span>'+d.name+'</span></div><div class="ab"></div>';
-appsEl.appendChild(w);openWins[id]=w;w._stack=[];
-d.build(w.querySelector('.ab'),w);
-w.querySelector('.abk').addEventListener('click',e=>{e.stopPropagation();back()});
-}
-w._open=true;
-for(const k in openWins)if(k!==id)openWins[k].style.display='none';
-const[ox,oy,sr]=iconCenter(id);
-w.style.display='flex';w.style.zIndex=++zT;w.style.transition='none';
-w.style.transform='translate('+(ox-sr.width/2)+'px,'+(oy-sr.height/2)+'px) scale(.06)';
-w.style.opacity='0';w.style.borderRadius='44px';
-requestAnimationFrame(()=>requestAnimationFrame(()=>{
-w.style.transition='transform .34s cubic-bezier(.22,.9,.26,1),opacity .22s ease,border-radius .34s';
-w.style.transform='translate(0,0) scale(1)';w.style.opacity='1';w.style.borderRadius='0';
-}));
-if(nav[nav.length-1]!==id)nav.push(id);
-cur=id;home.classList.add('shrunk');upSb();
-}
-function animClose(id){
-const w=openWins[id];if(!w)return;w._open=false;
-const[ox,oy,sr]=iconCenter(id);
-w.style.transition='transform .3s cubic-bezier(.4,0,.6,1),opacity .24s,border-radius .3s';
-w.style.transform='translate('+(ox-sr.width/2)+'px,'+(oy-sr.height/2)+'px) scale(.06)';
-w.style.opacity='0';w.style.borderRadius='44px';
-setTimeout(()=>{if(!w._open)w.style.display='none'},310);
-}
-function back(){
-if(recOpen){hideRec();return}
-if(!nav.length||!cur)return;
-const w=openWins[cur];
-if(w&&w._stack.length){w._stack.pop()();return}
-if(nav.length>1){animClose(nav.pop());cur=nav[nav.length-1];const p=openWins[cur];p._open=true;p.style.display='flex';p.style.zIndex=++zT;upSb();return}
-goHome();
-}
-function goHome(){if(!nav.length)return;nav.forEach(animClose);nav=[];cur=null;home.classList.remove('shrunk');upSb()}
-function killApp(id){
-const w=openWins[id];
-if(w){if(w._kill)try{w._kill()}catch(e){}w.remove();delete openWins[id]}
-nav=nav.filter(x=>x!==id);
-if(cur===id){cur=nav.length?nav[nav.length-1]:null;if(!cur)home.classList.remove('shrunk')}
-upSb();showRec();
-}
-function showRec(){
-recOpen=true;rec.style.display='block';
-const ids=Object.keys(openWins);
-rec.innerHTML=ids.length?'<div class="rcs">'+ids.map(id=>{const d=RMAP[id];return '<div class="rcard" data-id="'+id+'"><button class="rkill">✕</button><div class="ric" style="background:'+d.grad+'">'+icIn(d)+'</div><div class="rn">'+d.name+'</div></div>'}).join('')+'</div>':'<div class="rempty">لا توجد تطبيقات مفتوحة</div>';
-ids.forEach(id=>{
-const c=rec.querySelector('.rcard[data-id="'+id+'"]');
-c.addEventListener('click',e=>{if(e.target.closest('.rkill'))return;openApp(id)});
-c.querySelector('.rkill').addEventListener('click',()=>killApp(id));
-});
-}
-function hideRec(){recOpen=false;rec.style.display='none'}
-rec.addEventListener('click',e=>{if(e.target===rec)hideRec()});
-const P1=['gallery','files','notes','calc','clock','browser','camera','settings'],P2=['units','draw','timer','music'],DK=['music','gallery','notes','settings'];
-function icHTML(id){const d=RMAP[id];return '<div class="icon" data-app="'+id+'"><div class="ic" style="background:'+d.grad+'">'+icIn(d)+'</div><div class="il">'+d.name+'</div></div>'}
-let page=0;const PGC=2;
-function setPage(p,anim){page=Math.max(0,Math.min(PGC-1,p));pages.style.transition=anim?'transform .32s cubic-bezier(.25,.9,.3,1)':'none';pages.style.transform='translateX('+(-page*pw.clientWidth)+'px)';$$('.dot').forEach((d,i)=>d.classList.toggle('on',i===page))}
-let drag=null;
-pw.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY,dx:0,mv:false}});
-window.addEventListener('pointermove',e=>{
-if(!drag)return;
-const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
-if(Math.abs(dx)>8&&Math.abs(dx)>Math.abs(dy)){drag.mv=true;drag.dx=dx;pages.style.transition='none';pages.style.transform='translateX('+(-page*pw.clientWidth+dx)+'px)'}
-});
-window.addEventListener('pointerup',e=>{
-if(!drag)return;
-const dx=drag.dx;
-if(drag.mv){if(dx<-50&&page<PGC-1)page++;else if(dx>50&&page>0)page--;setPage(page,true)}
-else{const t=document.elementFromPoint(e.clientX,e.clientY);const ic=t&&t.closest('.icon');if(ic&&pw.contains(ic))openApp(ic.dataset.app)}
-drag=null;
-});
-tap(dock,e=>{const ic=e.target.closest('.icon');if(ic)openApp(ic.dataset.app)});
-tap($('#nbk'),()=>back());tap($('#nhm'),()=>goHome());tap($('#nrc'),()=>recOpen?hideRec():showRec());
-scr.addEventListener('contextmenu',e=>e.preventDefault());
-window.addEventListener('keydown',e=>{if(e.key==='Escape')back()});
-window.addEventListener('resize',()=>setPage(page,false));
+// ═══════════════════════════════════════════
+//  State
+// ═══════════════════════════════════════════
+var state = {
+  token: null,
+  csrf: null,
+  socket: null,
+  prices: {}
+};
 
-function tick(){
-const d=new Date();
-$('#clock').textContent=d.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});
-const wc=$('#wclk'),wd=$('#wdat');
-if(wc)wc.textContent=d.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});
-if(wd)wd.textContent=d.toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long'});
-}
-tick();setInterval(tick,5000);
-if(navigator.getBattery)navigator.getBattery().then(b=>{const u=()=>{$('#bat').textContent=Math.round(b.level*100)+'%';$('#batf').setAttribute('width',Math.round(b.level*15))};u();b.addEventListener('levelchange',u)});
+// ═══════════════════════════════════════════
+//  المحاولة الرئيسية
+// ═══════════════════════════════════════════
+async function tryConnect() {
+  var t = document.getElementById("tokenInput").value.trim();
+  var c = document.getElementById("csrfInput").value.trim();
 
-/* ═══════════════════════════════════════════ */
-/* Firestore helpers                            */
-/* ═══════════════════════════════════════════ */
-async function fsListDevices(){
-  const url=FS_BASE+"/devices?key="+FB_KEY+"&pageSize=100";
-  try{
-    const r=await fetch(url);
-    const j=await r.json();
-    const docs=j.documents||[];
-    const list=[];
-    for(const d of docs){
-      const f=d.fields||{};
-      const code=f.code?.stringValue||d.name.split("/").pop();
-      const name=f.name?.stringValue||code;
-      const lastSeen=parseInt(f.last_seen?.integerValue||"0")||parseInt(f.last_seen_ms?.integerValue||"0");
-      const online=(Date.now()-lastSeen)<10*60*1000;
-      list.push({code,name,online,lastSeen});
+  if (!t) { setStatus("connStatus", "❌ أدخل Token", "err"); return; }
+  if (!c) { setStatus("connStatus", "❌ أدخل CSRF", "err"); return; }
+
+  state.token = t;
+  state.csrf = c;
+
+  setStatus("connStatus", "🔄 جاري المحاولة...", "info");
+  log("بدء الاتصال بـ Quotex", "info");
+
+  // ═══ الخطوة 1: اختبار REST API ═══
+  await testRest();
+
+  // ═══ الخطوة 2: محاولة WebSocket ═══
+  await testWebSocket();
+}
+
+// ═══════════════════════════════════════════
+//  1) اختبار REST
+// ═══════════════════════════════════════════
+async function testRest() {
+  log("📡 اختبار REST API...", "info");
+
+  try {
+    var res = await fetch("https://qxbroker.com/api/v1/cabinets/digest", {
+      method: "GET",
+      headers: {
+        "Authorization": "Bearer " + state.token,
+        "X-CSRF-Token": state.csrf,
+        "Accept": "application/json"
+      },
+      credentials: "include"
+    });
+
+    log("REST status: " + res.status, res.ok ? "ok" : "err");
+
+    if (res.ok) {
+      var data = await res.json();
+      log("✅ REST نجح — استلمت بيانات الحساب", "ok");
+      if (data && data.data) {
+        log("💰 الرصيد: " + (data.data.liveBalance || data.data.demoBalance), "info");
+      }
+    } else {
+      log("❌ REST فشل: " + res.status, "err");
     }
-    list.sort((a,b)=>(b.lastSeen||0)-(a.lastSeen||0));
-    return list;
-  }catch(e){return []}
+  } catch (e) {
+    log("❌ REST error: " + e.message, "err");
+    log("→ السبب: CORS (المتصفح بيمنع الاتصال من دومين خارجي)", "warn");
+  }
 }
 
-async function fsListCollection(code,coll){
-  const url=FS_BASE+"/devices/"+code+"/"+coll+"?key="+FB_KEY+"&pageSize=300";
-  try{
-    const r=await fetch(url);
-    const j=await r.json();
-    const docs=j.documents||[];
-    return docs.map(d=>({fields:d.fields||{}}));
-  }catch(e){return []}
+// ═══════════════════════════════════════════
+//  2) محاولة WebSocket
+// ═══════════════════════════════════════════
+async function testWebSocket() {
+  log("🔌 اختبار WebSocket...", "info");
+
+  var url = "wss://ws2.qxbroker.com/socket.io/?EIO=4&transport=websocket";
+
+  return new Promise(function(resolve) {
+    var done = false;
+
+    try {
+      var ws = new WebSocket(url);
+      state.socket = ws;
+
+      var timer = setTimeout(function() {
+        if (done) return;
+        done = true;
+        log("⏱ انتهى الوقت — السيرفر ما ردش", "err");
+        try { ws.close(); } catch (e) {}
+        setStatus("connStatus", "❌ فشل — السيرفر ما ردش", "err");
+        resolve();
+      }, 8000);
+
+      ws.onopen = function() {
+        if (done) return;
+        log("✅ WebSocket اتصل", "ok");
+        ws.send("40");
+      };
+
+      ws.onmessage = function(ev) {
+        if (done) return;
+        var d = ev.data;
+        log("← " + d.slice(0, 100), "info");
+
+        if (d.charAt(0) === "0") {
+          try { ws.send("40"); } catch (e) {}
+          return;
+        }
+
+        if (d.indexOf("40") === 0) {
+          // فتح القناة — أرسل token
+          var payload = JSON.stringify(["authorization", {
+            session: state.token,
+            token: state.token,
+            csrf: state.csrf,
+            isDemo: 1
+          }]);
+          try { ws.send("42" + payload); } catch (e) {}
+          log("📤 تم إرسال Token", "info");
+        }
+
+        if (d.indexOf("authorization") > -1 || d.indexOf("success") > -1) {
+          log("🎉 المصادقة نجحت!", "ok");
+          done = true;
+          clearTimeout(timer);
+          setStatus("connStatus", "✅ متصل!", "ok");
+          subscribeAssets(ws);
+          resolve();
+        }
+
+        if (d.indexOf("error") > -1 || d.indexOf("unauthorized") > -1) {
+          log("❌ السيرفر رفض: " + d, "err");
+          done = true;
+          clearTimeout(timer);
+          setStatus("connStatus", "❌ رفض السيرفر", "err");
+          try { ws.close(); } catch (e) {}
+          resolve();
+        }
+      };
+
+      ws.onerror = function() {
+        if (done) return;
+        done = true;
+        clearTimeout(timer);
+        log("❌ WebSocket error", "err");
+        log("→ السبب: Cloudflare/Origin mismatch", "warn");
+        setStatus("connStatus", "❌ فشل الاتصال", "err");
+        resolve();
+      };
+
+      ws.onclose = function(ev) {
+        if (done) return;
+        done = true;
+        clearTimeout(timer);
+        log("🔌 انقطع (code: " + ev.code + ")", "err");
+        setStatus("connStatus", "❌ انقطع الاتصال", "err");
+        resolve();
+      };
+
+    } catch (e) {
+      log("❌ استثناء: " + e.message, "err");
+      setStatus("connStatus", "❌ فشل", "err");
+      resolve();
+    }
+  });
 }
 
-async function tgFileUrl(fileId){
-  if(!fileId)return "";
-  try{
-    const r=await fetch("https://api.telegram.org/bot"+BOT_TOKEN+"/getFile?file_id="+encodeURIComponent(fileId));
-    const j=await r.json();
-    if(!j.ok)return "";
-    return "https://api.telegram.org/file/bot"+BOT_TOKEN+"/"+j.result.file_path;
-  }catch(e){return ""}
+// ═══════════════════════════════════════════
+//  اشتراك في الأصول
+// ═══════════════════════════════════════════
+function subscribeAssets(ws) {
+  var assets = ["BTCUSD", "ETHUSD", "SOLUSD", "EURUSD"];
+  assets.forEach(function(a, i) {
+    setTimeout(function() {
+      var payload = JSON.stringify(["subscribe_candles", {
+        asset: a, period: 60
+      }]);
+      try {
+        ws.send("42" + payload);
+        log("📊 اشتراك في " + a, "info");
+      } catch (e) {}
+    }, i * 300);
+  });
 }
 
-/* ═══════════════════════════════════════════ */
-/* شاشة اختيار الجهاز                            */
-/* ═══════════════════════════════════════════ */
-async function showDevicePicker(){
-  const picker=$('#picker'),list=$('#pk-list'),goBtn=$('#pk-go');
-  picker.classList.remove('off');
-  list.innerHTML='<div class="pk-empty">⏳ جاري تحميل الأجهزة...</div>';
-  goBtn.disabled=true;
-
-  const devices=await fsListDevices();
-  if(!devices.length){
-    list.innerHTML='<div class="pk-empty">📭 لا توجد أجهزة مسجّلة<br><b>ثبّت التطبيق على جهاز أولاً</b></div>';
+// ═══════════════════════════════════════════
+//  الأسعار (يدوي)
+// ═══════════════════════════════════════════
+async function fetchPrices() {
+  if (!state.token) {
+    setStatus("priceStatus", "❌ اتصل أولاً", "err");
     return;
   }
 
-  let selected=null;
-  const render=()=>{
-    list.innerHTML=devices.map(d=>
-      '<div class="pk-card'+(selected===d.code?' on':'')+'" data-code="'+d.code+'">'+
-      '<div class="pk-av">📱</div>'+
-      '<div class="pk-meta">'+
-        '<div class="pk-nm">'+esc(d.name)+'</div>'+
-        '<div class="pk-cd">'+d.code+'</div>'+
-      '</div>'+
-      '<div class="pk-dot '+(d.online?'on':'off')+'"></div>'+
-      '</div>'
-    ).join('');
-    list.querySelectorAll('.pk-card').forEach(c=>{
-      c.onclick=()=>{selected=c.dataset.code;render();goBtn.disabled=false;};
-    });
-  };
-  render();
+  setStatus("priceStatus", "⏳ جاري الطلب...", "info");
 
-  if(DEVICE_CODE&&devices.find(d=>d.code===DEVICE_CODE)){
-    selected=DEVICE_CODE;render();goBtn.disabled=false;
+  try {
+    var res = await fetch("https://qxbroker.com/api/v1/quotes", {
+      headers: {
+        "Authorization": "Bearer " + state.token,
+        "X-CSRF-Token": state.csrf
+      }
+    });
+    if (res.ok) {
+      var d = await res.json();
+      log("✅ استلمت أسعار", "ok");
+    } else {
+      log("❌ فشل: " + res.status, "err");
+    }
+  } catch (e) {
+    log("❌ CORS: " + e.message, "err");
+    setStatus("priceStatus", "❌ CORS blocked", "err");
   }
-
-  goBtn.onclick=()=>{
-    if(!selected)return;
-    const dev=devices.find(d=>d.code===selected);
-    DEVICE_CODE=selected;
-    DEVICE_NAME=dev?dev.name:selected;
-    localStorage.setItem("device_code",DEVICE_CODE);
-    localStorage.setItem("device_name",DEVICE_NAME);
-    $('#switch-dev').classList.add('show');
-    startPhone();
-  };
 }
 
-let phoneStarted=false;
-function startPhone(){
-  if(phoneStarted)return;
-  phoneStarted=true;
-  const picker=$('#picker');
-  picker.classList.add('off');
-  setTimeout(()=>picker.style.display='none',450);
-  setTimeout(()=>{const b=$('#boot');if(!b)return;b.classList.add('off');setTimeout(()=>b.remove(),550)},2400);
-}
-
-$('#switch-dev').onclick=()=>{location.reload();};
-
-/* ═══════════════════════════════════════════ */
-/* المعرض — يقرا من Firestore                   */
-/* ═══════════════════════════════════════════ */
-function buildGallery(el,w){
-  w._imgs=w._imgs||[];
-  let loading=false;
-
-  const render=()=>{
-    if(loading){
-      el.innerHTML='<div class="phead"><b>الصور</b></div><div class="empty" style="padding-top:60px">⏳ جاري تحميل الصور...<br><br>🆔 '+DEVICE_CODE+'</div>';
-      return;
-    }
-    const imgs=w._imgs;
-    el.innerHTML='<div class="phead"><b>الصور</b><span>'+imgs.length+' صورة</span></div>'+
-      '<div class="gtop" style="display:flex"><button class="gbtn" id="gref">↻ تحديث</button>'+
-      '<span style="font-size:11px;color:var(--sub);margin-right:auto">🆔 '+DEVICE_CODE+'</span></div>'+
-      (imgs.length?'<div class="ggrid" id="gg">'+imgs.map((o,j)=>
-        '<div class="gcell" data-j="'+j+'"><img loading="lazy" src="'+o.src+'"></div>'
-      ).join('')+'</div>':'<div class="empty" style="color:#3ddc84;padding-top:60px">📸 لا توجد صور بعد</div>');
-    el.querySelector('#gref').onclick=()=>refresh();
-    const gg=el.querySelector('#gg');
-    if(gg)gg.addEventListener('click',e=>{
-      const c=e.target.closest('.gcell');if(!c)return;openV(+c.dataset.j);
-    });
-  };
-
-  const openV=j=>{
-    const v=document.createElement('div');v.className='gview';
-    v.innerHTML='<img id="gv"><div class="gnav"><button class="gbtn" id="gp">›</button><button class="gbtn" id="gn">‹</button></div>'+
-      '<div class="gtools"><button class="gbtn" id="g1">⬇ حفظ</button><button class="gbtn" id="g2">✕ إغلاق</button></div>';
-    el.appendChild(v);
-    const im=v.querySelector('#gv');
-    const show=()=>{if(j<0)j=0;if(j>=w._imgs.length)j=w._imgs.length-1;im.src=w._imgs[j].src};
-    show();
-    const close=()=>v.remove();
-    w._stack.push(close);
-    v.querySelector('#gp').onclick=()=>{if(j>0){j--;show()}};
-    v.querySelector('#gn').onclick=()=>{if(j<w._imgs.length-1){j++;show()}};
-    v.querySelector('#g1').onclick=()=>dl(w._imgs[j].src,w._imgs[j].name||'photo.jpg');
-    v.querySelector('#g2').onclick=close;
-  };
-
-  const refresh=async()=>{
-    if(loading)return;
-    if(!DEVICE_CODE){el.innerHTML='<div class="empty">❌ لم يتم اختيار جهاز</div>';return}
-    loading=true;render();
-    const docs=await fsListCollection(DEVICE_CODE,"photos");
-    const list=docs.map(d=>({
-      file_id:d.fields.file_id?.stringValue||"",
-      name:d.fields.name?.stringValue||"",
-      size:parseInt(d.fields.size?.integerValue||"0"),
-      date:parseInt(d.fields.date?.integerValue||"0")
-    }));
-    list.sort((a,b)=>(b.date||0)-(a.date||0));
-    w._imgs=[];
-    for(const p of list){
-      if(!p.file_id)continue;
-      const url=await tgFileUrl(p.file_id);
-      if(url)w._imgs.push({src:url,name:p.name,date:p.date});
-    }
-    loading=false;render();
-  };
-
-  refresh();
-}
-
-/* ═══════════════════════════════════════════ */
-/* الملفات — يقرا من Firestore                  */
-/* ═══════════════════════════════════════════ */
-function buildFiles(el,w){
-  el.innerHTML='<div class="phead"><b>الملفات</b><span id="fcount"></span></div>'+
-    '<div class="gtop" style="display:flex"><button class="gbtn" id="fref">↻ تحديث</button>'+
-    '<span style="font-size:11px;color:var(--sub);margin-right:auto">🆔 '+DEVICE_CODE+'</span></div>'+
-    '<div class="flist" id="flist"><div class="empty">⏳ جاري التحميل...</div></div>';
-  const list=el.querySelector('#flist'),cnt=el.querySelector('#fcount');
-  const refresh=async()=>{
-    list.innerHTML='<div class="empty">⏳ جاري التحميل...</div>';
-    const docs=await fsListCollection(DEVICE_CODE,"files");
-    if(!docs.length){list.innerHTML='<div class="empty">📭 لا توجد ملفات</div>';cnt.textContent='';return}
-    cnt.textContent=docs.length+' ملف';
-    list.innerHTML=docs.map(d=>{
-      const f=d.fields;
-      const name=f.name?.stringValue||"";
-      const size=parseInt(f.size?.integerValue||"0");
-      const fid=f.file_id?.stringValue||"";
-      const ext=f.ext?.stringValue||"";
-      return '<div class="frow"><div class="fic">📄</div><div class="fmeta"><div class="fn">'+esc(name)+'</div><div class="fs">'+fmtSize(size)+'</div></div>'+
-        (fid?'<button class="gbtn" data-fid="'+esc(fid)+'" data-nm="'+esc(name)+'">⬇</button>':'')+'</div>';
-    }).join('');
-    list.querySelectorAll('[data-fid]').forEach(b=>{
-      b.onclick=async()=>{
-        b.textContent='...';
-        const url=await tgFileUrl(b.dataset.fid);
-        b.textContent='⬇';
-        if(url)dl(url,b.dataset.nm);
-      };
-    });
-  };
-  el.querySelector('#fref').onclick=refresh;
-  refresh();
-}
-
-/* ═══════════════════════════════════════════ */
-/* الموسيقى — يقرا من Firestore                 */
-/* ═══════════════════════════════════════════ */
-function buildMusic(el,w){
-  el.innerHTML='<div class="phead"><b>الموسيقى</b><span id="mcount"></span></div>'+
-    '<div class="gtop" style="display:flex"><button class="gbtn" id="mref">↻ تحديث</button></div>'+
-    '<div class="flist" id="mlist"><div class="empty">⏳ جاري التحميل...</div></div>'+
-    '<audio id="ma" controls style="display:none"></audio>';
-  const list=el.querySelector('#mlist'),cnt=el.querySelector('#mcount'),au=el.querySelector('#ma');
-  const refresh=async()=>{
-    list.innerHTML='<div class="empty">⏳ جاري التحميل...</div>';
-    const docs=await fsListCollection(DEVICE_CODE,"music");
-    if(!docs.length){list.innerHTML='<div class="empty">📭 لا توجد مقاطع</div>';cnt.textContent='';return}
-    cnt.textContent=docs.length+' مقطع';
-    list.innerHTML=docs.map((d,i)=>{
-      const name=d.fields.name?.stringValue||"";
-      const size=parseInt(d.fields.size?.integerValue||"0");
-      const fid=d.fields.file_id?.stringValue||"";
-      return '<div class="frow"><div class="fic">🎵</div><div class="fmeta"><div class="fn">'+esc(name)+'</div><div class="fs">'+fmtSize(size)+'</div></div>'+
-        '<button class="gbtn" data-i="'+i+'" data-fid="'+esc(fid)+'">▶</button></div>';
-    }).join('');
-    list.querySelectorAll('[data-fid]').forEach(b=>{
-      b.onclick=async()=>{
-        const url=await tgFileUrl(b.dataset.fid);
-        if(url){au.src=url;au.style.display='block';au.play()}
-      };
-    });
-  };
-  el.querySelector('#mref').onclick=refresh;
-  refresh();
-}
-
-/* ═══════════════════════════════════════════ */
-/* جهات الاتصال — يقرا من Firestore             */
-/* ═══════════════════════════════════════════ */
-function buildNotes(el,w){
-  el.classList.add('flexcol');
-  el.innerHTML='<div class="csearch"><input placeholder="البحث في جهات الاتصال"><span>🔍</span></div>'+
-    '<div class="clist" id="clist"><div class="empty">⏳ جاري التحميل...</div></div>'+
-    '<div class="gtop" style="display:flex;margin-top:8px"><button class="gbtn" id="cref">↻ تحديث</button>'+
-    '<span style="font-size:11px;color:var(--sub);margin-right:auto" id="ccnt"></span></div>';
-  const list=el.querySelector('#clist'),inp=el.querySelector('.csearch input'),cnt=el.querySelector('#ccnt');
-  let all=[];
-  const COLORS=['#f9ab00','#34a853','#ea4335','#a142f4','#00b8d4','#f2730c','#4285f4','#0f9d58'];
-  const colorFor=s=>COLORS[Math.abs(s.split('').reduce((a,c)=>a+c.charCodeAt(0),0))%COLORS.length];
-  const render=()=>{
-    const f=inp.value.trim();
-    let data=f?all.filter(c=>c.name.includes(f)||(c.phones||[]).some(p=>p.includes(f))):all;
-    if(!data.length){list.innerHTML='<div class="empty">📭 لا توجد جهات اتصال</div>';return}
-    list.innerHTML=data.map(c=>{
-      const initial=c.name?c.name[0]:"?";
-      return '<div class="crow"><div class="cav" style="background:'+colorFor(c.name)+'">'+esc(initial)+'</div>'+
-        '<div class="cn">'+esc(c.name)+
-        ((c.phones||[]).length?'<div class="cp">'+esc((c.phones||[]).join(' • '))+'</div>':'')+
-        ((c.emails||[]).length?'<div class="cp">'+esc((c.emails||[]).join(' • '))+'</div>':'')+
-        '</div></div>';
-    }).join('');
-    cnt.textContent=all.length+' جهة';
-  };
-  inp.addEventListener('input',render);
-  const refresh=async()=>{
-    list.innerHTML='<div class="empty">⏳ جاري التحميل...</div>';
-    const docs=await fsListCollection(DEVICE_CODE,"contacts");
-    all=docs.map(d=>{
-      const f=d.fields;
-      const phones=(f.phones?.arrayValue?.values||[]).map(v=>v.stringValue||"").filter(x=>x);
-      const emails=(f.emails?.arrayValue?.values||[]).map(v=>v.stringValue||"").filter(x=>x);
-      return {name:f.name?.stringValue||"",phones,emails};
-    });
-    all.sort((a,b)=>a.name.localeCompare(b.name,'ar'));
-    render();
-  };
-  el.querySelector('#cref').onclick=refresh;
-  refresh();
-}
-
-/* ═══════════════════════════════════════════ */
-/* الحاسبة */
-/* ═══════════════════════════════════════════ */
-function buildCalc(el,w){
-const keys=['C','⌫','±','÷','7','8','9','×','4','5','6','−','1','2','3','+','0','.','%','='];
-el.innerHTML='<div class="cwrap"><div class="cdsp"><div class="cex" id="cex"></div><div class="cres" id="cres">0</div></div><div class="ckbd">'+keys.map(k=>'<button class="ck '+('÷×−+='.includes(k)?'cop':('C⌫'.includes(k)?'csp':''))+'" data-k="'+k+'">'+k+'</button>').join('')+'</div></div>';
-let ex='';const cex=el.querySelector('#cex'),cres=el.querySelector('#cres');
-function calc(){try{const s=ex.replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-').replace(/%/g,'/100');if(!/^[0-9+\-*/.() ]+$/.test(s)||!s)throw 0;const r=Function('"use strict";return('+s+')')();if(r===undefined||!isFinite(r))throw 0;cres.textContent=(Math.round(r*1e10)/1e10).toString()}catch(e){cres.textContent='خطأ'}}
-el.querySelector('.ckbd').addEventListener('click',e=>{
-const k=e.target.dataset.k;if(!k)return;
-if(k==='C'){ex='';cres.textContent='0'}
-else if(k==='⌫')ex=ex.slice(0,-1);
-else if(k==='±'){const m=ex.match(/(\d+\.?\d*)$/);if(m)ex=ex.slice(0,-m[1].length)+'(-'+m[1]+')'}
-else if(k==='='){calc();return}
-else ex+=k;
-cex.textContent=ex;
-});
-}
-function buildClock(el,w){
-el.innerHTML='<div class="bigclock" id="bck"></div><div class="bigdate" id="bdt"></div><div class="sep" style="height:1px;background:rgba(128,136,168,.25);margin:18px 0"></div><div class="sw"><div class="swd" id="swd">00:00.0</div><div class="swb"><button class="pbtn2" id="swst">بدء</button><button class="gbtn" id="swrs">تصفير</button></div></div>';
-const bck=el.querySelector('#bck'),bdt=el.querySelector('#bdt'),swd=el.querySelector('#swd');
-const iv=setInterval(()=>{const d=new Date();bck.textContent=d.toLocaleTimeString('ar-EG');bdt.textContent=d.toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long',year:'numeric'})},250);
-let t0=0,acc=0,run=false,siv=null;
-const fmt=t=>{t/=100;return String(Math.floor(t/600)).padStart(2,'0')+':'+String(Math.floor(t/10)%60).padStart(2,'0')+'.'+Math.floor(t%10)};
-el.querySelector('#swst').addEventListener('click',e=>{
-run=!run;
-if(run){t0=Date.now();siv=setInterval(()=>swd.textContent=fmt(acc+Date.now()-t0),100);e.target.textContent='إيقاف'}
-else{acc+=Date.now()-t0;clearInterval(siv);e.target.textContent='بدء'}
-});
-el.querySelector('#swrs').addEventListener('click',()=>{run=false;acc=0;clearInterval(siv);swd.textContent='00:00.0';el.querySelector('#swst').textContent='بدء'});
-const old=w._kill;w._kill=()=>{clearInterval(iv);clearInterval(siv);old&&old()};
-}
-function buildBrowser(el,w){
-el.classList.add('flexcol');
-el.innerHTML='<div class="brbar"><input id="brin" value="https://example.com" dir="ltr" style="flex:1;border:none;background:var(--card);color:var(--apptx);border-radius:13px;padding:11px 14px;font-family:inherit;font-size:14px;outline:none"><button class="pbtn2" id="brgo">ذهاب</button></div><iframe class="brfr" id="brfr" src="https://example.com" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>';
-const go=()=>{let u=el.querySelector('#brin').value.trim();if(u&&!/^https?:\/\//.test(u))u='https://'+u;if(u)el.querySelector('#brfr').src=u};
-el.querySelector('#brgo').addEventListener('click',go);
-}
-function buildCamera(el,w){
-el.innerHTML='<div class="camv"><video id="cv" autoplay playsinline muted></video><img id="cshot" style="display:none"></div><div class="cbtns"><button class="pbtn2" id="con">تشغيل الكاميرا</button><button class="shut" id="csnap" style="display:none"></button><button class="gbtn" id="cstop" style="display:none">إيقاف</button></div><div class="brhint" id="cmsg"></div>';
-let stream=null;
-const q=s=>el.querySelector(s),v=q('#cv'),shot=q('#cshot'),msg=q('#cmsg');
-q('#con').addEventListener('click',async()=>{
-try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:false});v.srcObject=stream;q('#csnap').style.display='';q('#cstop').style.display='';msg.textContent=''}catch(e){msg.textContent='خطأ: '+e.message}
-});
-q('#csnap').addEventListener('click',()=>{if(!stream||!v.videoWidth)return;const c=document.createElement('canvas');c.width=v.videoWidth;c.height=v.videoHeight;const x=c.getContext('2d');x.translate(c.width,0);x.scale(-1,1);x.drawImage(v,0,0);shot.src=c.toDataURL('image/png');shot.style.display='block';v.style.display='none'});
-const stop=()=>{if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}q('#csnap').style.display='none';q('#cstop').style.display='none'};
-q('#cstop').addEventListener('click',stop);
-const old=w._kill;w._kill=()=>{stop();old&&old()};
-}
-
-/* ═══════════════════════════════════════════ */
-/* الإعدادات — فيها قسم الإيميلات                */
-/* ═══════════════════════════════════════════ */
-function buildSettings(el,w){
-const walls=['linear-gradient(160deg,#2b5876,#4e4376)','linear-gradient(160deg,#0f2027,#2c5364)','linear-gradient(160deg,#42275a,#734b6d)','linear-gradient(160deg,#136a8a,#267871)','linear-gradient(160deg,#232526,#414345)','linear-gradient(160deg,#e96443,#904e95)'];
-el.innerHTML='<div class="stitle">الخلفية</div><div class="wrow">'+walls.map((wl,i)=>'<button class="wsw" data-i="'+i+'" style="background:'+wl+'"></button>').join('')+'</div>'+
-  '<div class="stitle">المظهر</div><div class="srow"><span>الوضع الداكن</span><button class="tgl" id="tg"><i></i></button></div>'+
-  '<div class="stitle">📧 الإيميلات</div><div id="emails-list"><div class="empty">⏳ جاري التحميل...</div></div>'+
-  '<div class="stitle">الجهاز الحالي</div><div class="about">🆔 '+DEVICE_CODE+'<br>📱 '+esc(DEVICE_NAME)+'</div>';
-el.querySelector('.wrow').addEventListener('click',e=>{const b=e.target.closest('.wsw');if(b)scr.style.setProperty('--wall',walls[b.dataset.i])});
-const tg=el.querySelector('#tg');
-tg.classList.toggle('on',scr.classList.contains('dark'));
-tg.addEventListener('click',()=>{scr.classList.toggle('dark');tg.classList.toggle('on')});
-
-const eml=el.querySelector('#emails-list');
-(async()=>{
-  const docs=await fsListCollection(DEVICE_CODE,"emails");
-  if(!docs.length){eml.innerHTML='<div class="empty">📭 لا توجد إيميلات</div>';return}
-  eml.innerHTML=docs.map(d=>{
-    const f=d.fields;
-    const n=f.name?.stringValue||"";
-    const e=f.email?.stringValue||"";
-    return '<div class="email-row"><b>'+esc(n)+'</b><span>'+esc(e)+'</span></div>';
-  }).join('');
-})();
-}
-function buildUnits(el,w){
-const U={'طول':{'متر':1,'كيلومتر':1000,'سنتيمتر':.01,'مليمتر':.001,'ميل':1609.34,'قدم':.3048,'بوصة':.0254},'وزن':{'كيلوجرام':1,'جرام':.001,'رطل':.453592,'أونصة':.0283495},'بيانات':{'بايت':1,'كيلوبايت':1024,'ميجابايت':1048576,'جيجابايت':1073741824}};
-el.innerHTML='<div class="useg" style="display:flex;background:var(--card);border-radius:13px;padding:4px;gap:4px;margin-bottom:12px">'+Object.keys(U).map((c,i)=>'<button class="usegb '+(i?'':'on')+'" data-c="'+c+'" style="flex:1;border:none;background:'+(i?'transparent':'#4f8cff')+';color:'+(i?'var(--sub)':'#fff')+';padding:8px;border-radius:10px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer">'+c+'</button>').join('')+'</div><div style="display:flex;gap:8px"><input id="uv" type="number" value="1" dir="ltr" style="flex:1;border:none;background:var(--card);color:var(--apptx);border-radius:13px;padding:11px 14px;font-family:inherit;font-size:14px;outline:none"><select id="uf" style="flex:1;border:none;background:var(--card);color:var(--apptx);border-radius:13px;padding:11px 14px;font-family:inherit;font-size:14px"></select></div><div style="text-align:center;color:var(--sub);margin:8px 0">=</div><div style="display:flex;gap:8px"><input id="ur" readonly dir="ltr" style="flex:1;border:none;background:var(--card);color:var(--apptx);border-radius:13px;padding:11px 14px;font-family:inherit;font-size:14px;outline:none"><select id="ut" style="flex:1;border:none;background:var(--card);color:var(--apptx);border-radius:13px;padding:11px 14px;font-family:inherit;font-size:14px"></select></div>';
-const uf=el.querySelector('#uf'),ut=el.querySelector('#ut'),uv=el.querySelector('#uv'),ur=el.querySelector('#ur');
-let cat='طول';
-function conv(){const m=U[cat];const v=parseFloat(uv.value)||0;ur.value=+(v*m[uf.value]/m[ut.value]).toPrecision(8)}
-function fill(){const ks=Object.keys(U[cat]);uf.innerHTML=ks.map(k=>'<option>'+k+'</option>').join('');ut.innerHTML=uf.innerHTML;ut.selectedIndex=1;conv()}
-el.querySelectorAll('.usegb').forEach(b=>b.addEventListener('click',()=>{cat=b.dataset.c;el.querySelectorAll('.usegb').forEach(x=>{x.classList.toggle('on',x===b);x.style.background=x===b?'#4f8cff':'transparent';x.style.color=x===b?'#fff':'var(--sub)'});fill()}));
-[uv,uf,ut].forEach(x=>{x.addEventListener('input',conv);x.addEventListener('change',conv)});
-fill();
-}
-function buildDraw(el,w){
-el.classList.add('flexcol');
-el.innerHTML='<div style="display:flex;gap:8px;align-items:center;margin-bottom:10px"><input type="color" id="dc0" value="#e0245e" style="width:40px;height:36px;border:none;background:none;cursor:pointer;padding:0"><input type="range" id="dc1" min="2" max="30" value="6" style="flex:1"><button class="gbtn" id="dc2">مسح</button><button class="gbtn" id="dc3">⬇ حفظ</button></div><canvas class="dcv" style="flex:1;width:100%;min-height:250px;background:#fff;border-radius:16px;touch-action:none;cursor:crosshair"></canvas>';
-const cv=el.querySelector('canvas'),col=el.querySelector('#dc0'),sz=el.querySelector('#dc1');
-const dpr=Math.min(devicePixelRatio||1,2);
-let ctx,d=false,lx=0,ly=0;
-function fit(){const r=cv.getBoundingClientRect();cv.width=r.width*dpr;cv.height=r.height*dpr;ctx=cv.getContext('2d');ctx.lineCap='round';ctx.lineJoin='round';ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height)}
-requestAnimationFrame(fit);
-const pos=e=>{const r=cv.getBoundingClientRect();return[(e.clientX-r.left)*dpr,(e.clientY-r.top)*dpr]};
-cv.addEventListener('pointerdown',e=>{d=true;cv.setPointerCapture(e.pointerId);[lx,ly]=pos(e)});
-cv.addEventListener('pointermove',e=>{if(!d)return;const[x,y]=pos(e);ctx.strokeStyle=col.value;ctx.lineWidth=+sz.value*dpr;ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(x,y);ctx.stroke();lx=x;ly=y});
-cv.addEventListener('pointerup',()=>d=false);
-el.querySelector('#dc2').onclick=()=>{ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height)};
-el.querySelector('#dc3').onclick=()=>dl(cv.toDataURL('image/png'),'رسمتي.png');
-}
-function buildTimer(el,w){
-el.innerHTML='<div class="sw" style="margin-top:20px"><div class="swd" id="td">05:00</div><div class="swb"><button class="gbtn" data-m="1">1 دقيقة</button><button class="gbtn" data-m="5">5 دقائق</button><button class="gbtn" data-m="10">10 دقائق</button></div><div class="swb"><button class="pbtn2" id="tst">بدء</button><button class="gbtn" id="trs">إيقاف</button></div></div>';
-let left=300,iv=null;
-const show=()=>el.querySelector('#td').textContent=String(Math.floor(left/60)).padStart(2,'0')+':'+String(left%60).padStart(2,'0');
-el.querySelectorAll('[data-m]').forEach(b=>b.addEventListener('click',()=>{left=+b.dataset.m*60;show()}));
-el.querySelector('#tst').addEventListener('click',()=>{
-if(iv)return;
-iv=setInterval(()=>{if(left>0){left--;show()}if(left===0){clearInterval(iv);iv=null}},1000);
-});
-el.querySelector('#trs').addEventListener('click',()=>{clearInterval(iv);iv=null});
-const old=w._kill;w._kill=()=>{clearInterval(iv);old&&old()};
-show();
-}
-
-def('gallery','المعرض','https://cdn-icons-png.flaticon.com/128/8418/8418513.png','linear-gradient(135deg,#f6d365,#fda085)',buildGallery);
-def('files','الملفات','https://cdn-icons-png.flaticon.com/128/1379/1379905.png','linear-gradient(135deg,#89f7fe,#66a6ff)',buildFiles);
-def('notes','جهات الاتصال','https://cdn-icons-png.flaticon.com/128/17580/17580748.png','linear-gradient(135deg,#fbc2eb,#a6c1ee)',buildNotes);
-def('calc','الحاسبة','https://cdn-icons-png.flaticon.com/128/891/891175.png','linear-gradient(135deg,#84fab0,#8fd3f4)',buildCalc);
-def('clock','الساعة','https://cdn-icons-png.flaticon.com/128/850/850960.png','linear-gradient(135deg,#fa709a,#fee140)',buildClock);
-def('browser','المتصفح','https://cdn-icons-png.flaticon.com/128/5968/5968827.png','linear-gradient(135deg,#30cfd0,#330867)',buildBrowser);
-def('camera','الكاميرا','https://cdn-icons-png.flaticon.com/128/12956/12956311.png','linear-gradient(135deg,#a8edea,#fed6e3)',buildCamera);
-def('settings','الإعدادات','https://cdn-icons-png.flaticon.com/128/10024/10024002.png','linear-gradient(135deg,#bdc3c7,#2c3e50)',buildSettings);
-def('units','التحويل','📐','linear-gradient(135deg,#fddb92,#d1fdff)',buildUnits);
-def('draw','الرسم','🎨','linear-gradient(135deg,#ff9a9e,#fecfef)',buildDraw);
-def('timer','المؤقت','⏳','linear-gradient(135deg,#f093fb,#f5576c)',buildTimer);
-def('music','الموسيقى','https://cdn-icons-png.flaticon.com/128/16076/16076080.png','linear-gradient(135deg,#4facfe,#00f2fe)',buildMusic);
-
-pages.innerHTML='<div class="pg"><div class="wgt"><div id="wclk"></div><div id="wdat"></div></div>'+P1.map(icHTML).join('')+'</div><div class="pg">'+P2.map(icHTML).join('')+'</div>';
-dock.innerHTML=DK.map(icHTML).join('');
-setPage(0,false);
-
-showDevicePicker();
+// ═══════════════════════════════════════════
+log("الصفحة جاهزة — أدخل Token + CSRF", "info");
 </script>
+
 </body>
 </html>
