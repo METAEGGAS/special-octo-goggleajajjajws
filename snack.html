@@ -1,93 +1,87 @@
-<!-- language: HTML/JS, file: binance_live.html, runtime: modern browsers -->
-<!-- *Binance market data streams are public — no API key needed for WebSocket price feeds* -->
+<!-- language: HTML/JS, file: binance_chart.html, runtime: modern browsers -->
+<!-- *Lightweight Charts is free from TradingView; kline stream drives candles directly* -->
 
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Binance Live Prices</title>
+<title>Binance Live + Chart</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
   body {
     font-family:-apple-system,'Segoe UI',Tahoma,sans-serif;
     background:#0b0e11; color:#eaecef;
-    padding:20px; min-height:100vh;
+    padding:16px; min-height:100vh;
     display:flex; flex-direction:column; align-items:center;
   }
-  h1 {
-    font-size:20px; color:#f0b90b;
-    margin-bottom:4px; font-weight:600;
-  }
-  .sub {
-    font-size:12px; color:#848e9c;
-    margin-bottom:20px; font-family:monospace;
-  }
+  h1 { font-size:18px; color:#f0b90b; margin-bottom:4px; font-weight:600; }
+  .sub { font-size:11px; color:#848e9c; margin-bottom:14px; font-family:monospace; }
   .controls {
-    display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;
+    display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap;
     justify-content:center;
   }
   select, button {
-    padding:10px 16px; background:#1e2329; color:#eaecef;
+    padding:8px 14px; background:#1e2329; color:#eaecef;
     border:1px solid #2b3139; border-radius:6px;
-    font-size:14px; cursor:pointer;
+    font-size:13px; cursor:pointer;
   }
   button { background:#f0b90b; color:#0b0e11; border-color:#f0b90b; font-weight:600; }
   button:hover { background:#d9a509; }
   button:disabled { opacity:.5; cursor:not-allowed; }
   .status {
-    padding:8px 14px; border-radius:6px; margin-bottom:16px;
-    font-size:13px; font-family:monospace;
-    width:100%; max-width:480px; text-align:center;
+    padding:6px 12px; border-radius:6px; margin-bottom:10px;
+    font-size:12px; font-family:monospace;
+    width:100%; max-width:900px; text-align:center;
   }
   .connected { background:#1a3a1f; color:#3fb950; }
   .disconnected { background:#3a1a1a; color:#f85149; }
   .connecting { background:#3a2f1a; color:#d29922; }
-  .card {
+  .toprow {
+    display:grid; grid-template-columns:1fr auto;
+    gap:12px; width:100%; max-width:900px;
+    align-items:center; margin-bottom:10px;
+  }
+  .pricebox {
     background:#181a20; border:1px solid #2b3139;
-    border-radius:10px; padding:28px 36px; text-align:center;
-    width:100%; max-width:480px;
+    border-radius:8px; padding:12px 18px;
+    display:flex; align-items:baseline; gap:14px;
   }
-  .symbol {
-    font-size:14px; color:#848e9c;
-    margin-bottom:8px; font-family:monospace;
-  }
+  .symbol { font-size:13px; color:#848e9c; font-family:monospace; }
   .price {
-    font-size:56px; font-weight:700;
+    font-size:28px; font-weight:700;
     font-variant-numeric:tabular-nums;
-    transition:color .12s; letter-spacing:-1px;
+    transition:color .12s;
   }
   .up { color:#0ecb81; }
   .down { color:#f6465d; }
-  .meta {
-    font-size:12px; color:#848e9c;
-    margin-top:10px; font-family:monospace;
-  }
+  .chg { font-size:14px; font-weight:600; font-variant-numeric:tabular-nums; }
   .stats {
-    display:grid; grid-template-columns:repeat(3,1fr);
-    gap:8px; margin-top:16px;
+    display:flex; gap:12px;
+    background:#181a20; border:1px solid #2b3139;
+    border-radius:8px; padding:12px 18px;
+    font-size:12px;
   }
-  .stat {
-    background:#1e2329; border-radius:6px;
-    padding:10px 6px; text-align:center;
+  .stat-label { color:#848e9c; margin-left:4px; }
+  #chart {
+    width:100%; max-width:900px;
+    height:420px;
+    background:#181a20;
+    border:1px solid #2b3139;
+    border-radius:8px;
+    overflow:hidden;
   }
-  .stat-label { font-size:10px; color:#848e9c; margin-bottom:4px; }
-  .stat-value { font-size:13px; font-weight:600; font-variant-numeric:tabular-nums; }
-  .log {
-    background:#0b0e11; border:1px solid #2b3139;
-    border-radius:6px; padding:12px;
-    font-family:monospace; font-size:11px;
-    max-height:160px; overflow-y:auto;
-    color:#848e9c; width:100%; max-width:480px;
-    margin-top:16px;
+  @media(max-width:640px){
+    .toprow { grid-template-columns:1fr; }
+    #chart { height:300px; }
+    .price { font-size:22px; }
   }
-  .log div { padding:2px 0; }
 </style>
 </head>
 <body>
 
-<h1>Binance Live Prices</h1>
-<div class="sub">// WebSocket real-time feed</div>
+<h1>Binance Live + Chart</h1>
+<div class="sub">// WebSocket trade + kline stream</div>
 
 <div class="controls">
   <select id="sym">
@@ -99,52 +93,200 @@
     <option value="adausdt">ADA/USDT</option>
     <option value="dogeusdt">DOGE/USDT</option>
   </select>
+  <select id="interval">
+    <option value="1m">1 دقيقة</option>
+    <option value="5m">5 دقائق</option>
+    <option value="15m">15 دقيقة</option>
+    <option value="1h">1 ساعة</option>
+  </select>
   <button id="connectBtn">اتصال</button>
   <button id="disconnectBtn" disabled>قطع</button>
 </div>
 
 <div id="status" class="status disconnected">غير متصل</div>
 
-<div class="card">
-  <div class="symbol" id="symLabel">—</div>
-  <div class="price" id="price">—</div>
-  <div class="meta" id="meta">آخر تحديث: —</div>
-
+<div class="toprow">
+  <div class="pricebox">
+    <span class="symbol" id="symLabel">—</span>
+    <span class="price" id="price">—</span>
+  </div>
   <div class="stats">
-    <div class="stat">
-      <div class="stat-label">أعلى 24س</div>
-      <div class="stat-value" id="high">—</div>
-    </div>
-    <div class="stat">
-      <div class="stat-label">أدنى 24س</div>
-      <div class="stat-value" id="low">—</div>
-    </div>
-    <div class="stat">
-      <div class="stat-label">تغيير %</div>
-      <div class="stat-value" id="chg">—</div>
-    </div>
+    <div>أعلى: <span id="high">—</span></div>
+    <div>أدنى: <span id="low">—</span></div>
+    <div>تغيير: <span id="chg">—</span></div>
   </div>
 </div>
 
-<div class="log" id="log"></div>
+<div id="chart"></div>
 
+<script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
 <script>
 const $ = id => document.getElementById(id);
 
 let ws = null;
+let chart = null;
+let candleSeries = null;
 let currentSym = null;
+let currentInterval = null;
 let lastPrice = null;
-let msgCount = 0;
-let lastMsgTime = 0;
 
-function log(msg) {
-  const el = $('log');
-  const t = new Date().toLocaleTimeString();
-  const d = document.createElement('div');
-  d.textContent = `[${t}] ${msg}`;
-  el.appendChild(d);
-  el.scrollTop = el.scrollHeight;
-  while (el.children.length > 40) el.removeChild(el.firstChild);
+// ============================================================
+// Chart setup
+// ============================================================
+function initChart() {
+  const container = $('chart');
+  chart = LightweightCharts.createChart(container, {
+    layout: {
+      background: { color: '#181a20' },
+      textColor: '#d1d4dc',
+    },
+    grid: {
+      vertLines: { color: '#2b3139' },
+      horzLines: { color: '#2b3139' },
+    },
+    crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
+    rightPriceScale: { borderColor: '#2b3139' },
+    timeScale: {
+      borderColor: '#2b3139',
+      timeVisible: true,
+      secondsVisible: false,
+    },
+  });
+
+  candleSeries = chart.addCandlestickSeries({
+    upColor: '#0ecb81',
+    downColor: '#f6465d',
+    borderUpColor: '#0ecb81',
+    borderDownColor: '#f6465d',
+    wickUpColor: '#0ecb81',
+    wickDownColor: '#f6465d',
+  });
+
+  // Responsive
+  const resizeObs = new ResizeObserver(() => {
+    chart.applyOptions({
+      width: container.clientWidth,
+      height: container.clientHeight,
+    });
+  });
+  resizeObs.observe(container);
+  chart.applyOptions({ width: container.clientWidth, height: container.clientHeight });
+}
+
+// ============================================================
+// Fetch historical candles via REST
+// ============================================================
+async function loadHistory(symbol, interval) {
+  const url = `https://api.binance.com/api/v3/klines?symbol=${symbol.toUpperCase()}&interval=${interval}&limit=200`;
+  const res = await fetch(url);
+  const raw = await res.json();
+
+  const candles = raw.map(k => ({
+    time: Math.floor(k[0] / 1000),        // open time in seconds
+    open: parseFloat(k[1]),
+    high: parseFloat(k[2]),
+    low: parseFloat(k[3]),
+    close: parseFloat(k[4]),
+  }));
+
+  candleSeries.setData(candles);
+  if (candles.length) lastPrice = candles[candles.length - 1].close;
+  return candles;
+}
+
+// ============================================================
+// Connect WebSocket: trade + kline + ticker
+// ============================================================
+function connect() {
+  if (ws) return;
+
+  currentSym = $('sym').value;
+  currentInterval = $('interval').value;
+  $('symLabel').textContent = currentSym.toUpperCase();
+  setStatus('connecting', 'تحميل البيانات التاريخية...');
+
+  (async () => {
+    try {
+      await loadHistory(currentSym, currentInterval);
+      setStatus('connecting', 'جاري الاتصال بالبث اللحظي...');
+      openSocket();
+    } catch (e) {
+      setStatus('disconnected', '● فشل تحميل البيانات: ' + e.message);
+    }
+  })();
+}
+
+function openSocket() {
+  const sym = currentSym;
+  const iv = currentInterval;
+
+  const url = `wss://stream.binance.com:9443/stream?streams=` +
+              `${sym}@trade/${sym}@kline_${iv}/${sym}@ticker`;
+  ws = new WebSocket(url);
+
+  ws.onopen = () => {
+    setStatus('connected', `● متصل — ${sym.toUpperCase()} @ ${iv}`);
+    $('connectBtn').disabled = true;
+    $('disconnectBtn').disabled = false;
+  };
+
+  ws.onmessage = (ev) => {
+    const msg = JSON.parse(ev.data);
+    const d = msg.data;
+    if (!d) return;
+
+    // --- Trade: update price ticker only (candle comes from kline) ---
+    if (d.e === 'trade') {
+      const price = parseFloat(d.p);
+      const el = $('price');
+      el.textContent = price.toFixed(price > 100 ? 2 : 5);
+      if (lastPrice !== null) {
+        el.className = 'price ' + (price > lastPrice ? 'up' : price < lastPrice ? 'down' : '');
+      }
+      lastPrice = price;
+    }
+
+    // --- Kline: update candle in real time ---
+    if (d.e === 'kline') {
+      const k = d.k;
+      candleSeries.update({
+        time: Math.floor(k.t / 1000),
+        open: parseFloat(k.o),
+        high: parseFloat(k.h),
+        low: parseFloat(k.l),
+        close: parseFloat(k.c),
+      });
+    }
+
+    // --- Ticker: 24h stats ---
+    if (d.e === '24hrTicker') {
+      $('high').textContent = parseFloat(d.h).toFixed(2);
+      $('low').textContent = parseFloat(d.l).toFixed(2);
+      const chg = parseFloat(d.P);
+      const chgEl = $('chg');
+      chgEl.textContent = (chg >= 0 ? '+' : '') + chg.toFixed(2) + '%';
+      chgEl.style.color = chg >= 0 ? '#0ecb81' : '#f6465d';
+    }
+  };
+
+  ws.onclose = () => {
+    setStatus('disconnected', '● انقطع — إعادة محاولة...');
+    ws = null;
+    setTimeout(() => { if (!ws) connect(); }, 3000);
+  };
+
+  ws.onerror = () => setStatus('disconnected', '● خطأ في الاتصال');
+}
+
+function disconnect() {
+  if (ws) {
+    ws.onclose = null;
+    ws.close();
+    ws = null;
+  }
+  setStatus('disconnected', 'غير متصل');
+  $('connectBtn').disabled = false;
+  $('disconnectBtn').disabled = true;
 }
 
 function setStatus(state, text) {
@@ -154,103 +296,20 @@ function setStatus(state, text) {
 }
 
 // ============================================================
-// Connect to Binance WebSocket
-// ============================================================
-function connect() {
-  if (ws) return;
-
-  currentSym = $('sym').value;
-  $('symLabel').textContent = currentSym.toUpperCase();
-  setStatus('connecting', 'جاري الاتصال...');
-  log('Connecting to Binance...');
-
-  // Combined stream: trade + 24h ticker for one symbol
-  const url = `wss://stream.binance.com:9443/stream?streams=${currentSym}@trade/${currentSym}@ticker`;
-  ws = new WebSocket(url);
-
-  ws.onopen = () => {
-    setStatus('connected', '● متصل — بث لحظي');
-    log('Connected: ' + currentSym + '@trade + @ticker');
-    msgCount = 0;
-    lastMsgTime = Date.now();
-  };
-
-  ws.onmessage = (ev) => {
-    const msg = JSON.parse(ev.data);
-    const data = msg.data;
-    if (!data) return;
-
-    msgCount++;
-
-    // Trade event: has 'p' (price) and 'q' (quantity), 'e' = 'trade'
-    if (data.e === 'trade') {
-      const price = parseFloat(data.p);
-      const el = $('price');
-      el.textContent = price.toFixed(price > 100 ? 2 : 5);
-
-      if (lastPrice !== null) {
-        el.className = 'price ' + (price > lastPrice ? 'up' : price < lastPrice ? 'down' : '');
-      }
-      lastPrice = price;
-
-      $('meta').textContent = 'آخر صفقة: ' + new Date().toLocaleTimeString() +
-                              ' (رسالة #' + msgCount + ')';
-    }
-
-    // Ticker event: has 24h stats
-    if (data.e === '24hrTicker') {
-      $('high').textContent = parseFloat(data.h).toFixed(2);
-      $('low').textContent = parseFloat(data.l).toFixed(2);
-
-      const chg = parseFloat(data.P);
-      const chgEl = $('chg');
-      chgEl.textContent = (chg >= 0 ? '+' : '') + chg.toFixed(2) + '%';
-      chgEl.style.color = chg >= 0 ? '#0ecb81' : '#f6465d';
-    }
-  };
-
-  ws.onclose = (e) => {
-    setStatus('disconnected', '● انقطع — إعادة محاولة...');
-    log('Closed: code ' + e.code);
-    ws = null;
-    setTimeout(connect, 3000);
-  };
-
-  ws.onerror = (e) => {
-    setStatus('disconnected', '● خطأ في الاتصال');
-    log('Error: ' + e.message);
-  };
-
-  $('connectBtn').disabled = true;
-  $('disconnectBtn').disabled = false;
-}
-
-function disconnect() {
-  if (ws) {
-    ws.onclose = null; // prevent auto-reconnect
-    ws.close();
-    ws = null;
-    log('Manually disconnected');
-  }
-  setStatus('disconnected', 'غير متصل');
-  $('connectBtn').disabled = false;
-  $('disconnectBtn').disabled = true;
-}
-
-// ============================================================
 // Events
 // ============================================================
 $('connectBtn').addEventListener('click', connect);
 $('disconnectBtn').addEventListener('click', disconnect);
 
 $('sym').addEventListener('change', () => {
-  if (ws) {
-    disconnect();
-    setTimeout(connect, 300);
-  }
+  if (ws) { disconnect(); setTimeout(connect, 300); }
+});
+$('interval').addEventListener('change', () => {
+  if (ws) { disconnect(); setTimeout(connect, 300); }
 });
 
-log('Ready. Press اتصال to begin.');
+// Init chart immediately so it's visible before connecting
+initChart();
 </script>
 </body>
 </html>
