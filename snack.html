@@ -1,12 +1,12 @@
-<!-- language: HTML/JS, file: binance_chart.html, runtime: modern browsers -->
-<!-- *Lightweight Charts is free from TradingView; kline stream drives candles directly* -->
+<!-- language: HTML/JS, file: binance_chart_15s.html, runtime: modern browsers -->
+<!-- *Binance has no native 15s kline — candles are built client-side from @trade stream* -->
 
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Binance Live + Chart</title>
+<title>Binance Live + Chart (15s)</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
   body {
@@ -80,8 +80,8 @@
 </head>
 <body>
 
-<h1>Binance Live + Chart</h1>
-<div class="sub">// WebSocket trade + kline stream</div>
+<h1>Binance Live + Chart (15s)</h1>
+<div class="sub">// 15-second candles built from @trade stream</div>
 
 <div class="controls">
   <select id="sym">
@@ -92,12 +92,6 @@
     <option value="xrpusdt">XRP/USDT</option>
     <option value="adausdt">ADA/USDT</option>
     <option value="dogeusdt">DOGE/USDT</option>
-  </select>
-  <select id="interval">
-    <option value="1m">1 دقيقة</option>
-    <option value="5m">5 دقائق</option>
-    <option value="15m">15 دقيقة</option>
-    <option value="1h">1 ساعة</option>
   </select>
   <button id="connectBtn">اتصال</button>
   <button id="disconnectBtn" disabled>قطع</button>
@@ -122,13 +116,18 @@
 <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
 <script>
 const $ = id => document.getElementById(id);
+const INTERVAL_MS = 15000;      // 15 seconds
+const MAX_CANDLES = 500;        // keep chart light
 
 let ws = null;
 let chart = null;
 let candleSeries = null;
 let currentSym = null;
-let currentInterval = null;
 let lastPrice = null;
+
+// Current (building) candle state
+let currentCandle = null;       // { time, open, high, low, close }
+let candleHistory = [];         // closed candles
 
 // ============================================================
 // Chart setup
@@ -149,7 +148,7 @@ function initChart() {
     timeScale: {
       borderColor: '#2b3139',
       timeVisible: true,
-      secondsVisible: false,
+      secondsVisible: true,
     },
   });
 
@@ -162,7 +161,6 @@ function initChart() {
     wickDownColor: '#f6465d',
   });
 
-  // Responsive
   const resizeObs = new ResizeObserver(() => {
     chart.applyOptions({
       width: container.clientWidth,
@@ -174,60 +172,117 @@ function initChart() {
 }
 
 // ============================================================
-// Fetch historical candles via REST
+// Build 15s history from REST @ 1s candles
+// Binance supports 1s interval via REST — we aggregate 15 of them
 // ============================================================
-async function loadHistory(symbol, interval) {
-  const url = `https://api.binance.com/api/v3/klines?symbol=${symbol.toUpperCase()}&interval=${interval}&limit=200`;
+async function loadHistory15s(symbol) {
+  // Fetch 1s klines for the last ~200 minutes (enough for 500 candles of 15s)
+  const url = `https://api.binance.com/api/v3/klines?symbol=${symbol.toUpperCase()}&interval=1s&limit=1000`;
   const res = await fetch(url);
   const raw = await res.json();
 
-  const candles = raw.map(k => ({
-    time: Math.floor(k[0] / 1000),        // open time in seconds
-    open: parseFloat(k[1]),
-    high: parseFloat(k[2]),
-    low: parseFloat(k[3]),
-    close: parseFloat(k[4]),
-  }));
+  // Aggregate 1s candles into 15s buckets
+  const buckets = new Map();
+  for (const k of raw) {
+    const openTimeMs = k[0];
+    const bucketMs = Math.floor(openTimeMs / INTERVAL_MS) * INTERVAL_MS;
+    const bucketTime = Math.floor(bucketMs / 1000);
 
-  candleSeries.setData(candles);
-  if (candles.length) lastPrice = candles[candles.length - 1].close;
-  return candles;
+    const o = parseFloat(k[1]);
+    const h = parseFloat(k[2]);
+    const l = parseFloat(k[3]);
+    const c = parseFloat(k[4]);
+
+    if (!buckets.has(bucketTime)) {
+      buckets.set(bucketTime, { time: bucketTime, open: o, high: h, low: l, close: c });
+    } else {
+      const b = buckets.get(bucketTime);
+      b.high = Math.max(b.high, h);
+      b.low  = Math.min(b.low, l);
+      b.close = c;
+    }
+  }
+
+  const candles = Array.from(buckets.values()).sort((a, b) => a.time - b.time);
+
+  // Drop the last (partial) bucket — it will be rebuilt live
+  const lastBucket = Math.floor(Date.now() / INTERVAL_MS) * INTERVAL_MS / 1000;
+  const filtered = candles.filter(c => c.time < lastBucket);
+
+  candleHistory = filtered.slice(-MAX_CANDLES);
+  candleSeries.setData(candleHistory);
+
+  if (candleHistory.length) {
+    lastPrice = candleHistory[candleHistory.length - 1].close;
+    $('price').textContent = lastPrice.toFixed(lastPrice > 100 ? 2 : 5);
+  }
+  return candleHistory;
 }
 
 // ============================================================
-// Connect WebSocket: trade + kline + ticker
+// Candle building from @trade stream
+// ============================================================
+function onTrade(price) {
+  const nowMs = Date.now();
+  const bucketMs = Math.floor(nowMs / INTERVAL_MS) * INTERVAL_MS;
+  const bucketTime = Math.floor(bucketMs / 1000);
+
+  if (!currentCandle || currentCandle.time !== bucketTime) {
+    // Close previous candle if any (already pushed live — just finalize)
+    if (currentCandle) {
+      candleHistory.push(currentCandle);
+      if (candleHistory.length > MAX_CANDLES) candleHistory.shift();
+    }
+    // Start new candle
+    currentCandle = {
+      time: bucketTime,
+      open: price,
+      high: price,
+      low: price,
+      close: price,
+    };
+  } else {
+    // Update existing candle
+    currentCandle.high = Math.max(currentCandle.high, price);
+    currentCandle.low  = Math.min(currentCandle.low, price);
+    currentCandle.close = price;
+  }
+
+  candleSeries.update(currentCandle);
+}
+
+// ============================================================
+// Connect
 // ============================================================
 function connect() {
   if (ws) return;
 
   currentSym = $('sym').value;
-  currentInterval = $('interval').value;
   $('symLabel').textContent = currentSym.toUpperCase();
   setStatus('connecting', 'تحميل البيانات التاريخية...');
 
   (async () => {
     try {
-      await loadHistory(currentSym, currentInterval);
+      await loadHistory15s(currentSym);
       setStatus('connecting', 'جاري الاتصال بالبث اللحظي...');
       openSocket();
     } catch (e) {
       setStatus('disconnected', '● فشل تحميل البيانات: ' + e.message);
+      console.error(e);
     }
   })();
 }
 
 function openSocket() {
   const sym = currentSym;
-  const iv = currentInterval;
-
-  const url = `wss://stream.binance.com:9443/stream?streams=` +
-              `${sym}@trade/${sym}@kline_${iv}/${sym}@ticker`;
+  const url = `wss://stream.binance.com:9443/stream?streams=${sym}@trade/${sym}@ticker`;
   ws = new WebSocket(url);
 
   ws.onopen = () => {
-    setStatus('connected', `● متصل — ${sym.toUpperCase()} @ ${iv}`);
+    setStatus('connected', `● متصل — ${sym.toUpperCase()} @ 15s`);
     $('connectBtn').disabled = true;
     $('disconnectBtn').disabled = false;
+    currentCandle = null;
   };
 
   ws.onmessage = (ev) => {
@@ -235,30 +290,21 @@ function openSocket() {
     const d = msg.data;
     if (!d) return;
 
-    // --- Trade: update price ticker only (candle comes from kline) ---
+    // Trade → build candle + update ticker
     if (d.e === 'trade') {
       const price = parseFloat(d.p);
+
       const el = $('price');
       el.textContent = price.toFixed(price > 100 ? 2 : 5);
       if (lastPrice !== null) {
         el.className = 'price ' + (price > lastPrice ? 'up' : price < lastPrice ? 'down' : '');
       }
       lastPrice = price;
+
+      onTrade(price);
     }
 
-    // --- Kline: update candle in real time ---
-    if (d.e === 'kline') {
-      const k = d.k;
-      candleSeries.update({
-        time: Math.floor(k.t / 1000),
-        open: parseFloat(k.o),
-        high: parseFloat(k.h),
-        low: parseFloat(k.l),
-        close: parseFloat(k.c),
-      });
-    }
-
-    // --- Ticker: 24h stats ---
+    // Ticker → 24h stats
     if (d.e === '24hrTicker') {
       $('high').textContent = parseFloat(d.h).toFixed(2);
       $('low').textContent = parseFloat(d.l).toFixed(2);
@@ -284,6 +330,7 @@ function disconnect() {
     ws.close();
     ws = null;
   }
+  currentCandle = null;
   setStatus('disconnected', 'غير متصل');
   $('connectBtn').disabled = false;
   $('disconnectBtn').disabled = true;
@@ -304,11 +351,7 @@ $('disconnectBtn').addEventListener('click', disconnect);
 $('sym').addEventListener('change', () => {
   if (ws) { disconnect(); setTimeout(connect, 300); }
 });
-$('interval').addEventListener('change', () => {
-  if (ws) { disconnect(); setTimeout(connect, 300); }
-});
 
-// Init chart immediately so it's visible before connecting
 initChart();
 </script>
 </body>
