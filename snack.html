@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="ar"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover"><title>QT — WTI Classic</title><style>
+<!DOCTYPE html><html lang="ar"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover"><title>QT — Crypto Live</title><style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{--g:#2ebd85;--r:#f6465d;--bg:#151a28;--card:#222a3e;--card2:#1b2233;--ln:#2f3952;--tx:#eaeef7;--mu:#858ea3}
 body{background:#0d1120;display:flex;justify-content:center;font-family:Tahoma,Arial,sans-serif;color:var(--tx)}
@@ -14,20 +14,21 @@ body{background:#0d1120;display:flex;justify-content:center;font-family:Tahoma,A
 .wl{width:46px;height:46px;border-radius:13px;background:linear-gradient(160deg,#31c98f,#1d9c68);display:grid;place-items:center;box-shadow:0 4px 12px rgba(46,189,133,.35)}
 .prw{display:flex;gap:8px;padding:2px 12px 6px}
 .pp{flex:1;display:flex;align-items:center;gap:9px;background:var(--card);border:1px solid var(--ln);border-radius:13px;padding:9px 12px;font-size:14.5px;font-weight:600}
-.oi{width:27px;height:27px;border-radius:50%;border:1.6px solid #aeb6cc;display:grid;place-items:center;flex:none}
+.pp select{flex:1;background:transparent;border:none;outline:none;color:var(--tx);font:inherit;font-weight:600;appearance:none;-webkit-appearance:none;cursor:pointer}
+.pp option{background:var(--card)}
+.oi{width:27px;height:27px;border-radius:50%;border:1.6px solid #f0b90b;color:#f0b90b;display:grid;place-items:center;flex:none;font-size:15px;font-weight:700}
 .dt{width:46px;background:var(--card);border:1px solid var(--ln);border-radius:13px;display:grid;place-items:center;color:var(--mu);letter-spacing:2px;font-weight:700}
 .inf{display:flex;align-items:center;gap:10px;padding:2px 14px 4px}
 .bt{width:34px;height:34px;border-radius:10px;background:#233047;display:grid;place-items:center;flex:none}
 .inf .p{font-size:13px;font-weight:700;line-height:1.25}
 .inf small{color:var(--mu);font-weight:400;font-size:11px}
-.ch{position:relative;flex:1;min-height:0;overflow:hidden}
-.mt,.ch canvas{position:absolute;inset:0;width:100%;height:100%}
-.pl{position:absolute;right:6px;transform:translateY(-50%);font-size:11px;color:#78829c;z-index:2}
-.m1{position:absolute;right:64px;top:73.5%;font-size:12px;color:#aeb6cc;z-index:2}
-.cd{position:absolute;right:64px;top:78%;font-size:12px;color:#cdd4e8;z-index:2}
-.pp1,.pp2{position:absolute;right:0;transform:translateY(-50%);font-size:11.5px;font-weight:700;padding:4px 9px;border-radius:7px 0 0 7px;z-index:2}
-.pp1{top:80.9%;background:#3f8cff;color:#fff;box-shadow:0 2px 8px rgba(63,140,255,.5)}
-.pp2{top:84.6%;background:#565f75;color:#dfe3ee}
+.ch{position:relative;flex:1;min-height:0;overflow:hidden;touch-action:none}
+.ch canvas{position:absolute;inset:0;width:100%;height:100%}
+.zm{position:absolute;left:8px;top:8px;display:flex;flex-direction:column;gap:6px;z-index:3}
+.zm button{width:30px;height:30px;border-radius:9px;border:1px solid var(--ln);background:rgba(34,42,62,.92);color:var(--tx);font-size:17px;font-weight:700;cursor:pointer;line-height:1}
+.m1{position:absolute;right:64px;top:6px;font-size:12px;color:#aeb6cc;z-index:2}
+.cd{position:absolute;right:64px;top:24px;font-size:12px;color:#cdd4e8;z-index:2}
+.pp1{position:absolute;right:0;transform:translateY(-50%);font-size:11.5px;font-weight:700;padding:4px 9px;border-radius:7px 0 0 7px;z-index:2;top:50%;background:#3f8cff;color:#fff;box-shadow:0 2px 8px rgba(63,140,255,.5)}
 .sn{padding:4px 14px 6px}
 .snl{display:flex;justify-content:space-between;font-size:11.5px;font-weight:700;margin-bottom:4px}
 .sb{display:flex;height:13px;border-radius:8px;overflow:hidden;background:#000}
@@ -38,16 +39,16 @@ body{background:#0d1120;display:flex;justify-content:center;font-family:Tahoma,A
 .fld b{flex:1;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600}
 .fld span{width:46px;display:grid;place-items:center;background:var(--card);border-left:1px solid var(--ln);color:var(--mu);flex:none}
 .btns{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:2px 14px 8px}
-.b{height:62px;border:none;border-radius:15px;color:#fff;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.b{height:58px;border:none;border-radius:15px;color:#fff;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
 .b em{font-style:normal;font-size:17px;font-weight:700}.b small{font-size:13px;font-weight:600;opacity:.95}
 .bg{background:linear-gradient(180deg,#34c491,#25a172);box-shadow:0 5px 14px rgba(46,189,133,.35)}
 .br{background:linear-gradient(180deg,#f6546a,#e83a52);box-shadow:0 5px 14px rgba(246,70,93,.35)}
 .tax{display:flex;justify-content:space-between;padding:2px 18px 6px;color:var(--mu);font-size:11px}
-.nv{display:flex;background:#1b2132;border-top:1px solid #283049;padding:8px 4px max(14px,env(safe-area-inset-bottom))}
-.ni{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--mu)}
-.ni small{font-size:10.5px;white-space:nowrap}
+.nv{display:flex;background:#1b2132;border-top:1px solid #283049;padding:4px 4px max(6px,env(safe-area-inset-bottom))}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--mu)}
+.ni small{font-size:9.5px;white-space:nowrap}
 .ni.cm small{color:#fff;font-weight:700}
-.cmb{width:46px;height:46px;border-radius:13px;background:#202740;border:2px solid;border-top-color:var(--g);border-bottom-color:var(--r);border-left-color:#3a7d68;border-right-color:#7d3a48;display:grid;place-items:center;color:#fff;font-size:20px;box-shadow:0 -9px 18px -5px rgba(46,189,133,.55),0 9px 18px -5px rgba(246,70,93,.55)}
+.cmb{width:38px;height:38px;border-radius:11px;background:#202740;border:2px solid;border-top-color:var(--g);border-bottom-color:var(--r);border-left-color:#3a7d68;border-right-color:#7d3a48;display:grid;place-items:center;color:#fff;font-size:17px;box-shadow:0 -7px 14px -5px rgba(46,189,133,.55),0 7px 14px -5px rgba(246,70,93,.55)}
 svg{display:block}
 </style></head><body><div class="app">
 <div class="tb">
@@ -57,27 +58,18 @@ svg{display:block}
  <div class="wl"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9"><rect x="3" y="6" width="18" height="14" rx="3"/><path d="M3 10h18M16 15h2"/></svg></div>
 </div>
 <div class="prw">
- <div class="pp"><span class="oi"><svg width="13" height="13" viewBox="0 0 24 24" fill="#cdd4e8"><path d="M12 2C12 2 5 11 5 15.5A7 7 0 0 0 19 15.5C19 11 12 2 12 2Z"/></svg></span>WTI Crude Oil OTC<span class="chv" style="margin-left:auto">▾</span></div>
+ <div class="pp"><span class="oi">₿</span><select id="sym"><option>BTCUSDT</option><option>ETHUSDT</option><option>BNBUSDT</option><option>SOLUSDT</option><option>XRPUSDT</option><option>DOGEUSDT</option><option>ADAUSDT</option><option>TRXUSDT</option><option>LTCUSDT</option><option>LINKUSDT</option></select><span class="chv">▾</span></div>
  <div class="dt">•••</div>
 </div>
 <div class="inf">
  <span class="bt"><svg width="17" height="17" viewBox="0 0 24 24" fill="#fff"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"/></svg></span>
- <span class="p">⌃ 91.239<br><small>14:56:43 UTC+3</small></span>
+ <span class="p" id="pr">⌃ …<br><small id="clk">--:--:-- UTC+3</small></span>
 </div>
 <div class="ch">
- <svg class="mt" viewBox="0 0 430 500" preserveAspectRatio="none">
-  <path fill="#232b40" opacity=".85" d="M0 330 L45 270 90 310 140 210 185 290 235 160 290 250 340 130 390 230 430 90 V500 H0Z"/>
-  <path fill="#2c3550" opacity=".6" d="M0 380 L70 300 120 350 190 250 250 330 320 210 370 300 430 190 V500 H0Z"/>
-  <path fill="#3a4563" opacity=".35" d="M150 500 L235 290 300 400 360 280 430 420 V500Z"/>
- </svg>
  <canvas id="cv"></canvas>
- <span class="pl" style="top:4.5%">91.300</span>
- <span class="pl" style="top:27.3%">91.200</span>
- <span class="pl" style="top:50%">91.100</span>
- <span class="pl" style="top:72.7%">91</span>
- <span class="pl" style="top:95.4%">90.900</span>
- <span class="m1">M1</span><span class="cd" id="cd">00:17</span>
- <span class="pp1">90.964</span><span class="pp2">90.948</span>
+ <div class="zm"><button id="zi">+</button><button id="zo">−</button></div>
+ <span class="m1">M1</span><span class="cd" id="cd">--:--</span>
+ <span class="pp1" id="lp">—</span>
 </div>
 <div class="sn">
  <div class="snl"><b style="color:var(--g)">16%</b><b style="color:var(--r)">84%</b></div>
@@ -91,17 +83,53 @@ svg{display:block}
  <button class="b bg"><em>شراء</em><small>80%</small></button>
  <button class="b br"><em>بيع</em><small>80%</small></button>
 </div>
-<div class="tax"><span>14:20</span><span>14:36</span><span>14:52</span><span>15:08</span></div>
+<div class="tax"><span></span><span></span><span></span><span></span></div>
 <div class="nv">
- <div class="ni"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 3v14m0 0-3-3m3 3 3-3M16 21V7m0 0-3 3m3-3 3 3"/></svg><small>التداولات</small></div>
- <div class="ni"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3.5 13.5a12 12 0 0 1 17 0M6.5 16.8a8 8 0 0 1 11 0"/><circle cx="12" cy="19.6" r="1.5" fill="currentColor" stroke="none"/></svg><small>الرؤى</small></div>
+ <div class="ni"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 3v14m0 0-3-3m3 3 3-3M16 21V7m0 0-3 3m3-3 3 3"/></svg><small>التداولات</small></div>
+ <div class="ni"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3.5 13.5a12 12 0 0 1 17 0M6.5 16.8a8 8 0 0 1 11 0"/><circle cx="12" cy="19.6" r="1.5" fill="currentColor" stroke="none"/></svg><small>الرؤى</small></div>
  <div class="ni cm"><span class="cmb">⇅</span><small>Classic mode</small></div>
- <div class="ni"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="8.5" cy="8.5" r="3"/><path d="M3 19c.6-3.2 2.8-4.8 5.5-4.8s4.9 1.6 5.5 4.8"/><circle cx="16.8" cy="9.5" r="2.4"/><path d="M15.4 14.3c2.9.1 4.7 1.7 5.3 4.7"/></svg><small>تاول الاجتماعي</small></div>
- <div class="ni"><svg width="23" height="23" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg><small>المزيد</small></div>
+ <div class="ni"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="8.5" cy="8.5" r="3"/><path d="M3 19c.6-3.2 2.8-4.8 5.5-4.8s4.9 1.6 5.5 4.8"/><circle cx="16.8" cy="9.5" r="2.4"/><path d="M15.4 14.3c2.9.1 4.7 1.7 5.3 4.7"/></svg><small>تاول الاجتماعي</small></div>
+ <div class="ni"><svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg><small>المزيد</small></div>
 </div>
 </div><script>
-const cv=document.getElementById('cv'),x=cv.getContext('2d');
-const P=[91.10,91.12,91.10,91.14,91.12,91.16,91.14,91.18,91.22,91.20,91.24,91.26,91.23,91.25,91.21,91.23,91.19,91.21,91.17,91.13,91.08,91.05,91.08,91.06,91.10,91.08,91.11,91.13,91.09,91.06,91.04,91.06,91.03,91.05,91.07,91.10,91.08,91.11,91.09,91.05,91.00,90.97,90.99,90.95,90.97,90.948,90.964];
-function draw(){const W=cv.clientWidth,H=cv.clientHeight,d=devicePixelRatio||1;cv.width=W*d;cv.height=H*d;x.setTransform(d,0,0,d,0,0);x.clearRect(0,0,W,H);const MN=90.88,MX=91.32,y=v=>(MX-v)/(MX-MN)*H;x.strokeStyle='rgba(255,255,255,.055)';x.lineWidth=1;[91.3,91.2,91.1,91,90.9].forEach(p=>{x.beginPath();x.moveTo(0,y(p));x.lineTo(W,y(p));x.stroke()});[.08,.34,.6,.86].forEach(f=>{x.beginPath();x.moveTo(W*f,0);x.lineTo(W*f,H);x.stroke()});const n=P.length-1,cw=(W-72)/n;for(let i=0;i<n;i++){const o=P[i],c=P[i+1],up=c>=o;const h=Math.max(o,c)+((i*13)%7)*.003+.004,l=(i==n-1?90.925:Math.min(o,c)-((i*7)%5)*.003-.004);const X=i*cw+cw/2;x.strokeStyle=x.fillStyle=up?'#2ebd85':'#f6465d';x.lineWidth=1.4;x.beginPath();x.moveTo(X,y(h));x.lineTo(X,y(l));x.stroke();const t=y(Math.max(o,c)),b=y(Math.min(o,c));x.fillRect(X-cw*.32,t,cw*.64,Math.max(2,b-t));}x.lineWidth=1.3;x.strokeStyle='#3f8cff';x.beginPath();x.moveTo(0,y(90.964));x.lineTo(W-64,y(90.964));x.stroke();x.strokeStyle='rgba(255,255,255,.35)';x.setLineDash([4,4]);x.beginPath();x.moveTo(0,y(90.948));x.lineTo(W-64,y(90.948));x.stroke();x.setLineDash([]);}
-addEventListener('resize',draw);draw();let t=17;setInterval(()=>{t=t>0?t-1:59;document.getElementById('cd').textContent='00:'+String(t).padStart(2,'0')},1000);
+const cv=document.getElementById('cv'),x=cv.getContext('2d'),lp=document.getElementById('lp'),cd=document.getElementById('cd'),pr=document.getElementById('pr'),clk=document.getElementById('clk'),tq=document.querySelectorAll('.tax span');
+let SYM='BTCUSDT',K=[],cw=9,off=0,ws=null,drag=null,pinch=0;
+const fmt=p=>p>=1000?p.toFixed(2):p>=1?p.toFixed(3):p.toFixed(6);
+async function load(){try{const a=await(await fetch('https://api.binance.com/api/v3/klines?symbol='+SYM+'&interval=1m&limit=300')).json();K=a.map(k=>({t:k[0],o:+k[1],h:+k[2],l:+k[3],c:+k[4],ct:k[6]}));off=0;sub();draw();}catch(e){x.clearRect(0,0,cv.width,cv.height);draw();}}
+function sub(){if(ws)ws.close();ws=new WebSocket('wss://stream.binance.com:9443/ws/'+SYM.toLowerCase()+'@kline_1m');ws.onmessage=e=>{const k=JSON.parse(e.data).k,c={t:k.t,o:+k.o,h:+k.h,l:+k.l,c:+k.c,ct:k.T};if(K.length&&c.t===K[K.length-1].t)K[K.length-1]=c;else K.push(c);draw();};}
+function zoom(f){cw=Math.max(2,Math.min(44,cw*f));draw();}
+function draw(){
+ const W=cv.clientWidth,H=cv.clientHeight,d=devicePixelRatio||1;cv.width=W*d;cv.height=H*d;x.setTransform(d,0,0,d,0,0);x.clearRect(0,0,W,H);
+ const PW=58,CW=W-PW;
+ if(!K.length){x.fillStyle='#858ea3';x.font='13px Tahoma';x.textAlign='center';x.fillText('جاري تحميل البيانات من بينانس…',CW/2,H/2);return}
+ const n=Math.max(5,Math.floor(CW/cw));off=Math.max(0,Math.min(off,K.length-n));
+ const s=Math.max(0,K.length-n-off),v=K.slice(s,K.length-off);
+ let mn=1/0,mx=-1/0;v.forEach(c=>{if(c.l<mn)mn=c.l;if(c.h>mx)mx=c.h});
+ const pd=(mx-mn)*.08||1;mn-=pd;mx+=pd;const y=p=>(mx-p)/(mx-mn)*(H-26)+8;
+ x.strokeStyle='rgba(255,255,255,.055)';x.fillStyle='#78829c';x.font='11px Tahoma';x.textAlign='left';x.lineWidth=1;
+ for(let i=0;i<=4;i++){const p=mn+(mx-mn)*i/4,yy=y(p);x.beginPath();x.moveTo(0,yy);x.lineTo(CW,yy);x.stroke();x.fillText(fmt(p),CW+5,yy+3)}
+ [.25,.5,.75].forEach(f=>{x.beginPath();x.moveTo(CW*f,0);x.lineTo(CW*f,H);x.stroke()});
+ const bw=Math.max(1,cw*.62);
+ v.forEach((c,i)=>{const X=(i+.5)*cw,up=c.c>=c.o;x.strokeStyle=x.fillStyle=up?'#2ebd85':'#f6465d';x.lineWidth=Math.max(1,cw*.14);
+  x.beginPath();x.moveTo(X,y(c.h));x.lineTo(X,y(c.l));x.stroke();
+  const t=y(Math.max(c.o,c.c)),b=y(Math.min(c.o,c.c));x.fillRect(X-bw/2,t,bw,Math.max(1,b-t));});
+ const L=K[K.length-1],yy=y(L.c);
+ if(yy>-10&&yy<H+10){x.strokeStyle='#3f8cff';x.setLineDash([4,4]);x.beginPath();x.moveTo(0,yy);x.lineTo(CW,yy);x.stroke();x.setLineDash([]);lp.style.top=Math.max(10,Math.min(H-10,yy))+'px';lp.textContent=fmt(L.c);}
+ const step=Math.max(1,Math.floor(v.length/4));
+ for(let i=0;i<4;i++){const c=v[Math.min(v.length-1,i*step)];tq[i].textContent=c?new Date(c.t).toTimeString().slice(0,5):''}
+ const r=Math.max(0,L.ct-Date.now());cd.textContent=String(Math.floor(r/6e4)).padStart(2,'0')+':'+String(Math.floor(r/1e3)%60).padStart(2,'0');
+ pr.innerHTML=(L.c>=L.o?'⌃ ':'⌄ ')+fmt(L.c)+'<br><small>'+clk.textContent+'</small>';
+}
+cv.addEventListener('pointerdown',e=>{if(e.pointerType=='touch'&&e.isPrimary==false)return;drag={x:e.clientX,off};cv.setPointerCapture(e.pointerId)});
+cv.addEventListener('pointermove',e=>{if(drag){off=Math.round(drag.off+(e.clientX-drag.x)/cw);draw()}});
+cv.addEventListener('pointerup',()=>drag=null);cv.addEventListener('pointercancel',()=>drag=null);
+cv.addEventListener('wheel',e=>{e.preventDefault();zoom(e.deltaY<0?1.18:1/1.18)},{passive:false});
+cv.addEventListener('touchmove',e=>{if(e.touches.length==2){e.preventDefault();const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);if(pinch)zoom(d/pinch);pinch=d}},{passive:false});
+cv.addEventListener('touchend',()=>pinch=0);
+document.getElementById('zi').onclick=()=>zoom(1.3);
+document.getElementById('zo').onclick=()=>zoom(1/1.3);
+document.getElementById('sym').onchange=e=>{SYM=e.target.value;K=[];lp.textContent='—';load();};
+addEventListener('resize',draw);
+setInterval(()=>{const t=new Date(Date.now()+108e5);clk.textContent=t.toISOString().slice(11,19)+' UTC+3';draw();},1000);
+draw();load();
 </script></body></html>
