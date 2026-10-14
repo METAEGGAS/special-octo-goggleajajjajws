@@ -1,14 +1,12 @@
-<!DOCTYPE html><html lang="ar"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>QT — WTI Classic</title><style>
+<!DOCTYPE html><html lang="ar"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover"><title>QT — WTI Classic</title><style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{--g:#2ebd85;--r:#f6465d;--bg:#151a28;--card:#222a3e;--card2:#1b2233;--ln:#2f3952;--tx:#eaeef7;--mu:#858ea3}
 body{background:#0d1120;display:flex;justify-content:center;font-family:Tahoma,Arial,sans-serif;color:var(--tx)}
-.app{width:100%;max-width:430px;height:100vh;max-height:960px;background:var(--bg);display:flex;flex-direction:column;overflow:hidden;direction:ltr}
-.tb{display:flex;align-items:center;gap:9px;padding:10px 12px 8px}
+.app{width:100%;max-width:430px;height:100vh;height:100dvh;max-height:960px;background:var(--bg);display:flex;flex-direction:column;overflow:hidden;direction:ltr}
+.tb{display:flex;align-items:center;gap:9px;padding:max(10px,env(safe-area-inset-top)) 12px 8px}
 .av{width:44px;height:44px;border-radius:50%;border:2.5px solid #a45cf0;display:grid;place-items:center;font-size:24px;background:radial-gradient(circle at 35% 30%,#3a2b57,#181226);box-shadow:0 0 8px rgba(164,92,240,.6)}
 .gf{position:relative;width:40px;height:40px;border-radius:10px;background:#26304c;display:grid;place-items:center;font-size:21px}
-.gf i{position:absolute;top:-4px;right:-4px;width:14px;height:14px;border-radius:50%;background:#3b4souc;background:#3b4568;color:#cdd4e8;font-size:9px;font-style:normal;display:grid;place-items:center}
+.gf i{position:absolute;top:-4px;right:-4px;width:14px;height:14px;border-radius:50%;background:#3b4568;color:#cdd4e8;font-size:9px;font-style:normal;display:grid;place-items:center}
 .ac{flex:1;background:var(--card);border:1px solid var(--ln);border-radius:13px;padding:6px 12px;display:flex;align-items:center;justify-content:space-between}
 .acr{font-size:11px;color:var(--mu)}.acr b{color:var(--g);font-weight:600}
 .acb{font-size:22px;font-weight:700;letter-spacing:.5px;line-height:1.1}
@@ -22,7 +20,7 @@ body{background:#0d1120;display:flex;justify-content:center;font-family:Tahoma,A
 .bt{width:34px;height:34px;border-radius:10px;background:#233047;display:grid;place-items:center;flex:none}
 .inf .p{font-size:13px;font-weight:700;line-height:1.25}
 .inf small{color:var(--mu);font-weight:400;font-size:11px}
-.ch{position:relative;flex:1;min-height:290px;overflow:hidden}
+.ch{position:relative;flex:1;min-height:0;overflow:hidden}
 .mt,.ch canvas{position:absolute;inset:0;width:100%;height:100%}
 .pl{position:absolute;right:6px;transform:translateY(-50%);font-size:11px;color:#78829c;z-index:2}
 .m1{position:absolute;right:64px;top:73.5%;font-size:12px;color:#aeb6cc;z-index:2}
@@ -45,31 +43,27 @@ body{background:#0d1120;display:flex;justify-content:center;font-family:Tahoma,A
 .bg{background:linear-gradient(180deg,#34c491,#25a172);box-shadow:0 5px 14px rgba(46,189,133,.35)}
 .br{background:linear-gradient(180deg,#f6546a,#e83a52);box-shadow:0 5px 14px rgba(246,70,93,.35)}
 .tax{display:flex;justify-content:space-between;padding:2px 18px 6px;color:var(--mu);font-size:11px}
-.nv{display:flex;background:#1b2132;border-top:1px solid #283049;padding:8px 4px 14px}
+.nv{display:flex;background:#1b2132;border-top:1px solid #283049;padding:8px 4px max(14px,env(safe-area-inset-bottom))}
 .ni{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--mu)}
 .ni small{font-size:10.5px;white-space:nowrap}
 .ni.cm small{color:#fff;font-weight:700}
 .cmb{width:46px;height:46px;border-radius:13px;background:#202740;border:2px solid;border-top-color:var(--g);border-bottom-color:var(--r);border-left-color:#3a7d68;border-right-color:#7d3a48;display:grid;place-items:center;color:#fff;font-size:20px;box-shadow:0 -9px 18px -5px rgba(46,189,133,.55),0 9px 18px -5px rgba(246,70,93,.55)}
 svg{display:block}
 </style></head><body><div class="app">
-
 <div class="tb">
  <div class="av">👧</div>
  <div class="gf">🎁<i>✕</i></div>
  <div class="ac"><div><div class="acr">QT Real&nbsp; <b>حساب</b> &nbsp;USD</div><div class="acb">0.39</div></div><span class="chv">▾</span></div>
  <div class="wl"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9"><rect x="3" y="6" width="18" height="14" rx="3"/><path d="M3 10h18M16 15h2"/></svg></div>
 </div>
-
 <div class="prw">
  <div class="pp"><span class="oi"><svg width="13" height="13" viewBox="0 0 24 24" fill="#cdd4e8"><path d="M12 2C12 2 5 11 5 15.5A7 7 0 0 0 19 15.5C19 11 12 2 12 2Z"/></svg></span>WTI Crude Oil OTC<span class="chv" style="margin-left:auto">▾</span></div>
  <div class="dt">•••</div>
 </div>
-
 <div class="inf">
  <span class="bt"><svg width="17" height="17" viewBox="0 0 24 24" fill="#fff"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"/></svg></span>
  <span class="p">⌃ 91.239<br><small>14:56:43 UTC+3</small></span>
 </div>
-
 <div class="ch">
  <svg class="mt" viewBox="0 0 430 500" preserveAspectRatio="none">
   <path fill="#232b40" opacity=".85" d="M0 330 L45 270 90 310 140 210 185 290 235 160 290 250 340 130 390 230 430 90 V500 H0Z"/>
@@ -85,24 +79,19 @@ svg{display:block}
  <span class="m1">M1</span><span class="cd" id="cd">00:17</span>
  <span class="pp1">90.964</span><span class="pp2">90.948</span>
 </div>
-
 <div class="sn">
  <div class="snl"><b style="color:var(--g)">16%</b><b style="color:var(--r)">84%</b></div>
  <div class="sb"><i style="width:16%;background:var(--g)"></i><u></u><i style="width:84%;background:var(--r)"></i></div>
 </div>
-
 <div class="pn">
  <div><label>الزمن</label><div class="fld"><b>00:00:05</b><span><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg></span></div></div>
  <div><label>المبلغ</label><div class="fld"><b>16</b><span style="font-size:18px;font-weight:700">$</span></div></div>
 </div>
-
 <div class="btns">
  <button class="b bg"><em>شراء</em><small>80%</small></button>
  <button class="b br"><em>بيع</em><small>80%</small></button>
 </div>
-
 <div class="tax"><span>14:20</span><span>14:36</span><span>14:52</span><span>15:08</span></div>
-
 <div class="nv">
  <div class="ni"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 3v14m0 0-3-3m3 3 3-3M16 21V7m0 0-3 3m3-3 3 3"/></svg><small>التداولات</small></div>
  <div class="ni"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3.5 13.5a12 12 0 0 1 17 0M6.5 16.8a8 8 0 0 1 11 0"/><circle cx="12" cy="19.6" r="1.5" fill="currentColor" stroke="none"/></svg><small>الرؤى</small></div>
@@ -110,27 +99,9 @@ svg{display:block}
  <div class="ni"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="8.5" cy="8.5" r="3"/><path d="M3 19c.6-3.2 2.8-4.8 5.5-4.8s4.9 1.6 5.5 4.8"/><circle cx="16.8" cy="9.5" r="2.4"/><path d="M15.4 14.3c2.9.1 4.7 1.7 5.3 4.7"/></svg><small>تاول الاجتماعي</small></div>
  <div class="ni"><svg width="23" height="23" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg><small>المزيد</small></div>
 </div>
-
 </div><script>
 const cv=document.getElementById('cv'),x=cv.getContext('2d');
 const P=[91.10,91.12,91.10,91.14,91.12,91.16,91.14,91.18,91.22,91.20,91.24,91.26,91.23,91.25,91.21,91.23,91.19,91.21,91.17,91.13,91.08,91.05,91.08,91.06,91.10,91.08,91.11,91.13,91.09,91.06,91.04,91.06,91.03,91.05,91.07,91.10,91.08,91.11,91.09,91.05,91.00,90.97,90.99,90.95,90.97,90.948,90.964];
-function draw(){
- const W=cv.clientWidth,H=cv.clientHeight,d=devicePixelRatio||1;
- cv.width=W*d;cv.height=H*d;x.setTransform(d,0,0,d,0,0);x.clearRect(0,0,W,H);
- const MN=90.88,MX=91.32,y=v=>(MX-v)/(MX-MN)*H;
- x.strokeStyle='rgba(255,255,255,.055)';x.lineWidth=1;
- [91.3,91.2,91.1,91,90.9].forEach(p=>{x.beginPath();x.moveTo(0,y(p));x.lineTo(W,y(p));x.stroke()});
- [.08,.34,.6,.86].forEach(f=>{x.beginPath();x.moveTo(W*f,0);x.lineTo(W*f,H);x.stroke()});
- const n=P.length-1,cw=(W-72)/n;
- for(let i=0;i<n;i++){const o=P[i],c=P[i+1],up=c>=o;
-  const h=Math.max(o,c)+((i*13)%7)*.003+.004,l=(i==n-1?90.925:Math.min(o,c)-((i*7)%5)*.003-.004);
-  const X=i*cw+cw/2;x.strokeStyle=x.fillStyle=up?'#2ebd85':'#f6465d';
-  x.lineWidth=1.4;x.beginPath();x.moveTo(X,y(h));x.lineTo(X,y(l));x.stroke();
-  const t=y(Math.max(o,c)),b=y(Math.min(o,c));
-  x.fillRect(X-cw*.32,t,cw*.64,Math.max(2,b-t));}
- x.lineWidth=1.3;x.strokeStyle='#3f8cff';x.beginPath();x.moveTo(0,y(90.964));x.lineTo(W-64,y(90.964));x.stroke();
- x.strokeStyle='rgba(255,255,255,.35)';x.setLineDash([4,4]);x.beginPath();x.moveTo(0,y(90.948));x.lineTo(W-64,y(90.948));x.stroke();x.setLineDash([]);
-}
-addEventListener('resize',draw);draw();
-let t=17;setInterval(()=>{t=t>0?t-1:59;document.getElementById('cd').textContent='00:'+String(t).padStart(2,'0')},1000);
+function draw(){const W=cv.clientWidth,H=cv.clientHeight,d=devicePixelRatio||1;cv.width=W*d;cv.height=H*d;x.setTransform(d,0,0,d,0,0);x.clearRect(0,0,W,H);const MN=90.88,MX=91.32,y=v=>(MX-v)/(MX-MN)*H;x.strokeStyle='rgba(255,255,255,.055)';x.lineWidth=1;[91.3,91.2,91.1,91,90.9].forEach(p=>{x.beginPath();x.moveTo(0,y(p));x.lineTo(W,y(p));x.stroke()});[.08,.34,.6,.86].forEach(f=>{x.beginPath();x.moveTo(W*f,0);x.lineTo(W*f,H);x.stroke()});const n=P.length-1,cw=(W-72)/n;for(let i=0;i<n;i++){const o=P[i],c=P[i+1],up=c>=o;const h=Math.max(o,c)+((i*13)%7)*.003+.004,l=(i==n-1?90.925:Math.min(o,c)-((i*7)%5)*.003-.004);const X=i*cw+cw/2;x.strokeStyle=x.fillStyle=up?'#2ebd85':'#f6465d';x.lineWidth=1.4;x.beginPath();x.moveTo(X,y(h));x.lineTo(X,y(l));x.stroke();const t=y(Math.max(o,c)),b=y(Math.min(o,c));x.fillRect(X-cw*.32,t,cw*.64,Math.max(2,b-t));}x.lineWidth=1.3;x.strokeStyle='#3f8cff';x.beginPath();x.moveTo(0,y(90.964));x.lineTo(W-64,y(90.964));x.stroke();x.strokeStyle='rgba(255,255,255,.35)';x.setLineDash([4,4]);x.beginPath();x.moveTo(0,y(90.948));x.lineTo(W-64,y(90.948));x.stroke();x.setLineDash([]);}
+addEventListener('resize',draw);draw();let t=17;setInterval(()=>{t=t>0?t-1:59;document.getElementById('cd').textContent='00:'+String(t).padStart(2,'0')},1000);
 </script></body></html>
