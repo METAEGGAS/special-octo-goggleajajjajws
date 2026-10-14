@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Biquote Live Price</title>
+<title>Biquote Live Candles</title>
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -11,115 +11,304 @@
         background: #0a0a0a;
         color: #fff;
         min-height: 100vh;
+        padding: 16px;
+    }
+    .header {
         display: flex;
-        flex-direction: column;
+        justify-content: space-between;
         align-items: center;
-        justify-content: center;
-        gap: 12px;
-    }
-    .card {
+        padding: 12px 16px;
         background: #1a1a1a;
-        border: 1px solid #2a2a2a;
-        border-radius: 16px;
-        padding: 40px 60px;
-        text-align: center;
-        min-width: 320px;
+        border-radius: 12px;
+        margin-bottom: 12px;
     }
-    .symbol {
-        font-size: 18px;
-        color: #888;
-        margin-bottom: 8px;
-        letter-spacing: 1px;
-    }
+    .symbol { font-size: 16px; color: #888; letter-spacing: 1px; }
     .price {
-        font-size: 56px;
+        font-size: 32px;
         font-weight: 700;
         font-variant-numeric: tabular-nums;
-        transition: color 0.2s;
     }
-    .change {
-        font-size: 16px;
-        margin-top: 8px;
-        font-weight: 600;
-    }
+    .change { font-size: 14px; font-weight: 600; }
     .up { color: #00c853; }
     .down { color: #ff1744; }
+    .chart-container {
+        background: #1a1a1a;
+        border-radius: 12px;
+        padding: 12px;
+        height: 60vh;
+        position: relative;
+    }
+    canvas { display: block; width: 100%; height: 100%; }
     .status {
         font-size: 12px;
         color: #555;
+        margin-top: 8px;
+        text-align: center;
+    }
+    .controls {
+        display: flex;
+        gap: 8px;
         margin-top: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
     }
-    .flash-up { animation: flashUp 0.3s; }
-    .flash-down { animation: flashDown 0.3s; }
-    @keyframes flashUp {
-        0% { background: #00c85322; }
-        100% { background: transparent; }
+    .controls button {
+        background: #2a2a2a;
+        color: #fff;
+        border: 1px solid #3a3a3a;
+        padding: 6px 14px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 13px;
+        transition: background 0.15s;
     }
-    @keyframes flashDown {
-        0% { background: #ff174422; }
-        100% { background: transparent; }
-    }
+    .controls button:hover { background: #3a3a3a; }
+    .controls button.active { background: #0064e0; border-color: #0064e0; }
 </style>
 </head>
 <body>
 
-<div class="card">
-    <div class="symbol">EUR / USD</div>
+<div class="header">
+    <div>
+        <div class="symbol">EUR / USD</div>
+        <div class="change" id="change">0.00%</div>
+    </div>
     <div class="price" id="price">---.-----</div>
-    <div class="change" id="change">0.00%</div>
-    <div class="status" id="status">Connecting...</div>
 </div>
 
+<div class="chart-container">
+    <canvas id="chart"></canvas>
+</div>
+
+<div class="controls">
+    <button data-interval="1m" class="active">1m</button>
+    <button data-interval="5m">5m</button>
+    <button data-interval="15m">15m</button>
+    <button data-interval="1h">1h</button>
+</div>
+
+<div class="status" id="status">Connecting...</div>
+
 <script type="module">
-    // Biquote — Free real-time market data, no API key, CORS open [citation:2]
-    // نستخدم esm.sh لتحميل المكتبة مباشرة في المتصفح
-    
     import Biquote from 'https://esm.sh/biquote@0.3.0';
 
     const bq = new Biquote();
-    
+    const canvas = document.getElementById('chart');
+    const ctx = canvas.getContext('2d');
     const priceEl = document.getElementById('price');
     const changeEl = document.getElementById('change');
     const statusEl = document.getElementById('status');
-    
+
+    const SYMBOL = 'EURUSD';
+    let candles = [];        // مصفوفة الشموع {time, open, high, low, close}
+    let livePrice = null;    // السعر اللحظي الحالي
+    let currentInterval = '1m';
     let lastMid = null;
 
+    // ─── إعداد الـ Canvas ───────────────────────────────────
+    function resizeCanvas() {
+        const rect = canvas.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        ctx.scale(dpr, dpr);
+        draw();
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    // ─── جلب الشموع التاريخية ───────────────────────────────
+    // ohlc() من Biquote — من الأقدم للأحدث 
+    async function loadCandles(interval) {
+        try {
+            const bars = await bq.ohlc(SYMBOL, { interval, limit: 100 });
+            // bars: [{time, open, high, low, close}, ...]
+            candles = bars.map(b => ({
+                time: b.time,
+                open: b.open,
+                high: b.high,
+                low: b.low,
+                close: b.close
+            }));
+            draw();
+            statusEl.textContent = `Loaded ${candles.length} candles • ${interval}`;
+        } catch (e) {
+            statusEl.textContent = 'Error loading candles: ' + e.message;
+        }
+    }
+
+    // ─── جلب السعر اللحظي ────────────────────────────────────
     async function fetchPrice() {
         try {
-            // tick("EURUSD") — يرجع كائن فيه mid و dayDiffPercent [citation:2]
-            const data = await bq.tick("EURUSD");
-            
-            const mid = data.mid;
+            const data = await bq.tick(SYMBOL);
+            livePrice = data.mid;   // mid هو السعر الفعلي 
             const changePct = data.dayDiffPercent ?? 0;
-            
-            // تنسيق السعر — 5 خانات عشرية للفوركس
-            priceEl.textContent = mid.toFixed(5);
-            
-            // لون التغيير
+
+            priceEl.textContent = livePrice.toFixed(5);
             const sign = changePct >= 0 ? '+' : '';
             changeEl.textContent = `${sign}${changePct.toFixed(2)}%`;
             changeEl.className = 'change ' + (changePct >= 0 ? 'up' : 'down');
-            
-            // تأثير الوميض عند تغير السعر
-            if (lastMid !== null && mid !== lastMid) {
-                const cls = mid > lastMid ? 'flash-up' : 'flash-down';
-                document.querySelector('.card').classList.add(cls);
-                setTimeout(() => document.querySelector('.card').classList.remove(cls), 300);
-            }
-            lastMid = mid;
-            
-            statusEl.textContent = 'Live • ' + new Date().toLocaleTimeString();
-            
+
+            // تحديث الشمعة الأخيرة بالسعر الجديد (مثل أي منصة تداول)
+            updateCurrentCandle(livePrice);
+
+            lastMid = livePrice;
+            draw();
         } catch (e) {
             statusEl.textContent = 'Error: ' + e.message;
         }
     }
 
-    // أول استدعاء فوري
+    // ─── تحديث الشمعة الأخيرة ────────────────────────────────
+    function updateCurrentCandle(price) {
+        if (candles.length === 0) return;
+
+        const now = Date.now() / 1000;
+        const intervalSec = intervalToSeconds(currentInterval);
+        const lastCandle = candles[candles.length - 1];
+
+        // إذا انتهت مدة الشمعة الأخيرة، أنشئ شمعة جديدة
+        if (now - lastCandle.time >= intervalSec) {
+            candles.push({
+                time: now,
+                open: price,
+                high: price,
+                low: price,
+                close: price
+            });
+            // احتفظ بـ 100 شمعة فقط
+            if (candles.length > 100) candles.shift();
+        } else {
+            // تحديث الشمعة الحالية
+            lastCandle.close = price;
+            if (price > lastCandle.high) lastCandle.high = price;
+            if (price < lastCandle.low) lastCandle.low = price;
+        }
+    }
+
+    function intervalToSeconds(interval) {
+        const map = { '1m': 60, '5m': 300, '15m': 900, '1h': 3600 };
+        return map[interval] || 60;
+    }
+
+    // ─── رسم الشموع ──────────────────────────────────────────
+    function draw() {
+        const W = canvas.width / (window.devicePixelRatio || 1);
+        const H = canvas.height / (window.devicePixelRatio || 1);
+
+        ctx.clearRect(0, 0, W, H);
+
+        if (candles.length === 0) return;
+
+        // هامش للرسم
+        const padRight = 60;
+        const padTop = 10;
+        const padBottom = 20;
+        const chartW = W - padRight;
+        const chartH = H - padTop - padBottom;
+
+        // نطاق السعر
+        let min = Infinity, max = -Infinity;
+        for (const c of candles) {
+            if (c.low < min) min = c.low;
+            if (c.high > max) max = c.high;
+        }
+        const range = max - min || 1;
+        const pad = range * 0.1;
+        min -= pad;
+        max += pad;
+        const priceRange = max - min;
+
+        // تحويل السعر إلى y
+        const priceToY = (p) => padTop + chartH - ((p - min) / priceRange) * chartH;
+
+        // عرض الشمعة
+        const candleW = chartW / candles.length;
+        const bodyW = Math.max(candleW * 0.7, 2);
+
+        // ─── خطوط الشبكة + الأسعار على اليمين ───
+        ctx.strokeStyle = '#222';
+        ctx.fillStyle = '#666';
+        ctx.font = '11px -apple-system, sans-serif';
+        ctx.textAlign = 'left';
+
+        for (let i = 0; i <= 5; i++) {
+            const y = padTop + (chartH / 5) * i;
+            const price = max - (priceRange / 5) * i;
+
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(chartW, y);
+            ctx.stroke();
+
+            ctx.fillText(price.toFixed(5), chartW + 6, y + 4);
+        }
+
+        // ─── رسم الشموع ───
+        candles.forEach((c, i) => {
+            const x = i * candleW + candleW / 2;
+            const isUp = c.close >= c.open;
+            const color = isUp ? '#00c853' : '#ff1744';
+
+            // الفتيل (High-Low)
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(x, priceToY(c.high));
+            ctx.lineTo(x, priceToY(c.low));
+            ctx.stroke();
+
+            // الجسم (Open-Close)
+            const openY = priceToY(c.open);
+            const closeY = priceToY(c.close);
+            const topY = Math.min(openY, closeY);
+            const bodyH = Math.max(Math.abs(closeY - openY), 1);
+
+            ctx.fillStyle = color;
+            ctx.fillRect(x - bodyW / 2, topY, bodyW, bodyH);
+        });
+
+        // ─── خط السعر اللحظي ───
+        if (livePrice !== null) {
+            const y = priceToY(livePrice);
+            ctx.strokeStyle = '#0064e0';
+            ctx.setLineDash([4, 4]);
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(chartW, y);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // شارة السعر
+            ctx.fillStyle = '#0064e0';
+            ctx.fillRect(chartW, y - 9, padRight, 18);
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 11px -apple-system, sans-serif';
+            ctx.fillText(livePrice.toFixed(5), chartW + 5, y + 4);
+        }
+    }
+
+    // ─── التحكم في الفواصل الزمنية ───────────────────────────
+    document.querySelectorAll('.controls button').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            document.querySelectorAll('.controls button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentInterval = btn.dataset.interval;
+            await loadCandles(currentInterval);
+        });
+    });
+
+    // ─── التشغيل ──────────────────────────────────────────────
+    resizeCanvas();
+    await loadCandles('1m');
+
+    // السعر اللحظي كل ثانية
     fetchPrice();
-    
-    // تحديث كل ثانية
     setInterval(fetchPrice, 1000);
+
+    // إعادة تحميل الشموع كل 30 ثانية (لتحديث البيانات التاريخية)
+    setInterval(() => loadCandles(currentInterval), 30000);
+
 </script>
 
 </body>
