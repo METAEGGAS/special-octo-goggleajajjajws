@@ -3,19 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>تحقق أمني</title>
+<title>لوحة التحقق الأمني</title>
 <style>
   :root {
-    --bg: #05060a;
+    --bg: #04050a;
+    --panel: #0a0b12;
     --red: #ff2b3d;
-    --dim: #6b0f16;
+    --red-dim: #6b0f16;
+    --green: #2bff88;
     --text: #c9ccd4;
+    --muted: #6a6e7a;
+    --mono: "Consolas", "Courier New", monospace;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
     min-height: 100vh;
-    background: radial-gradient(circle at 50% 30%, #12060a 0%, var(--bg) 70%);
+    background:
+      radial-gradient(circle at 50% 20%, #14070b 0%, var(--bg) 65%);
     color: var(--text);
     font-family: "Segoe UI", Tahoma, system-ui, sans-serif;
     display: flex;
@@ -25,227 +30,404 @@
     user-select: none;
   }
 
-  /* شبكة خلفية خافتة */
+  /* شبكة خلفية */
   body::before {
     content: "";
-    position: fixed;
-    inset: 0;
+    position: fixed; inset: 0;
     background-image:
-      linear-gradient(rgba(255,43,61,0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,43,61,0.05) 1px, transparent 1px);
-    background-size: 40px 40px;
+      linear-gradient(rgba(255,43,61,.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,43,61,.045) 1px, transparent 1px);
+    background-size: 44px 44px;
     pointer-events: none;
-    animation: gridPulse 6s ease-in-out infinite;
+    animation: gridPulse 7s ease-in-out infinite;
   }
-  @keyframes gridPulse {
-    0%,100% { opacity: .4; }
-    50%     { opacity: .9; }
+  @keyframes gridPulse { 0%,100%{opacity:.35} 50%{opacity:.8} }
+
+  /* ================= المرحلة 1: لوحة البحث ================= */
+  #stageSearch {
+    position: relative; z-index: 2;
+    width: min(94vw, 480px);
+    transition: opacity .3s ease, transform .3s ease;
   }
+  #stageSearch.hide { opacity: 0; transform: scale(.94); pointer-events: none; }
 
   .panel {
-    position: relative;
-    z-index: 2;
-    width: min(92vw, 460px);
-    padding: 38px 28px;
-    background: rgba(10, 6, 8, .85);
-    border: 1px solid var(--dim);
+    padding: 30px 26px;
+    background: rgba(10,11,18,.9);
+    border: 1px solid var(--red-dim);
     border-radius: 14px;
-    box-shadow: 0 0 60px rgba(255,43,61,.15), inset 0 0 40px rgba(255,43,61,.05);
-    text-align: center;
-    backdrop-filter: blur(4px);
+    box-shadow: 0 0 60px rgba(255,43,61,.14), inset 0 0 40px rgba(255,43,61,.04);
+    backdrop-filter: blur(5px);
   }
 
-  .warn-icon {
-    font-size: 46px;
-    color: var(--red);
-    margin-bottom: 14px;
-    animation: blink 1.1s steps(2, start) infinite;
-  }
-  @keyframes blink { to { opacity: .35; } }
-
-  h1 {
-    font-size: 20px;
-    font-weight: 700;
-    color: #fff;
-    letter-spacing: .5px;
-    margin-bottom: 10px;
-  }
-
-  .sub {
-    font-size: 13.5px;
-    line-height: 1.8;
-    color: #8d909a;
-    margin-bottom: 26px;
-  }
-
-  .status-line {
-    font-family: "Consolas", monospace;
-    font-size: 11.5px;
-    color: var(--red);
-    opacity: .75;
+  .header-row {
+    display: flex; align-items: center; justify-content: space-between;
     margin-bottom: 22px;
-    direction: ltr;
-    min-height: 16px;
-    white-space: nowrap;
+  }
+  .header-row .title {
+    font-size: 15px; font-weight: 800; color: #fff; letter-spacing: .3px;
+  }
+  .header-row .dot {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 10px var(--green);
+    animation: livePulse 1.4s ease-in-out infinite;
+  }
+  @keyframes livePulse { 50% { opacity: .35; } }
+
+  /* رادار */
+  .radar-wrap {
+    display: flex; justify-content: center;
+    margin: 8px 0 24px;
+  }
+  .radar {
+    position: relative;
+    width: 130px; height: 130px;
+    border-radius: 50%;
+    border: 1px solid var(--red-dim);
+    background:
+      radial-gradient(circle, rgba(255,43,61,.07) 0%, transparent 70%);
     overflow: hidden;
+  }
+  .radar::before, .radar::after {
+    content: ""; position: absolute; inset: 0; border-radius: 50%;
+    border: 1px solid rgba(255,43,61,.15);
+  }
+  .radar::after { inset: 22px; }
+  .radar .cross-h, .radar .cross-v {
+    position: absolute; background: rgba(255,43,61,.18);
+  }
+  .radar .cross-h { left: 0; right: 0; top: 50%; height: 1px; }
+  .radar .cross-v { top: 0; bottom: 0; left: 50%; width: 1px; }
+  .radar .sweep {
+    position: absolute; inset: 0;
+    background: conic-gradient(from 0deg,
+      rgba(255,43,61,.55), rgba(255,43,61,0) 60deg);
+    animation: sweepSpin 2.4s linear infinite;
+    border-radius: 50%;
+  }
+  @keyframes sweepSpin { to { transform: rotate(360deg); } }
+
+  .radar .blip {
+    position: absolute;
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--red);
+    box-shadow: 0 0 8px var(--red);
+    opacity: 0;
+    animation: blip 2.4s linear infinite;
+  }
+  @keyframes blip {
+    0%   { opacity: 0; transform: scale(.3); }
+    10%  { opacity: 1; transform: scale(1); }
+    30%  { opacity: 0; }
+    100% { opacity: 0; }
+  }
+
+  /* حقل الإدخال */
+  .input-group {
+    display: flex; gap: 10px; margin-bottom: 20px;
+  }
+  #username {
+    flex: 1;
+    padding: 13px 16px;
+    font-family: var(--mono);
+    font-size: 14px;
+    color: #fff;
+    background: rgba(0,0,0,.5);
+    border: 1px solid var(--red-dim);
+    border-radius: 9px;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  #username::placeholder { color: var(--muted); }
+  #username:focus {
+    border-color: var(--red);
+    box-shadow: 0 0 0 3px rgba(255,43,61,.12);
+  }
+
+  #searchBtn {
+    padding: 13px 20px;
+    font-family: inherit; font-size: 14px; font-weight: 700;
+    color: #fff;
+    background: linear-gradient(180deg, #ff2b3d, #a40d1a);
+    border: none; border-radius: 9px;
+    cursor: pointer;
+    transition: transform .12s, box-shadow .2s;
+    box-shadow: 0 4px 18px rgba(255,43,61,.35);
+  }
+  #searchBtn:hover  { box-shadow: 0 6px 26px rgba(255,43,61,.6); }
+  #searchBtn:active { transform: scale(.96); }
+
+  /* نتيجة البحث */
+  #searchResult {
+    display: none;
+    border: 1px solid var(--red-dim);
+    border-radius: 10px;
+    padding: 16px;
+    background: rgba(255,43,61,.04);
+    animation: fadeUp .3s ease-out;
+  }
+  #searchResult.show { display: block; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .profile {
+    display: flex; align-items: center; gap: 14px; margin-bottom: 16px;
+  }
+  .avatar {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: linear-gradient(135deg, #ff2b3d, #5a0810);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 18px; color: #fff;
+  }
+  .profile-info .name {
+    font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 3px;
+  }
+  .profile-info .status {
+    font-family: var(--mono); font-size: 11px; color: var(--red);
   }
 
   #strikeBtn {
     width: 100%;
-    padding: 16px;
-    font-size: 17px;
-    font-weight: 800;
-    font-family: inherit;
-    color: #fff;
-    background: linear-gradient(180deg, #ff2b3d, #a40d1a);
-    border: none;
-    border-radius: 10px;
+    padding: 15px;
+    font-family: inherit; font-size: 16px; font-weight: 800;
+    color: #fff; letter-spacing: .5px;
+    background: linear-gradient(180deg, #ff2b3d, #7a0a14);
+    border: none; border-radius: 10px;
     cursor: pointer;
-    letter-spacing: 1px;
     box-shadow: 0 6px 24px rgba(255,43,61,.4);
-    transition: transform .12s ease, box-shadow .2s ease;
+    transition: transform .12s, box-shadow .2s;
   }
-  #strikeBtn:hover  { box-shadow: 0 8px 34px rgba(255,43,61,.65); }
+  #strikeBtn:hover  { box-shadow: 0 8px 34px rgba(255,43,61,.7); }
   #strikeBtn:active { transform: scale(.97); }
-  #strikeBtn:disabled { opacity: .5; cursor: not-allowed; }
 
-  /* ---------- طبقة المؤثرات ---------- */
-  #fx {
-    position: fixed;
-    inset: 0;
-    z-index: 50;
-    pointer-events: none;
-    overflow: hidden;
-  }
-
-  .glyph {
-    position: absolute;
-    font-family: monospace;
-    font-weight: 700;
-    color: var(--red);
-    opacity: 0;
-    text-shadow: 0 0 12px rgba(255,43,61,.9);
-    animation: glyphFly 1.4s ease-out forwards;
-  }
-  @keyframes glyphFly {
-    0%   { opacity: 0; transform: translateY(30px) scale(.4) rotate(0deg); }
-    15%  { opacity: 1; }
-    100% { opacity: 0; transform: translateY(-180px) scale(1.6) rotate(25deg); }
-  }
-
-  .glitch-bar {
-    position: absolute;
-    left: 0; right: 0;
-    height: 3px;
-    background: var(--red);
-    opacity: 0;
-    animation: barFlash .35s ease-out forwards;
-  }
-  @keyframes barFlash {
-    0%   { opacity: .9; transform: scaleX(0); }
-    100% { opacity: 0; transform: scaleX(1); }
-  }
-
-  body.shake { animation: shake .45s cubic-bezier(.36,.07,.19,.97) both; }
-  @keyframes shake {
-    10%,90% { transform: translate(-2px, 1px); }
-    20%,80% { transform: translate(4px, -2px); }
-    30%,50%,70% { transform: translate(-6px, 2px); }
-    40%,60% { transform: translate(6px, -1px); }
-  }
-
-  /* ---------- شاشة النتيجة ---------- */
-  #result {
-    position: fixed;
-    inset: 0;
-    z-index: 100;
+  /* ================= المرحلة 2: نافذة التيرمنال ================= */
+  #terminalModal {
+    position: fixed; inset: 0; z-index: 200;
     display: none;
-    align-items: center;
-    justify-content: center;
-    background: rgba(2, 0, 3, .94);
+    align-items: center; justify-content: center;
+    background: rgba(0,0,0,.85);
+    backdrop-filter: blur(3px);
+    padding: 20px;
+  }
+  #terminalModal.show { display: flex; }
+
+  .terminal {
+    width: min(94vw, 560px);
+    background: #05060a;
+    border: 1px solid var(--red-dim);
+    border-radius: 12px;
+    box-shadow: 0 0 70px rgba(255,43,61,.25);
+    overflow: hidden;
+    animation: termIn .35s ease-out;
+  }
+  @keyframes termIn {
+    from { opacity: 0; transform: scale(.9) translateY(20px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .term-bar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 14px;
+    background: #0e0f16;
+    border-bottom: 1px solid #1a1c25;
+  }
+  .term-bar .dot { width: 11px; height: 11px; border-radius: 50%; }
+  .term-bar .dot.r { background: #ff5f57; }
+  .term-bar .dot.y { background: #febc2e; }
+  .term-bar .dot.g { background: #28c840; }
+  .term-bar .term-title {
+    margin-right: auto;
+    font-family: var(--mono); font-size: 11.5px; color: var(--muted);
+  }
+
+  .term-body {
+    padding: 16px 18px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.9;
+    direction: ltr;
+    text-align: left;
+    min-height: 260px;
+    max-height: 44vh;
+    overflow-y: auto;
+    color: var(--text);
+  }
+  .term-body::-webkit-scrollbar { width: 5px; }
+  .term-body::-webkit-scrollbar-thumb { background: var(--red-dim); border-radius: 3px; }
+
+  .term-line { white-space: pre-wrap; word-break: break-word; }
+  .term-line .prompt { color: var(--green); }
+  .term-line .cmd    { color: #fff; }
+  .term-line .ok     { color: var(--green); }
+  .term-line .warn   { color: #febc2e; }
+  .term-line .err    { color: var(--red); }
+  .term-line .dim    { color: var(--muted); }
+  .cursor {
+    display: inline-block;
+    width: 7px; height: 13px;
+    background: var(--green);
+    vertical-align: text-bottom;
+    animation: caret .8s steps(2) infinite;
+  }
+  @keyframes caret { 50% { opacity: 0; } }
+
+  .term-progress {
+    height: 3px; background: #0e0f16;
+  }
+  .term-progress .bar {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, var(--red), #ff6b3d);
+    box-shadow: 0 0 10px var(--red);
+    transition: width .2s linear;
+  }
+
+  /* ================= المرحلة 3: شاشة النجاح ================= */
+  #successScreen {
+    position: fixed; inset: 0; z-index: 300;
+    display: none;
+    align-items: center; justify-content: center;
+    background: rgba(2,0,3,.96);
     opacity: 0;
-    transition: opacity .35s ease;
+    transition: opacity .4s ease;
+    padding: 20px;
   }
-  #result.show { display: flex; opacity: 1; }
+  #successScreen.show { display: flex; opacity: 1; }
 
-  .result-box {
+  .success-box {
     text-align: center;
-    padding: 30px;
-    animation: resultIn .5s ease-out;
+    max-width: 420px;
+    animation: successIn .55s cubic-bezier(.2,.9,.3,1.2);
   }
-  @keyframes resultIn {
-    from { transform: scale(.85); opacity: 0; }
-    to   { transform: scale(1);   opacity: 1; }
+  @keyframes successIn {
+    from { transform: scale(.8); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
   }
 
-  .check {
-    width: 92px; height: 92px;
-    margin: 0 auto 22px;
+  .success-check {
+    width: 96px; height: 96px; margin: 0 auto 24px;
     border-radius: 50%;
     border: 4px solid var(--red);
     display: flex; align-items: center; justify-content: center;
-    font-size: 50px;
-    color: var(--red);
-    box-shadow: 0 0 40px rgba(255,43,61,.5), inset 0 0 30px rgba(255,43,61,.15);
+    font-size: 52px; color: var(--red);
+    box-shadow: 0 0 45px rgba(255,43,61,.55), inset 0 0 32px rgba(255,43,61,.18);
     animation: checkPulse 1.6s ease-in-out infinite;
   }
   @keyframes checkPulse {
-    0%,100% { box-shadow: 0 0 40px rgba(255,43,61,.5), inset 0 0 30px rgba(255,43,61,.15); }
-    50%     { box-shadow: 0 0 75px rgba(255,43,61,.9), inset 0 0 45px rgba(255,43,61,.3); }
+    50% { box-shadow: 0 0 80px rgba(255,43,61,.95), inset 0 0 50px rgba(255,43,61,.35); }
   }
 
-  .result-title {
-    font-size: 24px;
-    font-weight: 800;
-    color: #fff;
-    margin-bottom: 10px;
+  .success-title {
+    font-size: 25px; font-weight: 800; color: #fff; margin-bottom: 12px;
   }
-  .result-sub {
-    font-size: 14px;
-    color: #8d909a;
-    line-height: 1.8;
-    margin-bottom: 28px;
+  .success-text {
+    font-size: 14.5px; line-height: 1.9; color: #9a9ea9; margin-bottom: 8px;
   }
-  .result-sub b { color: var(--red); }
+  .success-text b { color: var(--red); }
 
-  #againBtn {
+  .ban-timer {
+    font-family: var(--mono);
+    font-size: 30px; font-weight: 800;
+    color: var(--red);
+    letter-spacing: 2px;
+    margin: 18px 0 6px;
+    text-shadow: 0 0 20px rgba(255,43,61,.6);
+  }
+  .ban-label {
+    font-size: 11.5px; color: var(--muted);
+    letter-spacing: 1px; margin-bottom: 26px;
+  }
+
+  .prank-note {
+    font-size: 12px; color: #5a5e68; line-height: 1.7;
+    padding: 12px; border-radius: 8px;
+    background: rgba(255,255,255,.02);
+    border: 1px dashed #2a2c35;
+    margin-bottom: 22px;
+  }
+
+  #resetBtn {
     padding: 11px 30px;
-    font-family: inherit;
-    font-size: 13.5px;
-    color: #8d909a;
+    font-family: inherit; font-size: 13.5px;
+    color: var(--muted);
     background: transparent;
-    border: 1px solid var(--dim);
+    border: 1px solid var(--red-dim);
     border-radius: 8px;
     cursor: pointer;
     transition: color .2s, border-color .2s;
   }
-  #againBtn:hover { color: #fff; border-color: var(--red); }
+  #resetBtn:hover { color: #fff; border-color: var(--red); }
 </style>
 </head>
 <body>
 
-<div class="panel">
-  <div class="warn-icon">⚠</div>
-  <h1>تحقق أمني مطلوب</h1>
-  <p class="sub">
-    تم رصد نشاط مشبوه مرتبط بهذا الحساب.<br>
-    اضغط على الزر أدناه لمتابعة إجراء التحقق.
-  </p>
-  <div class="status-line" id="statusLine">SCANNING...</div>
-  <button id="strikeBtn">ضرب الحساب</button>
+<!-- ========== المرحلة 1 ========== -->
+<div id="stageSearch">
+  <div class="panel">
+    <div class="header-row">
+      <span class="title">لوحة التحقق الأمني</span>
+      <span class="dot"></span>
+    </div>
+
+    <div class="radar-wrap">
+      <div class="radar">
+        <div class="cross-h"></div>
+        <div class="cross-v"></div>
+        <div class="sweep"></div>
+        <div class="blip" style="top:32%;left:60%;animation-delay:.2s"></div>
+        <div class="blip" style="top:66%;left:28%;animation-delay:1.1s"></div>
+        <div class="blip" style="top:48%;left:74%;animation-delay:1.7s"></div>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <input id="username" type="text" placeholder="أدخل اسم المستخدم..." autocomplete="off" spellcheck="false">
+      <button id="searchBtn">بحث</button>
+    </div>
+
+    <div id="searchResult">
+      <div class="profile">
+        <div class="avatar" id="avatarLetter">?</div>
+        <div class="profile-info">
+          <div class="name" id="resultName">—</div>
+          <div class="status">TARGET ACQUIRED · ONLINE</div>
+        </div>
+      </div>
+      <button id="strikeBtn">⚡ ضرب الحساب</button>
+    </div>
+  </div>
 </div>
 
-<div id="fx"></div>
-
-<div id="result">
-  <div class="result-box">
-    <div class="check">✔</div>
-    <div class="result-title">تم ضرب الحساب بنجاح</div>
-    <div class="result-sub">
-      العملية نفّذت <b>موقتاً</b> حسب رغبتك.<br>
-      هذا مجرد تأثير بصري — لا يوجد أي اختراق حقيقي.
+<!-- ========== المرحلة 2 ========== -->
+<div id="terminalModal">
+  <div class="terminal">
+    <div class="term-bar">
+      <span class="dot r"></span>
+      <span class="dot y"></span>
+      <span class="dot g"></span>
+      <span class="term-title">root@security-console:~</span>
     </div>
-    <button id="againBtn">إعادة التجربة</button>
+    <div class="term-body" id="termBody"></div>
+    <div class="term-progress"><div class="bar" id="termBar"></div></div>
+  </div>
+</div>
+
+<!-- ========== المرحلة 3 ========== -->
+<div id="successScreen">
+  <div class="success-box">
+    <div class="success-check">✔</div>
+    <div class="success-title">تم الضرب بنجاح</div>
+    <div class="success-text">
+      الحساب <b id="bannedName">—</b> تم حظره مؤقتاً.
+    </div>
+    <div class="ban-timer" id="banTimer">24:00:00</div>
+    <div class="ban-label">مدة الحظر المتبقية</div>
+    <div class="prank-note">
+      ⚠ هذا مجرد تأثير بصري للتخويف — لا يوجد أي اختراق أو حظر حقيقي.
+    </div>
+    <button id="resetBtn">بدء من جديد</button>
   </div>
 </div>
 
@@ -253,114 +435,171 @@
 (function () {
   "use strict";
 
-  const btn        = document.getElementById("strikeBtn");
-  const statusLine = document.getElementById("statusLine");
-  const fxLayer    = document.getElementById("fx");
-  const result     = document.getElementById("result");
-  const againBtn   = document.getElementById("againBtn");
+  /* ---------- عناصر ---------- */
+  const stageSearch  = document.getElementById("stageSearch");
+  const usernameIn   = document.getElementById("username");
+  const searchBtn    = document.getElementById("searchBtn");
+  const searchResult = document.getElementById("searchResult");
+  const resultName   = document.getElementById("resultName");
+  const avatarLetter = document.getElementById("avatarLetter");
+  const strikeBtn    = document.getElementById("strikeBtn");
 
-  /* رموز تُطلق أثناء المؤثرات */
-  const GLYPHS = ["✖", "⚠", "×", "!", "⛔", "◉", "▮", "؟", "ERR", "0x00"];
-  const GLYPH_COLORS = ["#ff2b3d", "#ff6b3d", "#ff2b6b", "#c9ccd4"];
+  const terminalModal = document.getElementById("terminalModal");
+  const termBody      = document.getElementById("termBody");
+  const termBar       = document.getElementById("termBar");
 
-  /* سطور الحالة الزائفة — تتغير بسرعة أثناء التنفيذ */
-  const STATUS_STEPS = [
-    "CONNECTING...",
-    "BYPASSING SECURITY LAYER...",
-    "TARGET ACQUIRED",
-    "INJECTING PAYLOAD...",
-    "OVERRIDING AUTH TOKENS...",
-    "STRIKE IN PROGRESS...",
-    "FINALIZING...",
-  ];
+  const successScreen = document.getElementById("successScreen");
+  const bannedName    = document.getElementById("bannedName");
+  const banTimer      = document.getElementById("banTimer");
+  const resetBtn      = document.getElementById("resetBtn");
 
-  function rand(min, max) {
-    return Math.random() * (max - min) + min;
-  }
+  /* ---------- مساعدات ---------- */
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  const rand  = (a, b) => Math.random() * (b - a) + a;
 
-  /* إطلاق رمز عشوائي يطير لأعلى */
-  function spawnGlyph() {
-    const el = document.createElement("span");
-    el.className = "glyph";
-    el.textContent = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
-    el.style.left = rand(5, 95) + "vw";
-    el.style.top  = rand(45, 90) + "vh";
-    el.style.fontSize = rand(18, 46) + "px";
-    el.style.color = GLYPH_COLORS[Math.floor(Math.random() * GLYPH_COLORS.length)];
-    fxLayer.appendChild(el);
-    el.addEventListener("animationend", () => el.remove());
-  }
+  /* ---------- 1. البحث ---------- */
+  let currentTarget = "";
 
-  /* شريط جليتش أفقي عشوائي */
-  function spawnGlitchBar() {
-    const bar = document.createElement("div");
-    bar.className = "glitch-bar";
-    bar.style.top = rand(5, 95) + "vh";
-    bar.style.height = rand(1, 4) + "px";
-    fxLayer.appendChild(bar);
-    bar.addEventListener("animationend", () => bar.remove());
-  }
-
-  /* اهتزاز الشاشة */
-  function shake() {
-    document.body.classList.add("shake");
-    setTimeout(() => document.body.classList.remove("shake"), 460);
-  }
-
-  /* تشغيل كل المؤثرات لمدة ms */
-  function runEffects(ms) {
-    const end = performance.now() + ms;
-    const tick = () => {
-      if (performance.now() > end) return;
-      spawnGlyph();
-      if (Math.random() < 0.35) spawnGlitchBar();
-      if (Math.random() < 0.25) shake();
-      setTimeout(tick, rand(40, 120));
-    };
-    tick();
-  }
-
-  /* تحديث سطر الحالة بسرعة */
-  function runStatus(ms, done) {
-    const end = performance.now() + ms;
-    let i = 0;
-    const tick = () => {
-      statusLine.textContent = STATUS_STEPS[i % STATUS_STEPS.length];
-      i++;
-      if (performance.now() > end) { done(); return; }
-      setTimeout(tick, rand(90, 180));
-    };
-    tick();
-  }
-
-  /* ---------- التدفق الرئيسي ---------- */
-  function strike() {
-    btn.disabled = true;
-    btn.textContent = "جارٍ التنفيذ...";
-
-    const DURATION = 2600; // مدة المؤثرات الكلية
-
-    runEffects(DURATION);
-    runStatus(DURATION, () => {
-      statusLine.textContent = "DONE";
-      result.classList.add("show");
-    });
-  }
-
-  btn.addEventListener("click", strike);
-
-  againBtn.addEventListener("click", () => {
-    result.classList.remove("show");
-    btn.disabled = false;
-    btn.textContent = "ضرب الحساب";
-    statusLine.textContent = "SCANNING...";
-    fxLayer.innerHTML = "";
+  searchBtn.addEventListener("click", doSearch);
+  usernameIn.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") doSearch();
   });
 
-  /* تشغيل خفيف تلقائي في الخلفية قبل الضغط */
-  setInterval(() => {
-    if (!btn.disabled && Math.random() < 0.3) spawnGlitchBar();
-  }, 1400);
+  function doSearch() {
+    const name = usernameIn.value.trim();
+    if (!name) {
+      usernameIn.focus();
+      usernameIn.style.borderColor = "#ff2b3d";
+      setTimeout(() => { usernameIn.style.borderColor = ""; }, 600);
+      return;
+    }
+    currentTarget = name;
+    resultName.textContent = name;
+    avatarLetter.textContent = name.charAt(0).toUpperCase();
+    searchResult.classList.add("show");
+  }
+
+  /* ---------- 2. سطور التيرمنال ---------- */
+  const TERMINAL_SCRIPT = [
+    { type: "cmd",  text: "auth --target \"{TARGET}\" --force" },
+    { type: "ok",   text: "[+] session token obtained" },
+    { type: "cmd",  text: "scan --ports 22,80,443 --deep" },
+    { type: "dim",  text: "scanning 3 services..." },
+    { type: "ok",   text: "[+] 22/tcp open  ssh" },
+    { type: "ok",   text: "[+] 443/tcp open  https" },
+    { type: "cmd",  text: "bypass --waf --rate-limit 0" },
+    { type: "warn", text: "[!] rate limiter disabled" },
+    { type: "warn", text: "[!] waf signature evasion active" },
+    { type: "cmd",  text: "inject --payload strike.sig" },
+    { type: "dim",  text: "writing payload to session..." },
+    { type: "ok",   text: "[+] payload deployed" },
+    { type: "cmd",  text: "strike --account \"{TARGET}\" --duration 24h" },
+    { type: "warn", text: "[!] account flag set: SUSPENDED" },
+    { type: "ok",   text: "[+] strike committed successfully" },
+    { type: "ok",   text: "[✔] operation complete" },
+  ];
+
+  function appendLine(type, text) {
+    const line = document.createElement("div");
+    line.className = "term-line";
+    const target = currentTarget || "unknown";
+    const safeText = text.replace("{TARGET}", target);
+
+    if (type === "cmd") {
+      line.innerHTML =
+        '<span class="prompt">root@sec:~#</span> ' +
+        '<span class="cmd">' + escapeHtml(safeText) + '</span>';
+    } else {
+      const cls = type === "ok" ? "ok" : type === "warn" ? "warn" :
+                  type === "err" ? "err" : "dim";
+      line.innerHTML = '<span class="' + cls + '">' + escapeHtml(safeText) + '</span>';
+    }
+    termBody.appendChild(line);
+    termBody.scrollTop = termBody.scrollHeight;
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/[&<>"']/g, c => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[c]));
+  }
+
+  /* ---------- 3. الضرب ---------- */
+  strikeBtn.addEventListener("click", async () => {
+    if (!currentTarget) return;
+
+    /* انتقال للشاشة */
+    stageSearch.classList.add("hide");
+    termBody.innerHTML = "";
+    termBar.style.width = "0%";
+    terminalModal.classList.add("show");
+
+    await sleep(300);
+
+    /* كتابة السطور بسرعة */
+    const total = TERMINAL_SCRIPT.length;
+    for (let i = 0; i < total; i++) {
+      const step = TERMINAL_SCRIPT[i];
+      appendLine(step.type, step.text);
+      termBar.style.width = Math.round(((i + 1) / total) * 100) + "%";
+      await sleep(rand(90, 200));
+    }
+
+    /* وميض نهائي */
+    await sleep(450);
+    terminalModal.classList.remove("show");
+
+    /* اسم الضحية */
+    bannedName.textContent = currentTarget;
+
+    /* تشغيل عدّاد تنازلي وهمي — يبدأ من 24 ساعة */
+    startFakeCountdown(24 * 60 * 60);
+
+    successScreen.classList.add("show");
+
+    /* إعادة تعيين الحالة */
+    resetBtn.onclick = resetAll;
+  });
+
+  /* ---------- 4. العدّاد الوهمي ---------- */
+  let countdownTimer = null;
+
+  function formatTime(sec) {
+    const h = String(Math.floor(sec / 3600)).padStart(2, "0");
+    const m = String(Math.floor((sec % 3600) / 60)).padStart(2, "0");
+    const s = String(sec % 60).padStart(2, "0");
+    return h + ":" + m + ":" + s;
+  }
+
+  function startFakeCountdown(totalSec) {
+    let remaining = totalSec;
+    banTimer.textContent = formatTime(remaining);
+    clearInterval(countdownTimer);
+    countdownTimer = setInterval(() => {
+      remaining = Math.max(0, remaining - 1);
+      banTimer.textContent = formatTime(remaining);
+      if (remaining === 0) clearInterval(countdownTimer);
+    }, 1000);
+  }
+
+  /* ---------- 5. إعادة التعيين ---------- */
+  function resetAll() {
+    clearInterval(countdownTimer);
+    successScreen.classList.remove("show");
+    terminalModal.classList.remove("show");
+    termBody.innerHTML = "";
+    termBar.style.width = "0%";
+    searchResult.classList.remove("show");
+    usernameIn.value = "";
+    currentTarget = "";
+    resultName.textContent = "—";
+    avatarLetter.textContent = "?";
+    banTimer.textContent = "24:00:00";
+
+    /* رجوع تدريجي للوحة البحث */
+    stageSearch.classList.remove("hide");
+    usernameIn.focus();
+  }
 })();
 </script>
 </body>
