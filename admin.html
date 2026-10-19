@@ -7,7 +7,6 @@
 <style>
   :root {
     --bg: #04050a;
-    --panel: #0a0b12;
     --red: #ff2b3d;
     --red-dim: #6b0f16;
     --green: #2bff88;
@@ -19,8 +18,7 @@
 
   body {
     min-height: 100vh;
-    background:
-      radial-gradient(circle at 50% 20%, #14070b 0%, var(--bg) 65%);
+    background: radial-gradient(circle at 50% 20%, #14070b 0%, var(--bg) 65%);
     color: var(--text);
     font-family: "Segoe UI", Tahoma, system-ui, sans-serif;
     display: flex;
@@ -30,7 +28,6 @@
     user-select: none;
   }
 
-  /* شبكة خلفية */
   body::before {
     content: "";
     position: fixed; inset: 0;
@@ -43,7 +40,7 @@
   }
   @keyframes gridPulse { 0%,100%{opacity:.35} 50%{opacity:.8} }
 
-  /* ================= المرحلة 1: لوحة البحث ================= */
+  /* ============ المرحلة 1 ============ */
   #stageSearch {
     position: relative; z-index: 2;
     width: min(94vw, 480px);
@@ -75,18 +72,13 @@
   }
   @keyframes livePulse { 50% { opacity: .35; } }
 
-  /* رادار */
-  .radar-wrap {
-    display: flex; justify-content: center;
-    margin: 8px 0 24px;
-  }
+  .radar-wrap { display: flex; justify-content: center; margin: 8px 0 24px; }
   .radar {
     position: relative;
     width: 130px; height: 130px;
     border-radius: 50%;
     border: 1px solid var(--red-dim);
-    background:
-      radial-gradient(circle, rgba(255,43,61,.07) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(255,43,61,.07) 0%, transparent 70%);
     overflow: hidden;
   }
   .radar::before, .radar::after {
@@ -94,20 +86,16 @@
     border: 1px solid rgba(255,43,61,.15);
   }
   .radar::after { inset: 22px; }
-  .radar .cross-h, .radar .cross-v {
-    position: absolute; background: rgba(255,43,61,.18);
-  }
+  .radar .cross-h, .radar .cross-v { position: absolute; background: rgba(255,43,61,.18); }
   .radar .cross-h { left: 0; right: 0; top: 50%; height: 1px; }
   .radar .cross-v { top: 0; bottom: 0; left: 50%; width: 1px; }
   .radar .sweep {
     position: absolute; inset: 0;
-    background: conic-gradient(from 0deg,
-      rgba(255,43,61,.55), rgba(255,43,61,0) 60deg);
+    background: conic-gradient(from 0deg, rgba(255,43,61,.55), rgba(255,43,61,0) 60deg);
     animation: sweepSpin 2.4s linear infinite;
     border-radius: 50%;
   }
   @keyframes sweepSpin { to { transform: rotate(360deg); } }
-
   .radar .blip {
     position: absolute;
     width: 5px; height: 5px; border-radius: 50%;
@@ -123,10 +111,7 @@
     100% { opacity: 0; }
   }
 
-  /* حقل الإدخال */
-  .input-group {
-    display: flex; gap: 10px; margin-bottom: 20px;
-  }
+  .input-group { display: flex; gap: 10px; margin-bottom: 20px; }
   #username {
     flex: 1;
     padding: 13px 16px;
@@ -158,7 +143,6 @@
   #searchBtn:hover  { box-shadow: 0 6px 26px rgba(255,43,61,.6); }
   #searchBtn:active { transform: scale(.96); }
 
-  /* نتيجة البحث */
   #searchResult {
     display: none;
     border: 1px solid var(--red-dim);
@@ -173,21 +157,15 @@
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  .profile {
-    display: flex; align-items: center; gap: 14px; margin-bottom: 16px;
-  }
+  .profile { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
   .avatar {
     width: 48px; height: 48px; border-radius: 50%;
     background: linear-gradient(135deg, #ff2b3d, #5a0810);
     display: flex; align-items: center; justify-content: center;
     font-weight: 800; font-size: 18px; color: #fff;
   }
-  .profile-info .name {
-    font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 3px;
-  }
-  .profile-info .status {
-    font-family: var(--mono); font-size: 11px; color: var(--red);
-  }
+  .profile-info .name { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 3px; }
+  .profile-info .status { font-family: var(--mono); font-size: 11px; color: var(--red); }
 
   #strikeBtn {
     width: 100%;
@@ -203,7 +181,7 @@
   #strikeBtn:hover  { box-shadow: 0 8px 34px rgba(255,43,61,.7); }
   #strikeBtn:active { transform: scale(.97); }
 
-  /* ================= المرحلة 2: نافذة التيرمنال ================= */
+  /* ============ المرحلة 2 ============ */
   #terminalModal {
     position: fixed; inset: 0; z-index: 200;
     display: none;
@@ -265,18 +243,8 @@
   .term-line .warn   { color: #febc2e; }
   .term-line .err    { color: var(--red); }
   .term-line .dim    { color: var(--muted); }
-  .cursor {
-    display: inline-block;
-    width: 7px; height: 13px;
-    background: var(--green);
-    vertical-align: text-bottom;
-    animation: caret .8s steps(2) infinite;
-  }
-  @keyframes caret { 50% { opacity: 0; } }
 
-  .term-progress {
-    height: 3px; background: #0e0f16;
-  }
+  .term-progress { height: 3px; background: #0e0f16; }
   .term-progress .bar {
     height: 100%; width: 0%;
     background: linear-gradient(90deg, var(--red), #ff6b3d);
@@ -284,7 +252,7 @@
     transition: width .2s linear;
   }
 
-  /* ================= المرحلة 3: شاشة النجاح ================= */
+  /* ============ المرحلة 3 ============ */
   #successScreen {
     position: fixed; inset: 0; z-index: 300;
     display: none;
@@ -319,12 +287,8 @@
     50% { box-shadow: 0 0 80px rgba(255,43,61,.95), inset 0 0 50px rgba(255,43,61,.35); }
   }
 
-  .success-title {
-    font-size: 25px; font-weight: 800; color: #fff; margin-bottom: 12px;
-  }
-  .success-text {
-    font-size: 14.5px; line-height: 1.9; color: #9a9ea9; margin-bottom: 8px;
-  }
+  .success-title { font-size: 25px; font-weight: 800; color: #fff; margin-bottom: 12px; }
+  .success-text { font-size: 14.5px; line-height: 1.9; color: #9a9ea9; margin-bottom: 8px; }
   .success-text b { color: var(--red); }
 
   .ban-timer {
@@ -338,14 +302,6 @@
   .ban-label {
     font-size: 11.5px; color: var(--muted);
     letter-spacing: 1px; margin-bottom: 26px;
-  }
-
-  .prank-note {
-    font-size: 12px; color: #5a5e68; line-height: 1.7;
-    padding: 12px; border-radius: 8px;
-    background: rgba(255,255,255,.02);
-    border: 1px dashed #2a2c35;
-    margin-bottom: 22px;
   }
 
   #resetBtn {
@@ -424,9 +380,6 @@
     </div>
     <div class="ban-timer" id="banTimer">24:00:00</div>
     <div class="ban-label">مدة الحظر المتبقية</div>
-    <div class="prank-note">
-      ⚠ هذا مجرد تأثير بصري للتخويف — لا يوجد أي اختراق أو حظر حقيقي.
-    </div>
     <button id="resetBtn">بدء من جديد</button>
   </div>
 </div>
@@ -435,7 +388,6 @@
 (function () {
   "use strict";
 
-  /* ---------- عناصر ---------- */
   const stageSearch  = document.getElementById("stageSearch");
   const usernameIn   = document.getElementById("username");
   const searchBtn    = document.getElementById("searchBtn");
@@ -453,7 +405,6 @@
   const banTimer      = document.getElementById("banTimer");
   const resetBtn      = document.getElementById("resetBtn");
 
-  /* ---------- مساعدات ---------- */
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   const rand  = (a, b) => Math.random() * (b - a) + a;
 
@@ -528,7 +479,6 @@
   strikeBtn.addEventListener("click", async () => {
     if (!currentTarget) return;
 
-    /* انتقال للشاشة */
     stageSearch.classList.add("hide");
     termBody.innerHTML = "";
     termBar.style.width = "0%";
@@ -536,7 +486,6 @@
 
     await sleep(300);
 
-    /* كتابة السطور بسرعة */
     const total = TERMINAL_SCRIPT.length;
     for (let i = 0; i < total; i++) {
       const step = TERMINAL_SCRIPT[i];
@@ -545,23 +494,17 @@
       await sleep(rand(90, 200));
     }
 
-    /* وميض نهائي */
     await sleep(450);
     terminalModal.classList.remove("show");
 
-    /* اسم الضحية */
     bannedName.textContent = currentTarget;
-
-    /* تشغيل عدّاد تنازلي وهمي — يبدأ من 24 ساعة */
     startFakeCountdown(24 * 60 * 60);
-
     successScreen.classList.add("show");
 
-    /* إعادة تعيين الحالة */
     resetBtn.onclick = resetAll;
   });
 
-  /* ---------- 4. العدّاد الوهمي ---------- */
+  /* ---------- 4. العدّاد ---------- */
   let countdownTimer = null;
 
   function formatTime(sec) {
@@ -582,7 +525,7 @@
     }, 1000);
   }
 
-  /* ---------- 5. إعادة التعيين ---------- */
+  /* ---------- 5. إعادة ---------- */
   function resetAll() {
     clearInterval(countdownTimer);
     successScreen.classList.remove("show");
@@ -596,7 +539,6 @@
     avatarLetter.textContent = "?";
     banTimer.textContent = "24:00:00";
 
-    /* رجوع تدريجي للوحة البحث */
     stageSearch.classList.remove("hide");
     usernameIn.focus();
   }
