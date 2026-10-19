@@ -1,282 +1,389 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>اختبار أسعار Yahoo Finance</title>
-    <style>
-        :root {
-            --bg: #141126;
-            --surface: #24203D;
-            --text: #F5F2FF;
-            --text-muted: #A9A5C6;
-            --green: #39FF14;
-            --red: #FF1A1A;
-            --cyan: #58D9F5;
-        }
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-            width: 100%;
-            max-width: 600px;
-        }
-        .header h1 {
-            color: var(--cyan);
-            font-size: 24px;
-            margin-bottom: 8px;
-        }
-        .header p {
-            color: var(--text-muted);
-            font-size: 14px;
-        }
-        .status-bar {
-            width: 100%;
-            max-width: 600px;
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-        .error-msg {
-            color: var(--red);
-            font-weight: bold;
-            display: none;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-        .quotes-grid {
-            width: 100%;
-            max-width: 600px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .quote-card {
-            background-color: var(--surface);
-            padding: 15px;
-            border-radius: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid #3D355A;
-            transition: transform 0.2s;
-        }
-        .quote-card:hover {
-            transform: scale(1.02);
-        }
-        .symbol-info {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        .symbol-name {
-            font-size: 16px;
-            font-weight: bold;
-            color: var(--text);
-        }
-        .symbol-code {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-        .price-info {
-            text-align: left;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        .price {
-            font-size: 18px;
-            font-weight: bold;
-            color: var(--text);
-        }
-        .change {
-            font-size: 14px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            justify-content: flex-end;
-        }
-        .up { color: var(--green); }
-        .down { color: var(--red); }
-        
-        /* Loader */
-        .loader {
-            border: 4px solid var(--surface);
-            border-top: 4px solid var(--cyan);
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            display: none;
-            margin: 20px auto;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تنبيهات شموع Biquote</title>
+<style>
+    :root {
+        --bg: #0f1621;
+        --surface: #1a2332;
+        --surface-light: #243044;
+        --green: #2ecc71;
+        --red: #e74c3c;
+        --text: #ffffff;
+        --text-muted: #8899aa;
+        --accent: #3498db;
+        --alert-green: #00e676;
+        --alert-red: #ff1744;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Arial, sans-serif; }
+    body {
+        background: var(--bg);
+        color: var(--text);
+        padding: 16px;
+        min-height: 100vh;
+    }
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--surface-light);
+    }
+    header h1 { font-size: 20px; color: var(--accent); }
+    .status { font-size: 12px; color: var(--text-muted); }
+    .status.online { color: var(--green); }
+    .status.offline { color: var(--red); }
+
+    /* Alert Banner */
+    #alert-banner {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%) translateY(-150%);
+        background: linear-gradient(135deg, #00e676, #00b248);
+        color: #000;
+        padding: 16px 24px;
+        border-radius: 12px;
+        font-weight: bold;
+        font-size: 16px;
+        box-shadow: 0 8px 32px rgba(0, 230, 118, 0.4);
+        z-index: 1000;
+        transition: transform 0.4s cubic-bezier(0.2, 1.1, 0.35, 1);
+        text-align: center;
+        min-width: 300px;
+    }
+    #alert-banner.red {
+        background: linear-gradient(135deg, #ff1744, #c4001d);
+        color: #fff;
+        box-shadow: 0 8px 32px rgba(255, 23, 68, 0.4);
+    }
+    #alert-banner.show { transform: translateX(-50%) translateY(0); }
+
+    /* Grid of cards */
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+        gap: 16px;
+    }
+    .card {
+        background: var(--surface);
+        border-radius: 12px;
+        padding: 14px;
+        border: 1px solid var(--surface-light);
+        transition: border-color 0.3s;
+    }
+    .card.alert-green { border-color: var(--alert-green); box-shadow: 0 0 20px rgba(0, 230, 118, 0.3); }
+    .card.alert-red { border-color: var(--alert-red); box-shadow: 0 0 20px rgba(255, 23, 68, 0.3); }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .pair-name { font-size: 16px; font-weight: bold; }
+    .price-info { text-align: left; font-size: 13px; }
+    .price { font-weight: bold; font-size: 15px; }
+    .price.up { color: var(--green); }
+    .price.down { color: var(--red); }
+    .price-time { font-size: 10px; color: var(--text-muted); }
+
+    .chart-container {
+        height: 120px;
+        background: var(--surface-light);
+        border-radius: 6px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .candle-badge {
+        display: inline-block;
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: bold;
+        margin-top: 8px;
+    }
+    .badge-green { background: rgba(0, 230, 118, 0.2); color: var(--alert-green); }
+    .badge-red { background: rgba(255, 23, 68, 0.2); color: var(--alert-red); }
+    .badge-neutral { background: rgba(136, 153, 170, 0.2); color: var(--text-muted); }
+</style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>اختبار Yahoo Finance API</h1>
-        <p>تحديث تلقائي كل 5 ثوانٍ</p>
-    </div>
+<header>
+    <h1>🔥 تنبيهات شموع Biquote</h1>
+    <div class="status offline" id="status">جاري الاتصال...</div>
+</header>
 
-    <div class="status-bar">
-        <span id="last-update">جاري الاتصال...</span>
-        <span id="timer">5s</span>
-    </div>
+<div id="alert-banner"></div>
 
-    <div id="error-msg" class="error-msg"></div>
-    <div id="loader" class="loader"></div>
+<div class="grid" id="grid"></div>
 
-    <div id="quotes-grid" class="quotes-grid">
-        <!-- سيتم إدخال البيانات هنا بواسطة JS -->
-    </div>
+<script>
+// ============================================================
+// الإعدادات
+// ============================================================
+const FOREX_PAIRS = [
+    "EURUSD", "GBPUSD", "USDJPY", "AUDUSD", "USDCAD", "USDCHF", "NZDUSD",
+    "EURGBP", "EURJPY", "GBPJPY", "AUDJPY", "CADJPY", "CHFJPY", "NZDJPY"
+];
 
-    <script>
-        // الرموز التي نريد اختبارها
-        const symbols = [
-            "AAPL",      // سهم أبل
-            "MSFT",      // سهم مايكروسوفت
-            "TSLA",      // سهم تسلا
-            "EURUSD=X",  // فوركس يورو/دولار
-            "GBPUSD=X",  // فوركس جنيه/دولار
-            "BTC-USD",   // بيتكوين
-            "ETH-USD",   // إيثريوم
-            "^GSPC"      // مؤشر S&P 500
-        ];
+const ALERT_THRESHOLD = 5; // عدد الشموع المتتالية
+const REFRESH_INTERVAL = 5000; // كل 5 ثوانٍ
+const BIQUOTE_BASE = "https://biquote.io";
 
-        // خريطة لتسميات الرموز بشكل مقروء
-        const symbolNames = {
-            "AAPL": "Apple Inc. (سهم)",
-            "MSFT": "Microsoft Corp. (سهم)",
-            "TSLA": "Tesla Inc. (سهم)",
-            "EURUSD=X": "EUR / USD (فوركس)",
-            "GBPUSD=X": "GBP / USD (فوركس)",
-            "BTC-USD": "Bitcoin (رقمية)",
-            "ETH-USD": "Ethereum (رقمية)",
-            "^GSPC": "S&P 500 (مؤشر)"
-        };
+// ============================================================
+// الحالة
+// ============================================================
+const state = {}; // { SYMBOL: { candles: [], lastPrice, lastUpdate } }
+FOREX_PAIRS.forEach(p => state[p] = { candles: [], lastPrice: null, lastUpdate: 0 });
 
-        let countdown = 5;
-        let timerInterval;
-        let fetchInterval;
+// ============================================================
+// جلب البيانات من Biquote
+// ============================================================
+async function fetchCandles(symbol) {
+    try {
+        const url = `${BIQUOTE_BASE}/api/${symbol}/ohlc?interval=1m&limit=20`;
+        const res = await fetch(url);
+        if (!res.ok) return null;
+        const data = await res.json();
+        if (!data.bars || !Array.isArray(data.bars)) return null;
 
-        async function fetchQuotes() {
-            const loader = document.getElementById('loader');
-            const errorMsg = document.getElementById('error-msg');
-            const grid = document.getElementById('quotes-grid');
+        return data.bars.map(b => ({
+            open: parseFloat(b.open || b.o),
+            high: parseFloat(b.high || b.h),
+            low: parseFloat(b.low || b.l),
+            close: parseFloat(b.close || b.c),
+            time: typeof b.time === "number" ? b.time : new Date(b.time).getTime()
+        })).filter(c => c.open > 0 && c.close > 0).sort((a, b) => a.time - b.time);
+    } catch (e) {
+        return null;
+    }
+}
 
-            // إظهار التحميل فقط إذا كانت الشاشة فارغة
-            if (grid.children.length === 0) loader.style.display = 'block';
-            errorMsg.style.display = 'none';
+async function fetchTick(symbol) {
+    try {
+        const res = await fetch(`${BIQUOTE_BASE}/api/${symbol}?allowStale=false`);
+        if (!res.ok) return null;
+        const data = await res.json();
+        return parseFloat(data.mid);
+    } catch (e) {
+        return null;
+    }
+}
 
-            // استخدام وسيط لتجاوز حظر CORS من ياهو
-            const yahooUrl = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${symbols.join(',')}`;
-            const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(yahooUrl)}`;
+// ============================================================
+// حساب عدد الشموع المتتالية
+// ============================================================
+function getConsecutiveCandles(candles) {
+    if (!candles || candles.length < 2) return { dir: 0, count: 0 };
 
-            try {
-                const response = await fetch(proxyUrl);
-                if (!response.ok) throw new Error("Network response was not ok");
-                
-                const data = await response.json();
-                
-                if (!data.quoteResponse || !data.quoteResponse.result) {
-                    throw new Error("Invalid data format from Yahoo");
-                }
+    let dir = 0, count = 0;
+    // نبدأ من النهاية (أحدث شمعة) ونعد للخلف
+    for (let i = candles.length - 1; i >= 0; i--) {
+        const c = candles[i];
+        const isUp = c.close >= c.open;
+        const currentDir = isUp ? 1 : -1;
 
-                const results = data.quoteResponse.result;
-                renderData(results);
-                
-                // تحديث وقت آخر تحديث
-                const now = new Date().toLocaleTimeString('ar-EG');
-                document.getElementById('last-update').innerText = `آخر تحديث: ${now}`;
-                
-            } catch (error) {
-                console.error("Fetch Error:", error);
-                if (grid.children.length === 0) {
-                    errorMsg.innerText = "❌ فشل جلب البيانات. قد يكون المزود محظوراً مؤقتاً أو هناك مشكلة في الاتصال.";
-                    errorMsg.style.display = 'block';
-                }
-            } finally {
-                loader.style.display = 'none';
+        if (dir === 0) {
+            dir = currentDir;
+            count = 1;
+        } else if (currentDir === dir) {
+            count++;
+        } else {
+            break;
+        }
+    }
+    return { dir, count };
+}
+
+// ============================================================
+// رسم الشموع (SVG)
+// ============================================================
+function drawChart(candles, width = 340, height = 120) {
+    if (!candles || candles.length === 0) {
+        return `<svg width="100%" height="${height}"><text x="50%" y="50%" text-anchor="middle" fill="#8899aa" font-size="12">لا توجد بيانات</text></svg>`;
+    }
+
+    const padding = 8;
+    const chartW = width - padding * 2;
+    const chartH = height - padding * 2;
+
+    const lows = candles.map(c => c.low);
+    const highs = candles.map(c => c.high);
+    const minLow = Math.min(...lows);
+    const maxHigh = Math.max(...highs);
+    const range = maxHigh - minLow || 0.0001;
+
+    const yFor = (price) => padding + chartH - ((price - minLow) / range) * chartH;
+    const candleWidth = Math.max(2, chartW / candles.length * 0.7);
+    const spacing = chartW / candles.length;
+
+    let svg = `<svg width="100%" height="${height}" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">`;
+
+    candles.forEach((c, i) => {
+        const x = padding + i * spacing + spacing / 2;
+        const isUp = c.close >= c.open;
+        const color = isUp ? "#2ecc71" : "#e74c3c";
+
+        const yHigh = yFor(c.high);
+        const yLow = yFor(c.low);
+        const yOpen = yFor(c.open);
+        const yClose = yFor(c.close);
+
+        // الشمعة (الجسم)
+        const top = Math.min(yOpen, yClose);
+        const bodyH = Math.max(1, Math.abs(yClose - yOpen));
+
+        // الظل
+        svg += `<line x1="${x}" y1="${yHigh}" x2="${x}" y2="${yLow}" stroke="${color}" stroke-width="1"/>`;
+        // الجسم
+        svg += `<rect x="${x - candleWidth / 2}" y="${top}" width="${candleWidth}" height="${bodyH}" fill="${color}"/>`;
+    });
+
+    svg += `</svg>`;
+    return svg;
+}
+
+// ============================================================
+// عرض البطاقات
+// ============================================================
+function render() {
+    const grid = document.getElementById("grid");
+
+    FOREX_PAIRS.forEach(symbol => {
+        const data = state[symbol];
+        const { dir, count } = getConsecutiveCandles(data.candles);
+
+        let cardClass = "card";
+        let badge = `<span class="candle-badge badge-neutral">—</span>`;
+
+        if (count >= ALERT_THRESHOLD) {
+            if (dir > 0) {
+                cardClass += " alert-green";
+                badge = `<span class="candle-badge badge-green">🟢 ${count} شموع خضراء متتالية</span>`;
+            } else if (dir < 0) {
+                cardClass += " alert-red";
+                badge = `<span class="candle-badge badge-red">🔴 ${count} شموع حمراء متتالية</span>`;
+            }
+        } else if (count > 0) {
+            badge = `<span class="candle-badge badge-neutral">${count} ${dir > 0 ? 'خضراء' : 'حمراء'}</span>`;
+        }
+
+        const priceClass = data.candles.length > 0 && data.candles[data.candles.length - 1].close >= data.candles[data.candles.length - 1].open ? "up" : "down";
+        const priceText = data.lastPrice ? data.lastPrice.toFixed(5) : "—";
+        const timeText = data.lastUpdate ? new Date(data.lastUpdate).toLocaleTimeString('ar-EG') : "—";
+
+        // نعيد بناء البطاقة فقط إذا كانت البيانات موجودة
+        let existingCard = document.getElementById(`card-${symbol}`);
+        if (!existingCard) {
+            existingCard = document.createElement("div");
+            existingCard.id = `card-${symbol}`;
+            existingCard.className = cardClass;
+            existingCard.innerHTML = `
+                <div class="card-header">
+                    <div class="pair-name">${symbol.slice(0, 3)}/${symbol.slice(3)}</div>
+                    <div class="price-info">
+                        <div class="price ${priceClass}">${priceText}</div>
+                        <div class="price-time">${timeText}</div>
+                    </div>
+                </div>
+                <div class="chart-container"></div>
+                <div class="badge-container">${badge}</div>
+            `;
+            grid.appendChild(existingCard);
+        } else {
+            existingCard.className = cardClass;
+            existingCard.querySelector(".price").className = `price ${priceClass}`;
+            existingCard.querySelector(".price").textContent = priceText;
+            existingCard.querySelector(".price-time").textContent = timeText;
+            existingCard.querySelector(".badge-container").innerHTML = badge;
+        }
+
+        // إعادة رسم الشموع
+        existingCard.querySelector(".chart-container").innerHTML = drawChart(data.candles, 340, 120);
+    });
+}
+
+// ============================================================
+// التنبيهات
+// ============================================================
+let lastAlertKey = "";
+function triggerAlert(symbol, dir, count) {
+    const banner = document.getElementById("alert-banner");
+    const key = `${symbol}-${dir}-${count}`;
+    if (key === lastAlertKey) return; // لا تعيد نفس التنبيه
+    lastAlertKey = key;
+
+    banner.className = dir > 0 ? "show" : "show red";
+    banner.textContent = dir > 0
+        ? `🟢 ${symbol}: ${count} شموع خضراء متتالية`
+        : `🔴 ${symbol}: ${count} شموع حمراء متتالية`;
+
+    // صوت تنبيه بسيط
+    try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.value = dir > 0 ? 880 : 440;
+        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.5);
+    } catch (e) { /* تجاهل */ }
+
+    setTimeout(() => {
+        banner.className = "";
+        lastAlertKey = ""; // للسماح بتنبيه جديد بعد فترة
+    }, 5000);
+}
+
+// ============================================================
+// حلقة التحديث الرئيسية
+// ============================================================
+async function updateAll() {
+    const status = document.getElementById("status");
+    let successCount = 0;
+
+    await Promise.all(FOREX_PAIRS.map(async (symbol) => {
+        const candles = await fetchCandles(symbol);
+        const tick = await fetchTick(symbol);
+
+        if (candles && candles.length > 0) {
+            state[symbol].candles = candles;
+            state[symbol].lastUpdate = Date.now();
+            if (tick) state[symbol].lastPrice = tick;
+            successCount++;
+
+            // فحص التنبيه
+            const { dir, count } = getConsecutiveCandles(candles);
+            if (count >= ALERT_THRESHOLD) {
+                triggerAlert(symbol, dir, count);
             }
         }
+    }));
 
-        function renderData(results) {
-            const grid = document.getElementById('quotes-grid');
-            grid.innerHTML = ''; // مسح البيانات القديمة
+    if (successCount > 0) {
+        status.textContent = `متصل (${successCount}/${FOREX_PAIRS.length}) - آخر تحديث: ${new Date().toLocaleTimeString('ar-EG')}`;
+        status.className = "status online";
+    } else {
+        status.textContent = "تعذر الاتصال بـ Biquote";
+        status.className = "status offline";
+    }
 
-            results.forEach(quote => {
-                const isUp = quote.regularMarketChange >= 0;
-                const changeClass = isUp ? 'up' : 'down';
-                const arrow = isUp ? '▲' : '▼';
-                
-                // تنسيق السعر (بعض الأرقام تحتاج لعدة خانات عشرية)
-                const price = quote.regularMarketPrice ? quote.regularMarketPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 5 }) : 'N/A';
-                const change = quote.regularMarketChange ? quote.regularMarketChange.toFixed(2) : '0.00';
-                const changePercent = quote.regularMarketChangePercent ? quote.regularMarketChangePercent.toFixed(2) : '0.00';
-                
-                const displayName = symbolNames[quote.symbol] || quote.shortName || quote.symbol;
+    render();
+}
 
-                const card = document.createElement('div');
-                card.className = 'quote-card';
-                card.innerHTML = `
-                    <div class="symbol-info">
-                        <span class="symbol-name">${displayName}</span>
-                        <span class="symbol-code">${quote.symbol}</span>
-                    </div>
-                    <div class="price-info">
-                        <span class="price">${price}</span>
-                        <span class="change ${changeClass}">
-                            ${arrow} ${Math.abs(change)} (${Math.abs(changePercent)}%)
-                        </span>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
+// بدء التشغيل
+updateAll();
+setInterval(updateAll, REFRESH_INTERVAL);
+</script>
 
-        function startTimer() {
-            countdown = 5;
-            document.getElementById('timer').innerText = `${countdown}s`;
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                countdown--;
-                if (countdown >= 0) {
-                    document.getElementById('timer').innerText = `${countdown}s`;
-                }
-            }, 1000);
-        }
-
-        // بدء التشغيل
-        function startApp() {
-            fetchQuotes();
-            startTimer();
-            
-            clearInterval(fetchInterval);
-            fetchInterval = setInterval(() => {
-                fetchQuotes();
-                startTimer();
-            }, 5000);
-        }
-
-        startApp();
-    </script>
 </body>
 </html>
