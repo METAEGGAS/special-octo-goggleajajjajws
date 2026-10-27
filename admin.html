@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark"><title>لوحة إدارة الإيداع والسحب</title>
+<style>
+:root{--bg:#080e1c;--panel:#121c30;--line:#26334b;--muted:#a8b6cc;--blue:#568cff;--green:#43d9ae;--red:#ff808b;--yellow:#ffd17d}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top right,#182d52,transparent 55%),var(--bg);color:#edf3ff;font:15px/1.7 Tahoma,Arial,sans-serif;min-height:100vh}button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:10px;padding:10px 16px;background:var(--blue);color:white;font-weight:bold}button:disabled{opacity:.45;cursor:not-allowed}button.secondary{background:#26344e}button.danger{background:#562838;color:#ffb5bf}button.accept{background:#154b42;color:#83f2cf}input,select,textarea{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:10px;background:#0b1527;color:#fff;outline:none}input:focus,select:focus,textarea:focus{border-color:var(--blue)}label{display:block;margin:14px 0 6px;color:var(--muted)}h1,h2,h3,p{margin-top:0}h1{font-size:25px;margin-bottom:4px}h2{font-size:20px}small,.muted{color:var(--muted)}.hidden,[hidden]{display:none!important}.wrap{width:min(1440px,94%);margin:26px auto}.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 16px 45px #0002}.login{width:min(450px,93%);margin:9vh auto}.brand{display:inline-grid;place-items:center;width:52px;height:52px;background:#224176;border-radius:16px;font-size:25px;margin-bottom:15px}.top{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:22px;flex-wrap:wrap}.actions{display:flex;gap:9px;flex-wrap:wrap}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:18px}.stat strong{display:block;font:700 30px/1.6 Arial}.stat span{color:var(--muted)}.filters{display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px;margin:18px 0}.notice{padding:13px 16px;border-radius:12px;background:#30291d;border:1px solid #655234;color:#ffe1a3;margin:16px 0;font-size:13px}.error{color:#ffacb7;white-space:pre-wrap}.ok{color:var(--green)}.status{display:inline-block;border-radius:99px;padding:3px 11px;white-space:nowrap;background:#4c3c22;color:var(--yellow);font-size:12px}.status.approved{background:#163f36;color:#80eac8}.status.rejected{background:#472733;color:#ffa6b1}.tablebox{overflow:auto;border:1px solid var(--line);border-radius:12px}table{width:100%;border-collapse:collapse;min-width:1060px;text-align:right}th,td{border-bottom:1px solid var(--line);padding:13px 12px;vertical-align:top}th{background:#1b2941;color:#b7c9e3;font-size:12px}td{font-size:13px}td .actions{flex-wrap:nowrap}td button{font-size:12px;padding:7px 10px}.mono{font-family:monospace;direction:ltr;unicode-bidi:plaintext;overflow-wrap:anywhere}.address{max-width:220px;font-size:12px}.empty{text-align:center;padding:45px;color:var(--muted)}.foot{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:18px}.online{font-size:12px;color:var(--green)}dialog{width:min(520px,94vw);background:var(--panel);color:#edf3ff;border:1px solid var(--line);border-radius:18px;padding:24px}dialog::backdrop{background:#000a;backdrop-filter:blur(3px)}.details{background:#0b1527;border-radius:12px;padding:14px;overflow-wrap:anywhere;white-space:pre-wrap}.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#253d5c;padding:12px 22px;border:1px solid #5378a3;border-radius:12px;z-index:10;max-width:94vw}.login button[type=submit]{width:100%;margin-top:20px}.view-message{margin:10px 0;min-height:24px}@media(max-width:760px){.stats{grid-template-columns:repeat(2,1fr)}.filters{grid-template-columns:1fr}.card{padding:16px}h1{font-size:21px}.wrap{width:95%}}
+</style>
+</head>
+<body>
+<section id="loginView" class="card login">
+<div class="brand" aria-hidden="true">▣</div><h1>إدارة الأصول</h1><p class="muted">تسجيل دخول الأدمن لمراجعة الإيداع والسحب</p>
+<form id="loginForm"><label for="email">بريد حساب الأدمن في Firebase</label><input id="email" type="email" required autocomplete="username" dir="ltr" placeholder="admin@example.com"><label for="password">كلمة المرور</label><input id="password" type="password" required autocomplete="current-password" dir="ltr"><button id="loginBtn" type="submit" disabled>جارٍ تهيئة الاتصال…</button></form>
+<p id="loginError" class="error view-message" role="alert"></p><small>تُضبط كلمة المرور في Firebase Authentication، ولا تُحفظ في كود الصفحة. لا تستخدم 123456 في بيئة مالية حقيقية.</small>
+</section>
+<main id="dashboard" class="wrap" hidden>
+<header class="top"><div><h1>لوحة إدارة الطلبات</h1><div class="muted">الإيداع والسحب <span aria-hidden="true">·</span> USDT</div></div><div><div class="actions"><button id="refreshBtn" class="secondary">إعادة الاتصال</button><button id="logoutBtn" class="danger">تسجيل الخروج</button></div><small id="adminEmail"></small></div></header>
+<div class="notice">قبول السحب يغيّر حالة الطلب فقط، ولا يرسل عملات. نفّذ التحويل خارجيًا وتحقق من الشبكة والعنوان أولًا، ثم سجّل مرجع التحويل. تأكد من استلام الإيداع فعليًا قبل قبوله.</div>
+<section class="stats"><div class="card stat"><span>طلبات الإيداع المعلقة</span><strong id="depCount">0</strong></div><div class="card stat"><span>طلبات السحب المعلقة</span><strong id="wdCount">0</strong></div><div class="card stat"><span>إجمالي الإيداع المعلق</span><strong id="depTotal">0.00</strong><small>USDT</small></div><div class="card stat"><span>إجمالي السحب المعلق</span><strong id="wdTotal">0.00</strong><small>USDT</small></div></section>
+<section class="card"><div class="top"><h2>طلبات المستخدمين</h2><span id="connection" class="online" role="status">جارٍ الاتصال…</span></div><div class="filters"><input id="search" aria-label="البحث" placeholder="بحث بالاسم، البريد، UID، العنوان أو مرجع التحويل"><select id="typeFilter" aria-label="نوع الطلب"><option value="all">كل الأنواع</option><option value="deposit">الإيداع</option><option value="withdraw">السحب</option></select><select id="statusFilter" aria-label="حالة الطلب"><option value="pending">قيد المراجعة</option><option value="all">كل الحالات</option><option value="approved">مقبول</option><option value="rejected">مرفوض</option></select></div>
+<p id="dataError" class="error" role="alert"></p><div class="tablebox"><table><thead><tr><th>المستخدم</th><th>النوع</th><th>المبلغ</th><th>الشبكة / العنوان</th><th>وقت الطلب</th><th>الحالة</th><th>الإجراءات</th></tr></thead><tbody id="rows"></tbody></table><div id="empty" class="empty" hidden>لا توجد طلبات مطابقة للفلاتر.</div></div>
+<footer class="foot"><small id="resultCount"></small><div class="actions"><button id="prevPage" class="secondary">السابق</button><span id="pageLabel"></span><button id="nextPage" class="secondary">التالي</button></div></footer><small>البيانات المقروءة من users/{uid}.records. تُحمّل مستندات المستخدمين كاملةً للتوافق مع البنية الحالية؛ يُنصح بمجموعة طلبات منفصلة عند التوسع.</small></section>
+</main>
+<dialog id="decisionDialog"><h2 id="dialogTitle"></h2><div id="dialogSummary" class="details"></div><form id="decisionForm"><label id="noteLabel" for="decisionNote">ملاحظة</label><textarea id="decisionNote" maxlength="500" rows="3"></textarea><p id="decisionHelp" class="muted"></p><p id="decisionError" class="error" role="alert"></p><div class="actions"><button id="confirmBtn" type="submit">تأكيد</button><button id="cancelBtn" type="button" class="secondary">إلغاء</button></div></form></dialog>
+<div id="toast" class="toast" role="status" hidden></div>
+<script type="module">
+// إعدادات Web العامة من الملف المرفوع؛ ليست Service Account أو مفتاح خادم.
+const FIREBASE_CONFIG = {
+ apiKey:'AIzaSyBvzfJOOjRFZnTgTUrwEZQPr8Ba7zKKlNg',
+ authDomain:'hhhxh-5ebe4.firebaseapp.com', projectId:'hhhxh-5ebe4',
+ storageBucket:'hhhxh-5ebe4.firebasestorage.app', messagingSenderId:'79243000696',
+ appId:'1:79243000696:web:ee0fb2d2ccce791954e68d'
+};
+// استبدل بالقيمة نفسها في قواعد Firestore. إخفاء الصفحة ليس تفويضًا أمنيًا.
+const ADMIN_UID = 'PUT_ADMIN_UID_HERE';
+const SDK = 'https://www.gstatic.com/firebasejs/12.19.0/';
+const $ = id => document.getElementById(id);
+let auth,db,authAPI,fs,unsubscribe=null,entries=[],page=1,selected=null,busy=false,toastTimer;
+const PAGE_SIZE=25;
+function toast(text){$('toast').textContent=text;$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,5000);}
+function readable(error){const code=String(error?.code||'');if(code.includes('permission-denied'))return 'الصلاحيات مرفوضة. راجع UID الأدمن وقواعد Firestore.';if(code.includes('invalid-credential')||code.includes('wrong-password')||code.includes('user-not-found'))return 'بيانات الدخول غير صحيحة.';if(code.includes('too-many-requests'))return 'محاولات كثيرة. انتظر قليلًا ثم حاول مجددًا.';if(code.includes('network')||code.includes('unavailable'))return 'تعذر الاتصال بالشبكة. تحقق من الإنترنت ثم أعد المحاولة.';return error?.message||'تعذر إتمام العملية.';}
+function kind(r){return ['deposit','dep'].includes(r.type)?'deposit':['withdraw','wd'].includes(r.type)?'withdraw':null;}
+function state(r){const s=String(r.status||'pending').toLowerCase();return ['approved','success'].includes(s)?'approved':['rejected','failed'].includes(s)?'rejected':s;}
+function stateText(r){return {pending:'قيد المراجعة',approved:'مقبول',rejected:'مرفوض'}[state(r)]||String(r.status||'غير معروف');}
+function amount(r){const v=r.amount;return (typeof v==='number'||typeof v==='string')&&String(v).trim()!==''?Number(v):NaN;}
+function validAmount(r){return Number.isFinite(amount(r))&&amount(r)>0;}
+function fmt(n){return Number.isFinite(n)?new Intl.NumberFormat('en-US',{minimumFractionDigits:2,maximumFractionDigits:8}).format(n):'غير صالح';}
+function timeOf(v){if(v&&typeof v.toMillis==='function')return v.toMillis();if(v&&typeof v.seconds==='number')return v.seconds*1000;return typeof v==='number'?v:typeof v==='string'?(Number(v)||Date.parse(v)):NaN;}
+function date(v){const t=timeOf(v);return Number.isFinite(t)?new Date(t).toLocaleString('ar-EG'):'غير محدد';}
+function signature(r){return JSON.stringify(r);}
+// دالة حسابية مستقلة لتوحيد سياسة الرصيد ومنع الخصم المكرر.
+function decideRecord(data,index,expected,decision,review){
+ if(!['approved','rejected'].includes(decision))throw new Error('قرار غير صالح.');
+ const records=Array.isArray(data.records)?data.records.slice():[];
+ const record=records[index];
+ if(!record||signature(record)!==expected)throw new Error('تغير الطلب منذ فتحه. حدّث البيانات وراجعه من جديد.');
+ if(state(record)!=='pending')throw new Error('تمت مراجعة هذا الطلب بالفعل.');
+ const type=kind(record);
+ if(!type||!validAmount(record))throw new Error('نوع الطلب أو المبلغ غير صالح.');
+ const value=amount(record);
+ const delta=(type==='deposit'&&decision==='approved')||(type==='withdraw'&&decision==='rejected')?value:0;
+ const patch={};
+ if(delta!==0){
+  const balance=data.balance;
+  if(typeof balance!=='number'||!Number.isFinite(balance)||balance<0)throw new Error('الرصيد المخزن غير صالح؛ يلزم تصحيحه قبل هذه العملية.');
+  const next=Number((balance+delta).toFixed(8));
+  if(!Number.isFinite(next)||next<=balance)throw new Error('المبلغ خارج نطاق الدقة المقبول.');
+  patch.balance=next;
+ }
+ records[index]={...record,status:decision,reviewedAt:review.at,reviewedBy:review.uid,adminNote:review.note};
+ patch.records=records;
+ return {patch,type,value,delta};
+}
+function addText(parent,tag,text,cls){const n=document.createElement(tag);n.textContent=String(text??'');if(cls)n.className=cls;parent.appendChild(n);return n;}
+function filterEntries(){const q=$('search').value.trim().toLowerCase(),t=$('typeFilter').value,s=$('statusFilter').value;return entries.filter(e=>(t==='all'||kind(e.r)===t)&&(s==='all'||state(e.r)===s)&&[e.uid,e.name,e.email,e.r.addr,e.r.txid,e.r.txHash,e.r.adminNote].join(' ').toLowerCase().includes(q));}
+function render(){
+ const pending=entries.filter(e=>state(e.r)==='pending'),deps=pending.filter(e=>kind(e.r)==='deposit'),wds=pending.filter(e=>kind(e.r)==='withdraw');
+ $('depCount').textContent=deps.length;$('wdCount').textContent=wds.length;
+ $('depTotal').textContent=fmt(deps.reduce((s,e)=>s+(validAmount(e.r)?amount(e.r):0),0));$('wdTotal').textContent=fmt(wds.reduce((s,e)=>s+(validAmount(e.r)?amount(e.r):0),0));
+ const list=filterEntries(),pages=Math.max(1,Math.ceil(list.length/PAGE_SIZE));page=Math.max(1,Math.min(page,pages));
+ $('rows').replaceChildren();
+ for(const e of list.slice((page-1)*PAGE_SIZE,page*PAGE_SIZE)){
+  const tr=document.createElement('tr'),user=document.createElement('td');addText(user,'b',e.name||e.email||'مستخدم');addText(user,'div',e.email||'','muted');addText(user,'div',e.uid,'mono muted');tr.appendChild(user);
+  addText(tr,'td',kind(e.r)==='deposit'?'إيداع ↓':'سحب ↑');addText(tr,'td',fmt(amount(e.r))+' USDT','mono');
+  const addr=document.createElement('td');addText(addr,'b',e.r.net||'غير محددة');addText(addr,'div',e.r.addr||'—','address mono muted');tr.appendChild(addr);
+  addText(tr,'td',date(e.r.at));const status=document.createElement('td');addText(status,'span',stateText(e.r),'status '+(state(e.r)==='approved'?'approved':state(e.r)==='rejected'?'rejected':''));tr.appendChild(status);
+  const actions=document.createElement('td'),group=document.createElement('div');group.className='actions';
+  for(const [label,decision,cls] of [['قبول','approved','accept'],['رفض','rejected','danger']]){const btn=addText(group,'button',label,cls);btn.type='button';btn.disabled=busy||state(e.r)!=='pending'||!validAmount(e.r);btn.addEventListener('click',()=>openDecision(e,decision));}
+  const info=addText(group,'button','تفاصيل','secondary');info.type='button';info.disabled=busy;info.addEventListener('click',()=>openDecision(e,null));actions.appendChild(group);tr.appendChild(actions);$('rows').appendChild(tr);
+ }
+ $('empty').hidden=list.length>0;$('resultCount').textContent=`${list.length} طلب مطابق من ${entries.length}`;$('pageLabel').textContent=`${page} / ${pages}`;$('prevPage').disabled=page<=1;$('nextPage').disabled=page>=pages;
+}
+function stop(){if(unsubscribe){unsubscribe();unsubscribe=null;}entries=[];page=1;render();}
+function subscribe(){
+ stop();$('dataError').textContent='';$('connection').textContent='جارٍ تحميل الطلبات…';
+ unsubscribe=fs.onSnapshot(fs.collection(db,'users'),{includeMetadataChanges:true},snapshot=>{
+ entries=[];snapshot.forEach(doc=>{const d=doc.data();(Array.isArray(d.records)?d.records:[]).forEach((r,index)=>{if(r&&kind(r))entries.push({uid:doc.id,name:d.name||d.fullName||d.username||'',email:d.email||'',r,index,expected:signature(r)});});});
+ entries.sort((a,b)=>(timeOf(b.r.at)||0)-(timeOf(a.r.at)||0));$('connection').textContent=snapshot.metadata.fromCache?'بيانات مخزنة مؤقتًا — انتظر تأكيد الاتصال':'متصل · تحديث لحظي';$('dataError').textContent='';render();
+ },error=>{entries=[];render();$('connection').textContent='تعذر الاتصال';$('dataError').textContent=readable(error);});
+}
+function openDecision(e,decision){
+ selected={...e,decision};$('dialogTitle').textContent=decision==='approved'?'تأكيد قبول الطلب':decision==='rejected'?'تأكيد رفض الطلب':'تفاصيل الطلب';
+ const r=e.r;$('dialogSummary').textContent=[`المستخدم: ${e.name||e.email||e.uid}`,`UID: ${e.uid}`,`النوع: ${kind(r)==='deposit'?'إيداع':'سحب'}`,`المبلغ: ${fmt(amount(r))} USDT`,`الشبكة: ${r.net||'غير محددة'}`,`العنوان: ${r.addr||'—'}`,`التاريخ: ${date(r.at)}`,`الحالة: ${stateText(r)}`,`مرجع المستخدم: ${r.txid||r.txHash||'—'}`,`ملاحظة الإدارة: ${r.adminNote||'—'}`,`وقت المراجعة: ${r.reviewedAt?date(r.reviewedAt):'—'}`].join('\n');
+ $('decisionNote').value='';$('decisionError').textContent='';$('decisionNote').hidden=!decision;$('noteLabel').hidden=!decision;$('confirmBtn').hidden=!decision;
+ $('decisionNote').required=!!decision&&(decision==='rejected'||kind(r)==='withdraw');
+ $('noteLabel').textContent=decision==='rejected'?'سبب الرفض':kind(r)==='withdraw'?'مرجع التحويل المنفذ فعليًا / TXID':'مرجع الإيداع أو ملاحظة التحقق';
+ $('decisionHelp').textContent=!decision?'للعرض فقط.':kind(r)==='deposit'?(decision==='approved'?'سيُضاف المبلغ إلى الرصيد. تحقق من استلام التحويل وعدم تسجيله سابقًا.':'لن يتغير الرصيد.'):(decision==='approved'?'لن يُخصم المبلغ مرة أخرى. هذا ليس تنفيذًا لتحويل على الشبكة.':'سيُعاد المبلغ الكامل المحجوز إلى الرصيد مرة واحدة، وفق منطق الملف الأصلي.');
+ $('decisionDialog').showModal();
+}
+async function confirmDecision(event){
+ event.preventDefault();if(busy||!selected?.decision)return;
+ const e=selected,user=auth.currentUser,note=$('decisionNote').value.trim();
+ if(!user||user.uid!==ADMIN_UID){$('decisionError').textContent='جلسة غير مصرح بها.';return;}
+ if($('decisionNote').required&&!note){$('decisionError').textContent='اكتب السبب أو مرجع التحويل أولًا.';return;}
+ busy=true;$('confirmBtn').disabled=true;$('cancelBtn').disabled=true;render();
+ const review={uid:user.uid,at:Date.now(),note};
+ const auditRef=fs.doc(fs.collection(db,'adminAudit'));
+ try{
+  await fs.runTransaction(db,async tx=>{
+   const ref=fs.doc(db,'users',e.uid),snap=await tx.get(ref);
+   if(!snap.exists())throw new Error('حساب المستخدم لم يعد موجودًا.');
+   const result=decideRecord(snap.data(),e.index,e.expected,e.decision,review);
+   tx.update(ref,result.patch);
+   tx.set(auditRef,{userId:e.uid,recordIndex:e.index,recordAt:e.r.at??null,type:result.type,amount:result.value,balanceDelta:result.delta,status:e.decision,adminUid:user.uid,note,createdAt:fs.serverTimestamp()});
+  });
+  $('decisionDialog').close();selected=null;toast('تم حفظ القرار وتحديث السجل بنجاح.');
+ }catch(error){$('decisionError').textContent=readable(error);}
+ finally{busy=false;$('confirmBtn').disabled=false;$('cancelBtn').disabled=false;render();}
+}
+$('decisionForm').addEventListener('submit',confirmDecision);$('cancelBtn').addEventListener('click',()=>$('decisionDialog').close());$('decisionDialog').addEventListener('cancel',event=>{if(busy)event.preventDefault();});
+$('search').addEventListener('input',()=>{page=1;render();});for(const id of ['typeFilter','statusFilter'])$(id).addEventListener('change',()=>{page=1;render();});$('prevPage').addEventListener('click',()=>{page--;render();});$('nextPage').addEventListener('click',()=>{page++;render();});
+$('refreshBtn').addEventListener('click',()=>{if(auth?.currentUser?.uid===ADMIN_UID&&!busy)subscribe();});
+$('logoutBtn').addEventListener('click',async()=>{if(busy)return;try{await authAPI.signOut(auth);}catch(e){toast(readable(e));}});
+$('loginForm').addEventListener('submit',async event=>{
+ event.preventDefault();$('loginError').textContent='';
+ if(ADMIN_UID==='PUT_ADMIN_UID_HERE'){$('loginError').textContent='اضبط ADMIN_UID داخل الملف وقواعد Firestore أولًا.';return;}
+ $('loginBtn').disabled=true;
+ try{await authAPI.signInWithEmailAndPassword(auth,$('email').value.trim(),$('password').value);$('password').value='';}catch(e){$('loginError').textContent=readable(e);}finally{$('loginBtn').disabled=false;}
+});
+async function boot(){
+ try{
+  const [appAPI,a,f]=await Promise.all([import(SDK+'firebase-app.js'),import(SDK+'firebase-auth.js'),import(SDK+'firebase-firestore.js')]);authAPI=a;fs=f;
+  const app=appAPI.initializeApp(FIREBASE_CONFIG,'assetAdminPanel');auth=a.getAuth(app);db=f.getFirestore(app);
+  await a.setPersistence(auth,a.browserSessionPersistence);
+  a.onAuthStateChanged(auth,async user=>{
+   if(!user||user.uid!==ADMIN_UID){stop();$('dashboard').hidden=true;$('loginView').hidden=false;if($('decisionDialog').open)$('decisionDialog').close();if(user){$('loginError').textContent='هذا الحساب غير مصرح له بإدارة الطلبات.';await a.signOut(auth);}return;}
+   $('loginView').hidden=true;$('dashboard').hidden=false;$('adminEmail').textContent=user.email||user.uid;subscribe();
+  });
+  $('loginBtn').textContent='دخول الأدمن';$('loginBtn').disabled=false;
+ }catch(error){$('loginError').textContent='تعذر تحميل Firebase. شغّل الصفحة عبر HTTPS أو localhost وتحقق من الإنترنت. '+readable(error);$('loginBtn').textContent='تعذر الاتصال';}
+}
+boot();
+</script>
+</body>
+</html>
