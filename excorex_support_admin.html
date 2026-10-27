@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ExCoreX | لوحة دعم العملاء</title>
+<style>
+:root{color-scheme:dark;--bg:#060d1c;--panel:#101d33;--line:#263c5b;--blue:#2f7bf6;--muted:#9fb3d1}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#103b70,#060d1c 55%);font-family:Tahoma,Arial,sans-serif;color:#f5f8ff;min-height:100vh}
+button,input,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:10px;padding:11px 15px;background:var(--blue);color:white;font-weight:700}
+.wrap{max-width:1200px;margin:auto;padding:24px 16px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}.top h1{font-size:24px;margin:0}.sub{color:var(--muted);font-size:13px;margin-top:7px}
+.panel{background:#0c1729ed;border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 12px 35px #0004}
+.login{max-width:440px;margin:9vh auto}.field{display:block;width:100%;margin:10px 0;padding:13px 14px;background:#071121;border:1px solid var(--line);border-radius:10px;color:white;outline:none}
+.layout{display:none;grid-template-columns:320px minmax(0,1fr);gap:16px}.list{max-height:72vh;overflow:auto}.user{width:100%;text-align:right;background:#0c1729;border:1px solid var(--line);margin-bottom:8px;padding:13px;border-radius:12px}.user.active{border-color:#4a94ff;background:#142b4b}.user b{display:block;direction:ltr;text-align:right;overflow-wrap:anywhere}.user small{display:block;color:var(--muted);margin-top:7px}.badge{display:inline-block;background:#1d4d82;border-radius:20px;padding:3px 8px;font-size:11px;margin-top:8px}
+.chathead{display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid var(--line);padding-bottom:13px}.chathead h2{margin:0;font-size:17px;overflow-wrap:anywhere}.messages{height:52vh;overflow:auto;padding:16px 2px;display:flex;flex-direction:column;gap:10px}.msg{max-width:85%;padding:11px 13px;border-radius:13px;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere}.msg.user{align-self:flex-end;background:#235acb}.msg.staff{align-self:flex-start;background:#17263b;border:1px solid #263c5b}.msg img{max-width:220px;display:block;border-radius:8px}.time{font-size:10px;color:#b7c8df;margin-top:5px;direction:ltr}.composer{display:flex;gap:9px}.composer textarea{resize:vertical;min-height:48px;max-height:150px;flex:1}.empty{color:var(--muted);text-align:center;padding:55px 12px}.status{color:var(--muted);font-size:13px;line-height:1.8;margin-top:12px}.error{color:#ff9b9b}.hidden{display:none!important}
+@media(max-width:760px){.wrap{padding:15px 10px}.layout{grid-template-columns:1fr}.list{max-height:28vh}.messages{height:42vh}.top h1{font-size:19px}.panel{padding:13px}}
+</style>
+</head>
+<body><main class="wrap">
+<header class="top"><div><h1>ExCoreX — دعم العملاء</h1><div class="sub">لوحة خاصة لعرض محادثات الدعم والرد على المستخدمين</div></div><button id="logout" class="hidden">تسجيل الخروج</button></header>
+<section id="login" class="panel login"><h2>دخول المشرف</h2><p class="sub">سجّل الدخول بحساب المشرف المعتمد في Firebase.</p><form id="loginForm"><input id="email" class="field" type="email" autocomplete="username" placeholder="البريد الإلكتروني" required><input id="password" class="field" type="password" autocomplete="current-password" placeholder="كلمة المرور" required><button style="width:100%">دخول</button></form><div id="loginStatus" class="status"></div></section>
+<section id="dashboard" class="layout"><aside class="panel"><input id="search" class="field" placeholder="ابحث بالبريد أو UID..." style="margin-top:0"><div id="userList" class="list"><div class="empty">جارٍ تحميل المحادثات…</div></div><div id="listStatus" class="status"></div></aside>
+<section class="panel"><div class="chathead"><div><h2 id="chatTitle">اختر محادثة</h2><div id="chatUid" class="sub"></div></div><button id="refresh">تحديث</button></div><div id="messages" class="messages"><div class="empty">اختر مستخدمًا من القائمة لعرض رسائله.</div></div><form id="replyForm" class="composer"><textarea id="replyText" class="field" placeholder="اكتب ردك هنا…" required disabled></textarea><button id="sendBtn" disabled>إرسال الرد</button></form><div id="chatStatus" class="status">تظهر الرسائل مباشرة عند توفر صلاحيات Firestore المطلوبة.</div></section></section>
+</main>
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+import {getAuth,onAuthStateChanged,signInWithEmailAndPassword,signOut} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+import {getFirestore,doc,getDoc,collection,collectionGroup,onSnapshot,addDoc,serverTimestamp,getDocs} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+const firebaseConfig = {
+ apiKey:"AIzaSyBvzfJOOjRFZnTgTUrwEZQPr8Ba7zKKlNg",authDomain:"hhhxh-5ebe4.firebaseapp.com",projectId:"hhhxh-5ebe4",storageBucket:"hhhxh-5ebe4.firebasestorage.app",messagingSenderId:"79243000696",appId:"1:79243000696:web:ee0fb2d2ccce791954e68d",measurementId:"G-08BR6LN6PT"
+};
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
+const $=id=>document.getElementById(id);
+let users=new Map(),selectedUid=null,allMessages=[],unsubs=[],loading=false;
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function status(id,msg,error=false){$(id).textContent=msg;$(id).classList.toggle('error',error)}
+function cleanup(){unsubs.forEach(u=>{try{u()}catch{}});unsubs=[]}
+function showDashboard(){ $('login').classList.add('hidden');$('dashboard').style.display='grid';$('logout').classList.remove('hidden');}
+async function authorize(user){
+ const snap=await getDoc(doc(db,'users',user.uid));
+ const d=snap.exists()?snap.data():{};
+ // Admin access must also be enforced by Firestore Security Rules.
+ return d.role==='admin'||d.isAdmin===true;
+}
+$('loginForm').addEventListener('submit',async e=>{e.preventDefault();status('loginStatus','جارٍ تسجيل الدخول…');try{await signInWithEmailAndPassword(auth,$('email').value.trim(),$('password').value)}catch(err){status('loginStatus','تعذّر تسجيل الدخول: '+(err.code||err.message),true)}});
+$('logout').onclick=async()=>{cleanup();await signOut(auth)};
+onAuthStateChanged(auth,async user=>{
+ cleanup();users.clear();allMessages=[];selectedUid=null;
+ if(!user){$('login').classList.remove('hidden');$('dashboard').style.display='none';$('logout').classList.add('hidden');return}
+ try{
+  if(!(await authorize(user))){status('loginStatus','هذا الحساب ليس مشرفًا. يجب ضبط users/'+user.uid+' بحقل role: "admin" ثم تسجيل الدخول مجددًا.',true);await signOut(auth);return}
+  showDashboard();status('listStatus','جارٍ جلب محادثات الدعم…');
+  // Messages are stored at users/{uid}/support/{messageId}, as in the client app.
+  const unsub=onSnapshot(collectionGroup(db,'support'),snap=>{
+   const grouped=new Map();
+   snap.forEach(ds=>{const path=ds.ref.path.split('/');if(path.length<4||path[0]!=='users'||path[2]!=='support')return;const uid=path[1];if(!grouped.has(uid))grouped.set(uid,[]);grouped.get(uid).push({id:ds.id,...ds.data()})});
+   users=grouped;renderUsers();if(selectedUid)renderMessages();status('listStatus',`${users.size} محادثة`); 
+  },err=>status('listStatus','تعذّر تحميل الرسائل: '+err.message+' — تحقق من قواعد Firestore وصلاحيات collectionGroup.',true));
+  unsubs.push(unsub);
+ }catch(err){status('loginStatus','تعذّر التحقق من صلاحيات المشرف: '+err.message,true);await signOut(auth)}
+});
+function dateOf(m){try{if(m.ts?.toDate)return m.ts.toDate();if(m.ts?.seconds)return new Date(m.ts.seconds*1000)}catch{}return null}
+function renderUsers(){
+ const q=$('search').value.trim().toLowerCase();const entries=[...users.entries()].filter(([uid,ms])=>{const latest=[...ms].sort((a,b)=>(dateOf(b)?.getTime()||0)-(dateOf(a)?.getTime()||0))[0];return (uid+' '+(latest?.email||'')).toLowerCase().includes(q)}).sort((a,b)=>Math.max(...b[1].map(m=>dateOf(m)?.getTime()||0))-Math.max(...a[1].map(m=>dateOf(m)?.getTime()||0)));
+ $('userList').innerHTML=entries.length?entries.map(([uid,ms])=>{const last=[...ms].sort((a,b)=>(dateOf(b)?.getTime()||0)-(dateOf(a)?.getTime()||0))[0];return `<button class="user ${uid===selectedUid?'active':''}" data-uid="${esc(uid)}"><b>${esc(last?.email||uid)}</b><small>${esc(last?.text|| (last?.image?'📷 صورة':'رسالة دعم'))}</small><span class="badge">${ms.length} رسالة</span></button>`}).join(''):'<div class="empty">لا توجد محادثات مطابقة.</div>';
+ $('userList').querySelectorAll('[data-uid]').forEach(b=>b.onclick=()=>selectUser(b.dataset.uid));
+}
+function selectUser(uid){selectedUid=uid;const ms=users.get(uid)||[];const last=ms.find(m=>m.email);$('chatTitle').textContent=last?.email||'محادثة المستخدم';$('chatUid').textContent='UID: '+uid;$('replyText').disabled=false;$('sendBtn').disabled=false;renderUsers();renderMessages()}
+function renderMessages(){
+ const ms=[...(users.get(selectedUid)||[])].sort((a,b)=>(dateOf(a)?.getTime()||0)-(dateOf(b)?.getTime()||0));
+ $('messages').innerHTML=ms.length?ms.map(m=>{const outgoing=m.from==='user';let content=m.image?`<img src="${esc(m.image)}" alt="مرفق">`:esc(m.text||'(رسالة بدون نص)');const dt=dateOf(m);return `<div class="msg ${outgoing?'user':'staff'}">${content}<div class="time">${dt?dt.toLocaleString():''}</div></div>`}).join(''):'<div class="empty">لا توجد رسائل في هذه المحادثة.</div>';
+ $('messages').scrollTop=$('messages').scrollHeight;
+}
+$('search').addEventListener('input',renderUsers);$('refresh').onclick=()=>{renderUsers();if(selectedUid)renderMessages()};
+$('replyForm').addEventListener('submit',async e=>{e.preventDefault();const text=$('replyText').value.trim();if(!text||!selectedUid||loading)return;loading=true;$('sendBtn').disabled=true;status('chatStatus','جارٍ إرسال الرد…');try{await addDoc(collection(db,'users',selectedUid,'support'),{from:'admin',text,ts:serverTimestamp()});$('replyText').value='';status('chatStatus','تم إرسال الرد.');}catch(err){status('chatStatus','فشل إرسال الرد: '+err.message+' — راجع صلاحيات الكتابة في Firestore.',true)}finally{loading=false;$('sendBtn').disabled=false}});
+</script></body></html>
