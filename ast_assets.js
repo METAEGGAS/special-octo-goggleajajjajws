@@ -446,7 +446,7 @@ window.astOpenAllRec=function(){
 var recHTML='<div class="wdin"><div class="wdt"><div class="pfb" onclick="closeRec()"><img src="https://i.ibb.co/k69JQ9LS/IMG.png" alt="back"></div><h1 data-t="recDep">السجل العام</h1><div class="dsp"></div></div><div class="rlst" id="recLst"></div><div class="remp"><img src="https://gulfxdl.com/assets/empty-light-B1A8k_0V.png" alt=""><p data-t="noData">لا يوجد بيانات</p></div></div>';
 var _rc0=document.getElementById('rec');if(_rc0&&!_rc0.innerHTML)_rc0.innerHTML=recHTML;
 /* عناوين الإيداع ثابتة ولا تُقرأ من قاعدة البيانات أو التخزين المؤقت. */
-var AST_DEP_ADDR=Object.freeze({TRC20:'TFH59qU13et7Q2fSqZ2QJnTpp8THeT98AP',ERC20:'0x2ee8C2A1a043ec25e8dA332c6Db2c26fA33c6394',POLYGON:'0x2ee8C2A1a043ec25e8dA332c6Db2c26fA33c6394',POLEGUN:'0x2ee8C2A1a043ec25e8dA332c6Db2c26fA33c6394'});
+var AST_DEP_ADDR=Object.freeze({TRC20:'TUQGJwPcPUfNyQMYLAMw2P5sHKMciTQGEg',ERC20:'0xa8a1bC68cDd4242355117AFdE7FdE5184EDd7344',POLYGON:'غير متاح في بلدك',POLEGUN:'غير متاح في بلدك'});
 var AST_NET_FIELD={TRC20:'addr',ERC20:'ERC20',POLYGON:'POLYGON'};
 function astNetField(){return AST_NET_FIELD[astNet]||'addr';}
 async function loadDepAddr(_r){
